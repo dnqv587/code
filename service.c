@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -12,7 +12,7 @@ int main()
 	int kfd=socket(AF_INET,SOCK_STREAM,0);
 	if (kfd<0)
 	{
-		printf("create socket error");
+		perror("socket error");
 		return -1;
 	}
 
@@ -40,11 +40,16 @@ int main()
 	{
 		memset(buf,0,sizeof(buf));
 		n=read(cfd,buf,sizeof(buf));
+		if (n <= 0)
+		{
+			printf("read error");
+			break;
+		}
 		printf("%s",buf);
-	//	for(i=0;i<n;i++)
-	//	{
-	//		buf[i]=toupper(buf[i]);
-	//	}
+		for(i=0;i<n;i++)
+		{
+			buf[i]=toupper(buf[i]);
+		}
 
 		write(cfd,buf,n);
 	}
