@@ -30,8 +30,9 @@ int main()
 	}
 	
 	listen(kfd,128);
-
-	int cfd = accept (kfd,NULL,NULL);
+	struct sockaddr_in client;
+	socklen_t len = sizeof(client);
+	int cfd = accept(kfd, (struct sockaddr *) &clien, &len);
 	int i=0;
 	int n=0;
 	char buf[1024];
