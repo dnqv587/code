@@ -26,7 +26,7 @@ void* thread_work(void* arg)
 			printf("read error");
 			pthread_exit(NULL);
 		}
-		printf("n=[%d],read=[%s]\n",  n, buf);
+		printf("prot=[%d],n=[%d],read=[%s]\n", ntohs(client.sin_port), n, buf);
 		for (int i = 0; i < n; i++)
 		{
 			buf[i] = toupper(buf[i]);
