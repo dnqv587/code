@@ -11,13 +11,19 @@
 
 int main()
 {
+	//创建socket
 	int lfd = Socket(AF_INET, SOCK_STREAM, 0);
+	//端口复用
+	int opt = 1;
+	setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int));
+	//绑定端口
 	struct sockaddr_in serv;
 	bzero(&serv, sizeof(serv));
 	serv.sin_family = AF_INET;
 	serv.sin_port = htons(8888);
 	serv.sin_addr.s_addr = htonl(INADDR_ANY);
 	int ret = Bind(lfd, (struct sockaddr*)&serv, sizeof(serv));
+	//监听
 	Listen(lfd, 128);
 
 	int cfd;
