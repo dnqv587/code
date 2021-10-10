@@ -37,7 +37,11 @@ int main()
 	//读写
 	int n = 0;
 	char buf[1024];
-	int sockfd;
+
+	//代码优化
+	int clientFD[1024];//用来存储通信描述符
+	memset(clientFD, -1, sizeof(clientFD));
+	int maxi=1;//存储clientFD最大有效下标
 	while (1)
 	{
 		tmpfds = readfds;
@@ -48,7 +52,7 @@ int main()
 				continue;
 			break;
 		}
-		printf("nready=%d\n", nready);
+		//printf("nready=%d\n", nready);
 		//有客户端请求
 		if (FD_ISSET(lfd, &tmpfds))
 		{
@@ -56,41 +60,50 @@ int main()
 			int cfd = Accept(lfd, NULL, NULL);
 			//将cfd加入到文件描述符集中去
 			FD_SET(cfd, &readfds);
+			//数组存入有效通信文件描述符
+			clientFD[maxi++] = cfd;
 			//修改内核监控的文件描述符的范围
 			if (maxfd < cfd)
 				maxfd = cfd;
 			if (--nready == 0)
 				continue;
 		}
+		printf("maxi=%d\n", maxi);
 		//有客户端数据发来
-		for (int i = lfd + 1; i <= maxfd ; i++)
+		//for (int i = lfd + 1; i <= maxfd ; i++)
+		for (int i = 1; i < maxi; i++)
 		{
-			sockfd = i;
-			if (FD_ISSET(sockfd, &tmpfds))
+			printf("clientFD[%d]=%d\n", i, clientFD[i]);
+		
+			if (clientFD[i] > 0)
 			{
-				while (1)
+				if (FD_ISSET(clientFD[i], &tmpfds))
 				{
-					memset(buf, 0x00, sizeof(buf));
-					//读数据
-					n = read(sockfd, buf, sizeof(buf));
-					if (n <= 0)
+					while (1)
 					{
-						close(sockfd);
-						FD_CLR(i, &readfds);//将文件描述符--sockfd从内核中去除
-						printf("read error or connect are closed");
+						memset(buf, 0x00, sizeof(buf));
+						//读数据
+						n = read(clientFD[i], buf, sizeof(buf));
+						if (n <= 0)
+						{
+							close(clientFD[i]);
+							FD_CLR(i, &readfds);//将文件描述符--sockfd从内核中去除
+							clientFD[i] = -1;//将无效的通信文件描述符从数组中去除
+							printf("read error or connect are closed");
+						}
+
+						printf("%s", buf);
+						for (int j = 0; j < n; j++)
+						{
+							buf[j] = toupper(buf[j]);
+						}
+						//应答数据给客户端
+						write(clientFD[i], buf, n);
+
+						if (--nready == 0)
+							break;
+
 					}
-
-					printf("%s", buf);
-					for (int j = 0; j < n; j++)
-					{
-						buf[j] = toupper(buf[j]);
-					}
-					//应答数据给客户端
-					write(sockfd, buf, n);
-
-					if (--nready == 0)
-						break;
-
 				}
 			}
 		}
