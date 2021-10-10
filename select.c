@@ -39,9 +39,19 @@ int main()
 	char buf[1024];
 
 	//代码优化
-	int clientFD[1024];//用来存储通信描述符
+	int clientFD[FD_SETSIZE];//用来存储通信描述符
+	//初始化有效的文件描述符集, 为-1表示可用, 该数组不保存lfd
+/*	for (int i = 0; i < FD_SETSIZE; i++)
+	{
+		clientFD[i] = -1;
+	}
+*/
 	memset(clientFD, -1, sizeof(clientFD));
-	int maxi=1;//存储clientFD最大有效下标
+	int maxi=0;//存储clientFD最大有效下标
+	//存储客户端的地址
+	struct sockaddr_in clientaddr;
+	socklen_t len;
+	char sIP[16];
 	while (1)
 	{
 		tmpfds = readfds;
@@ -56,12 +66,40 @@ int main()
 		//有客户端请求
 		if (FD_ISSET(lfd, &tmpfds))
 		{
+			len = sizeof(clientaddr);
+			memset(sIP, 0, sizeof(sIP));
 			//接受新的客户端请求
-			int cfd = Accept(lfd, NULL, NULL);
+			int cfd = Accept(lfd, (struct sockaddr*)&clientaddr, &len);
+			printf("client:[%s] [%d]\n", inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, sIP, sizeof(sIP)), ntohs(clientaddr.sin_port));
+			if (cfd < 0)
+			{
+				if (errno == EINTR || errno == ECONNABORTED)//被信号中断或异常
+					continue;
+				break;
+			}
 			//将cfd加入到文件描述符集中去
 			FD_SET(cfd, &readfds);
 			//数组存入有效通信文件描述符
-			clientFD[maxi++] = cfd;
+			for (int i = 0; i <= FD_SETSIZE; i++)
+			{
+				//寻找数组中空位置，并将通信文件描述符存入
+				if (clientFD[i] == -1)
+				{
+					clientFD[i] = cfd;
+					if (i > maxi)
+						maxi = i;
+					break;
+				}
+				//连接数大于连接的最大值
+				if (i == FD_SETSIZE)
+				{
+					close(cfd);
+					printf("to many clients\n");
+					continue;
+				}
+			}
+
+
 			//修改内核监控的文件描述符的范围
 			if (maxfd < cfd)
 				maxfd = cfd;
@@ -71,7 +109,7 @@ int main()
 		printf("maxi=%d\n", maxi);
 		//有客户端数据发来
 		//for (int i = lfd + 1; i <= maxfd ; i++)
-		for (int i = 1; i < maxi; i++)
+		for (int i = 0; i <= maxi; i++)
 		{
 			printf("clientFD[%d]=%d\n", i, clientFD[i]);
 		
@@ -89,10 +127,10 @@ int main()
 							close(clientFD[i]);
 							FD_CLR(i, &readfds);//将文件描述符--sockfd从内核中去除
 							clientFD[i] = -1;//将无效的通信文件描述符从数组中去除
-							printf("read error or connect are closed");
+							printf("read error or connect are closed\n");
 						}
 
-						printf("%s", buf);
+						printf("port=%d,%s", ntohs(clientaddr.sin_port), buf);
 						for (int j = 0; j < n; j++)
 						{
 							buf[j] = toupper(buf[j]);
