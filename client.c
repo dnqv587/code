@@ -10,12 +10,14 @@
 
 int main()
 {
+	//创建socket，获得监听文件描述符
 	int kfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (kfd < 0)
 	{
 		perror("socket error");
 		return -1;
 	}
+	//链接服务端
 	struct sockaddr_in serv;
 	serv.sin_family = AF_INET;
 	serv.sin_port = htons(8888);
@@ -31,15 +33,16 @@ int main()
 	char buf[256];
 	while (1)
 	{
-		memset(buf, 0, sizeof(buf));
+		memset(buf, 0, sizeof(buf));//清空缓冲区
+		//读数据
 		n = read(STDIN_FILENO, buf, sizeof(buf));
 		if (n <= 0)
 		{
 			printf("read error");
 			break;
 		}
+		//写数据
 		write(kfd, buf, sizeof(buf));
-		read(kfd, buf, sizeof(buf));
 		printf("read=%s\n", buf);
 	}
 	close(kfd);
