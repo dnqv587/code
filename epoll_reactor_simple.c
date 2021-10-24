@@ -27,6 +27,10 @@ typedef struct xx_event
 
 int epfd = 0;//树根节点
 
+char sIP[16];
+struct sockaddr_in clientAddr;
+socklen_t len = sizeof(clientAddr);
+
 xevent myevents[_EVENT_SIZE_+1];
 
 void readData(int fd, int events, void* arg);
@@ -43,7 +47,7 @@ void eventAdd(int fd, int events, void (*call_back)(int, int, void*), void* arg,
 	struct epoll_event epv;
 	epv.events = events;
 	epv.data.ptr = ev;//将epv的指针指向事件驱动ev
-	epoll_ctl(fd, EPOLL_CTL_ADD, fd, &epv);
+	epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epv);
 }
 
 //修改事件
@@ -83,6 +87,7 @@ void sendData(int fd, int events, void* arg)
 		ev->buf[i] = toupper(ev->buf[i]);
 	}
 	Write(fd, ev->buf, ev->buflen);
+	printf("%d->send:%s", clientAddr.sin_port,ev->buf);
 	eventModify(fd, EPOLLIN, readData, ev);
 }
 //读事件处理
@@ -93,7 +98,7 @@ void readData(int fd, int events, void *arg)
 	//读到数据
 	if (ev->buflen > 0)
 	{
-		printf("%s", ev->buf);
+		printf("%d->read:%s",clientAddr.sin_port, ev->buf);
 		//切换事件为写事件
 		eventModify(fd, EPOLLOUT, sendData, ev);
 	}
@@ -111,9 +116,8 @@ void readData(int fd, int events, void *arg)
 void initAccept(int fd, int events, void* arg)
 {
 
-	struct sockaddr_in addr;
-	socklen_t len = sizeof(addr);
-	int cfd = Accept(fd, (struct sockaddr*)&addr, &len);
+	int cfd = Accept(fd, (struct sockaddr*)&clientAddr, &len);
+	//printf("client:%s %d", inet_ntop(AF_INET, &clientAddr.sin_addr.s_addr, sIP, sizeof(sIP)), ntohs(clientAddr.sin_port));
 	for (int i = 0; i < _EVENT_SIZE_; i++)
 	{
 		if (myevents[i].fd == 0)
@@ -145,11 +149,11 @@ int main(int argc,char **argv)
 	//存储epoll_wait传出参数
 	struct epoll_event events[_EVENT_SIZE_];
 	//添加最初始事件，将侦听的描述符上树
+
 	eventAdd(lfd, EPOLLIN, initAccept, &myevents[_EVENT_SIZE_], &myevents[_EVENT_SIZE_]);
 
 	while (1)
 	{
-		printf("1");
 		int nready = epoll_wait(epfd, events, _EVENT_SIZE_, -1);
 
 		if (nready < 0)
