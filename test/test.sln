@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "modifyFlie", "modifyFlie\modifyFlie.vcxproj", "{FCDD5094-F0B1-4313-81CD-9314DE70E9F2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpJson", "Project1\HttpJson.vcxproj", "{F78420C8-5B08-4595-A60F-AEEB2D0E88A6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpJson", "HttpJson\HttpJson.vcxproj", "{F78420C8-5B08-4595-A60F-AEEB2D0E88A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
