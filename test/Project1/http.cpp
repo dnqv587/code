@@ -2,7 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 
-int _1main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	HttpRequest httpReq("172.18.44.236", 9505);
 
