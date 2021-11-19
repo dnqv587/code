@@ -34,7 +34,7 @@ int main()
 	while (1)
 	{
 		memset(buf, 0, sizeof(buf));//清空缓冲区
-		//读数据
+		//读标准输入数据
 		n = read(STDIN_FILENO, buf, sizeof(buf));
 		if (n <= 0)
 		{
