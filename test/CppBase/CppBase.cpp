@@ -120,11 +120,44 @@ void array_init_vector()
 
 }
 
+//使用位运算符记录
+void num_count()
+{
+	int num;
+	unsigned long count = 0;
+	unsigned long sign = 01;
+	bool flag = true;
+
+	while (cin >> num)
+	{
+		if (num <= 0 && num >= 31)
+			continue;
+		if (num == 99)
+			break;
+		if (num == 100)
+		{
+			flag = false;
+			continue;
+		}
+		if (num == 88)
+		{
+			flag = true;
+			continue;
+		}
+		if (flag)
+			count |= sign << num;
+		else
+			count &= ~(sign << num);
+	}
+	printf("%X", count);
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
 	//scores();
 	//array_init_vector();
+	//num_count();
 	system("pause");
 	return 0;
 }
