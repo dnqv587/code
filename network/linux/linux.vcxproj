@@ -38,7 +38,8 @@
     <ClInclude Include="..\wrap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\service.c" />
+    <ClCompile Include="..\..\system\IO\open.c" />
+    <ClCompile Include="..\web_service_epoll.c" />
     <ClCompile Include="..\wrap.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -81,6 +82,9 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>/usr/local/include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

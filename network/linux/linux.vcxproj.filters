@@ -17,7 +17,10 @@
     <ClCompile Include="..\wrap.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\service.c">
+    <ClCompile Include="..\web_service_epoll.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\system\IO\open.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
