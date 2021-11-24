@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <ctype.h>
+#include <exception>
 
 #include "./1/Sales_item.h"
 
@@ -152,12 +153,89 @@ void num_count()
 	printf("%X", count);
 }
 
+//异常处理
+float division(float a, float b )
+{
+	if (b == 0)
+	{
+		throw "divison by zeor condition";//抛出异常，类型为const char*
+	}
+	return a / b;
+}
+void try_catch()
+{
+	float a, b;
+	try
+	{
+		cin >> a;
+		cin >> b;
+		printf("%f\n", division(a,b));
+	}
+	catch (const char *msg)//抓住类型为const char* 的异常
+	{
+		//perror(msg);
+		cerr << msg << endl;
+	}
+}
+
+int static_add()
+{
+	static int n ;//内置类型的局部静态变量默认初始化为0
+	return ++n;
+}
+void static_test()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		cout << static_add() << endl;
+	}
+}
+
+//判断是否有大写，并转换为小写
+void change_to_lower(string &str)
+{
+	for (auto &c : str)
+	{
+		if (isupper(c))
+		{
+			c = tolower(c);
+		}
+	}
+}
+bool if_string_upper(const string &str)
+{
+	for (auto iter = str.begin(); iter != str.end(); iter++)
+	{
+		if (isupper(iter[0]))
+		{
+			cout << str << ":have upper" << endl;
+			return true;
+		}
+	}
+	return false;
+}
+void if_string_func()
+{
+	string str;
+	while (cin >> str)
+	{
+		if (str == "n")
+			break;
+		if_string_upper(str);
+		change_to_lower(str);
+		cout << str << endl;
+	}
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
 	//scores();
 	//array_init_vector();
 	//num_count();
+	//try_catch();
+	//static_test();
+	//if_string_func();
 	system("pause");
 	return 0;
 }
