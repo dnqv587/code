@@ -227,6 +227,23 @@ void if_string_func()
 	}
 }
 
+int* pt()//返回指针类型
+{
+	static int a = 2;
+	return &a;
+}
+int& ad()//返回引用类型
+{
+	static int b = 3;
+	return b;
+}
+
+//返回数组指针
+int (* get())[3] //auto get()->int(*)[3]  //尾置返回类型
+{
+	int s[3]{1,2,3};
+	return &s;//返回数组的地址
+}
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -236,6 +253,9 @@ int main(int argc, char** argv)
 	//try_catch();
 	//static_test();
 	//if_string_func();
+	//ad() = 5;
+	//printf("%d,%d", *pt(), ad());
+	printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
 	system("pause");
 	return 0;
 }
