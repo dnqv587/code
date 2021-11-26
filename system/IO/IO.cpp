@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include <string>
 #include <string.h>
+#include <dirent.h>
 
 using namespace std;
-
 
 void runcmd(const char * cwd_path);
 void create_text(const char * cwd_path)
@@ -45,6 +45,106 @@ void create_text(const char * cwd_path)
 	runcmd(cwd_path);
 }
 
+void change_text(const char * cwd_path)
+{
+	printf("请输入文件名：");
+	string file_name;
+	cin >> file_name;
+	printf("%s\n", file_name.c_str());
+	char file_path[1024];
+	sprintf(file_path, "%s/%s.txt", cwd_path, file_name.c_str());
+	printf("%s\n", file_path);
+	int file_fd = open(file_path, O_RDWR , 0775);
+	if (file_fd < 0)
+	{
+		perror("create error");
+	}
+	char text_buf[1024];
+	int text_num = read(file_fd, text_buf, sizeof(text_buf));
+	printf("文件内容：\n%s\n", text_buf);
+	lseek(file_fd, 0, SEEK_SET);
+	printf("请输入要修改的行数：");
+	int row;
+	cin >> row;
+	printf("\n请输入要修改的列数：");
+	int column;
+	cin >> column;
+	printf("\n请输入要修改的内容：");
+	char str[1024];
+	cin >> str;
+	int r_count = 0;
+	int c_count = 0;
+	for (int i = 0; i < text_num; ++i)
+	{
+
+		if (r_count == row && c_count == column)
+		{
+			for (int j = 0; j < strlen(str); ++j)
+			{
+				text_buf[i + j] = str[j];
+			}
+			break;
+		}
+		else
+		{
+			++c_count;
+			if (text_buf[i] == '\n')
+			{
+				++r_count;
+				c_count = 0;
+			}
+		}
+	}
+	printf("%s", text_buf);
+	write(file_fd, text_buf, text_num);
+	close(file_fd);
+	runcmd(cwd_path);
+}
+
+void delete_text(const char * cwd_path)
+{
+	DIR* dir = opendir(cwd_path);
+	if (dir == NULL)
+	{
+		perror("opendir error");
+	}
+	//循环读取目录内容
+	struct dirent  *pdir;
+	char* type;
+	while ((pdir = readdir(dir)) != NULL)
+	{
+		switch (pdir->d_type)
+		{
+		case DT_BLK:
+			type = "块设备";
+			break;
+		case DT_CHR:
+			type = "字符设备";
+			break;
+		case DT_DIR:
+			type = "目录";
+			break;
+		case DT_LNK:
+			type = "软链接";
+			break;
+		case DT_FIFO:
+			type = "管道";
+			break;
+		case DT_REG:
+			type = "普通文件";
+			break;
+		case DT_SOCK:
+			type = "套接字";
+			break;
+		default:
+			type = "未知";
+		}
+		printf("name:%s       type:%s\n", pdir->d_name, type);
+	}
+	closedir(dir);
+	runcmd(cwd_path);
+
+}
 
 void runcmd(const char * cwd_path)
 {
@@ -68,10 +168,10 @@ void runcmd(const char * cwd_path)
 		create_text(cwd_path);
 		break;
 	case 2:
-		//change_text();
+		change_text(cwd_path);
 		break;
 	case 3:
-		//delete_text();
+		delete_text(cwd_path);
 		break;
 	}
 }
