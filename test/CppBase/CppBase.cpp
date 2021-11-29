@@ -4,6 +4,8 @@
 #include <vector>
 #include <ctype.h>
 #include <exception>
+#include <windows.h>
+#include <assert.h>
 
 #include "./1/Sales_item.h"
 
@@ -244,6 +246,30 @@ int (* get())[3] //auto get()->int(*)[3]  //尾置返回类型
 	int s[3]{1,2,3};
 	return &s;//返回数组的地址
 }
+
+//函数指针
+inline int add(int a, int b){return a + b;}
+inline int subtract(int a, int b){return a - b;}
+inline int multiply(int a, int b){return a * b;}
+inline int division(int a, int b){return a / b;}
+void func_pt()
+{
+	//using pt = int(*)(int, int);//方法一，using别名
+	//typedef int (*pt)(int, int);//方法二，typedef别名
+	//int(*pt)(int, int);//方法三，函数声明
+
+	vector<int(*)(int,int)>vec;//定义int(*)(int,int)类型vector容器
+	//vector<pt)>vec;//先声明pt的类型
+	vec.push_back(&add);
+	vec.push_back(&subtract);
+	vec.push_back(&multiply);
+	vec.push_back(&division);
+	for (auto iter = vec.begin(); iter != vec.end(); ++iter)
+	{
+		printf("%d\n", (*iter)(5, 5));
+	}
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -255,7 +281,8 @@ int main(int argc, char** argv)
 	//if_string_func();
 	//ad() = 5;
 	//printf("%d,%d", *pt(), ad());
-	printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
+	//printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
+	func_pt();
 	system("pause");
 	return 0;
 }
