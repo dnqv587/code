@@ -282,7 +282,7 @@ int main(int argc, char** argv)
 	//ad() = 5;
 	//printf("%d,%d", *pt(), ad());
 	//printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
-	func_pt();
+	//func_pt();
 	system("pause");
 	return 0;
 }
