@@ -7,22 +7,8 @@ using namespace std;
 
 void my_Sales_data::add(const struct book& temp)  
 {
-	
-	cout << "编号：";
-	cin >> temp.book_no;
-	cout << endl << "书名：";
-	cin > temp.book_name;
-	cout << endl << "数量：";
-	cin >> temp.book_num;
-	cout << endl << "价格：";
-	cin >> temp.book_price;
-
-	time_t curtime;
-	time(&curtime);
-	temp.book_time = ctime(&curtime);
-
-	book *lib_book;
-	if (is_exist(temp.book_no, lib_book))
+	book* lib_book = nullptr;
+	if (this->is_exist(temp.book_no, lib_book))
 	{
 		lib_book->book_name = temp.book_name;
 		lib_book->book_num += temp.book_num;
@@ -38,12 +24,28 @@ void my_Sales_data::add(const struct book& temp)
 
 void my_Sales_data::sub(const struct book& temp)
 {
-
+	book* lib_book = nullptr;
+	if (is_exist(temp.book_no, lib_book))
+	{
+		//library.erase(lib_book);
+	}
+	else
+	{
+		library.push_back(temp);
+	}
 }
 
-void my_Sales_data::print_lib(const my_Sales_data&) const
+void my_Sales_data::print_lib() const
 {
+	for (auto iter = library.begin(); iter != library.end(); ++iter)
+	{
+		cout << "编号：" << iter->book_no << endl;
+		cout << "书名：" << iter->book_name << endl;
+		cout << "数量：" << iter->book_num << endl;
+		cout << "价格：" << iter->book_price << endl;
+		cout << "日期：" << iter->book_time << endl;
 
+	}
 }
 
 bool my_Sales_data::is_exist( const unsigned int & no,book* temp)

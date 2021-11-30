@@ -298,6 +298,34 @@ void salse_data_book()
 	}
 }
 
+//图书管理系统
+void library()
+{
+	my_Sales_data* library = new my_Sales_data;//书库
+	while (1)
+	{
+		book temp;
+		cout << "编号：";
+		cin >> temp.book_no;
+		cout << "书名：";
+		cin >> temp.book_name;
+		cout << "数量：";
+		cin >> temp.book_num;
+		cout << "价格：";
+		cin >> temp.book_price;
+
+		time_t curtime;
+		time(&curtime);
+
+		char temp_date[26];
+		ctime_s(temp_date, sizeof(temp_date), &curtime);
+		temp.book_time = temp_date;
+
+		library->add(temp);
+		library->print_lib();
+	}
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -311,7 +339,8 @@ int main(int argc, char** argv)
 	//printf("%d,%d", *pt(), ad());
 	//printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
 	//func_pt();
-	salse_data_book();
+	//salse_data_book();
+	library();
 	system("pause");
 	return 0;
 }
