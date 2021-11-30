@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file contains code from "C++ Primer, Fifth Edition", by Stanley B.
  * Lippman, Josee Lajoie, and Barbara E. Moo, and is covered under the
  * copyright and warranty notices given in that book:
@@ -47,7 +47,7 @@ public:
 	Sales_data(std::istream &);
 
 	// operations on Sales_data objects
-	std::string isbn() const { return bookNo; }
+	std::string isbn() const { return bookNo; }//const修改隐式this指针类型
 	Sales_data& combine(const Sales_data&);
 	double avg_price() const;
 private:
