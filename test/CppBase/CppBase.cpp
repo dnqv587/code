@@ -8,6 +8,8 @@
 #include <assert.h>
 
 #include "./1/Sales_item.h"
+#include "./7/Sales_data.h"
+#include "my_Sales_data.h"
 
 using namespace std;
 void for_and_vector()
@@ -256,10 +258,11 @@ void func_pt()
 {
 	//using pt = int(*)(int, int);//方法一，using别名
 	//typedef int (*pt)(int, int);//方法二，typedef别名
-	//int(*pt)(int, int);//方法三，函数声明
+	//int(*pt)(int, int);//函数声明，未初始化
+	//auto pt()->int(*)(int, int);//尾置返回类型
 
 	vector<int(*)(int,int)>vec;//定义int(*)(int,int)类型vector容器
-	//vector<pt)>vec;//先声明pt的类型
+	//vector<pt>vec;//先声明pt的类型
 	vec.push_back(&add);
 	vec.push_back(&subtract);
 	vec.push_back(&multiply);
@@ -267,6 +270,31 @@ void func_pt()
 	for (auto iter = vec.begin(); iter != vec.end(); ++iter)
 	{
 		printf("%d\n", (*iter)(5, 5));
+	}
+}
+
+//salse_data类的使用
+void salse_data_book()
+{
+	Sales_data total;//保存当前结果求和的变量
+	if (read(cin, total))//读入第一笔交易
+	{
+		Sales_data trans;//保存下一条交易数据的变量
+		while (read(cin, trans))//读入剩余的交易
+		{
+			if (total.isbn() == trans.isbn())//检查isbn
+				total.combine(trans);//更新变量total当前的值
+			else
+			{
+				print(cout, total) << endl;//输出结果
+				total = trans;//处理下一本书
+			}
+		}
+		print(cout, total) << endl;//输出最后一条交易
+	}
+	else//没有输入任何信息
+	{
+		cerr << "NO DATA ?" << endl;//通知用户
 	}
 }
 
@@ -283,6 +311,7 @@ int main(int argc, char** argv)
 	//printf("%d,%d", *pt(), ad());
 	//printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
 	//func_pt();
+	salse_data_book();
 	system("pause");
 	return 0;
 }
