@@ -301,29 +301,52 @@ void salse_data_book()
 //图书管理系统
 void library()
 {
-	my_Sales_data* library = new my_Sales_data;//书库
+	book inbook;
+	inbook.book_no = 1;
+	inbook.book_name = "C++";
+	inbook.book_num = 10;
+	inbook.book_price = 60;
+
+	my_Sales_data* library = new my_Sales_data(inbook);//书库
+
+	int mod;
 	while (1)
 	{
-		book temp;
-		cout << "编号：";
-		cin >> temp.book_no;
-		cout << "书名：";
-		cin >> temp.book_name;
-		cout << "数量：";
-		cin >> temp.book_num;
-		cout << "价格：";
-		cin >> temp.book_price;
+		
+		cout << "添加输1" << endl << "删除输2" << endl << "输入：" ;
+		cin >> mod;
+		if (mod == 1)
+		{
+			book temp;
+			cout << "编号：";
+			cin >> temp.book_no;
+			cout << "书名：";
+			cin >> temp.book_name;
+			cout << "数量：";
+			cin >> temp.book_num;
+			cout << "价格：";
+			cin >> temp.book_price;
 
-		time_t curtime;
-		time(&curtime);
+			time_t curtime;
+			time(&curtime);
 
-		char temp_date[26];
-		ctime_s(temp_date, sizeof(temp_date), &curtime);
-		temp.book_time = temp_date;
+			char temp_date[26];
+			ctime_s(temp_date, sizeof(temp_date), &curtime);
+			temp.book_time = temp_date;
 
-		library->add(temp);
-		library->print_lib();
+			library->add(temp);
+			library->print_lib();
+		}
+		else if (mod == 2)
+		{
+			book temp;
+			cout << "编号：";
+			cin >> temp.book_no;
+			library->sub(temp);
+			library->print_lib();
+		}
 	}
+	delete(library);
 }
 
 int main(int argc, char** argv)

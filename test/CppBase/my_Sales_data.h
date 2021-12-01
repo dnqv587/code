@@ -16,8 +16,11 @@ struct book
 
 class my_Sales_data
 {
-
+	friend void library();//友元
 public:
+	my_Sales_data() = default;//默认构造函数
+	my_Sales_data(const book&);
+	~my_Sales_data();
 	//添加
 	void add(const struct book&);
 	//去除
@@ -25,7 +28,7 @@ public:
 	//列表
 	void print_lib() const;
 	//书是否存在
-	bool is_exist(const unsigned int & no, book* temp);
+	bool is_exist(const unsigned int & ,  book** , std::vector<book>::iterator **);
 
 private:
 	std::vector <book> library;//书籍的信息
@@ -33,4 +36,5 @@ private:
 	double revenue;//收入
 };
 
+//void library();
 #endif
