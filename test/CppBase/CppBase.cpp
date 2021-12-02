@@ -349,6 +349,14 @@ void library()
 	delete(library);
 }
 
+class Y y;
+
+class X;
+
+//using X = class { Y* p_y = &y; };
+using Y = class { Y yy; };
+
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -367,3 +375,4 @@ int main(int argc, char** argv)
 	system("pause");
 	return 0;
 }
+

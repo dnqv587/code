@@ -78,11 +78,13 @@ bool my_Sales_data::is_exist( const unsigned int & no, book** temp, vector<book>
 	}
 	return false;
 }
+//---------------Screen
+
 
 char Screen::get(pos r, pos c) const
 {
 	pos row = r * width;
-	return content[row+c]
+	return content[row + c];
 
 }
 
@@ -90,6 +92,18 @@ inline Screen & Screen::move(pos r, pos c)
 {
 	pos row = r * width;
 	cursor = row + c;
+	return *this;
+}
+
+Screen & Screen::set(char c)
+{
+	content[cursor] = c;
+	return *this;
+}
+
+Screen & Screen::set(pos r , pos col, char ch)
+{
+	content[r*width + col] = ch;
 	return *this;
 }
 
