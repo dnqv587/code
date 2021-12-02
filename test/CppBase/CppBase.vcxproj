@@ -120,12 +120,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\primer cpp example\vs2012_c11\7\Sales_data.cpp" />
     <ClCompile Include="CppBase.cpp" />
-    <ClCompile Include="my_Sales_data.cpp" />
+    <ClCompile Include="my_data.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\primer cpp example\vs2012\1\Sales_item.h" />
     <ClInclude Include="..\..\primer cpp example\vs2012_c11\7\Sales_data.h" />
-    <ClInclude Include="my_Sales_data.h" />
+    <ClInclude Include="my_data.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

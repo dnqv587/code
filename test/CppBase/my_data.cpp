@@ -2,7 +2,7 @@
 #include <string>
 #include <time.h>
 
-#include "my_Sales_data.h"
+#include "my_data.h"
 
 using namespace std;
 
@@ -62,6 +62,7 @@ void my_Sales_data::print_lib() const
 		cout << "日期：" << iter->book_time << endl;
 
 	}
+	all_num++;
 }
 
 bool my_Sales_data::is_exist( const unsigned int & no, book** temp, vector<book>::iterator **it)
@@ -77,3 +78,18 @@ bool my_Sales_data::is_exist( const unsigned int & no, book** temp, vector<book>
 	}
 	return false;
 }
+
+char Screen::get(pos r, pos c) const
+{
+	pos row = r * width;
+	return content[row+c]
+
+}
+
+inline Screen & Screen::move(pos r, pos c)
+{
+	pos row = r * width;
+	cursor = row + c;
+	return *this;
+}
+

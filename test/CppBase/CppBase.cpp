@@ -9,7 +9,7 @@
 
 #include "./1/Sales_item.h"
 #include "./7/Sales_data.h"
-#include "my_Sales_data.h"
+#include "my_data.h"
 
 using namespace std;
 void for_and_vector()
