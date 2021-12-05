@@ -9,7 +9,7 @@
 
 #include "./1/Sales_item.h"
 #include "./7/Sales_data.h"
-#include "my_Sales_data.h"
+#include "my_data.h"
 
 using namespace std;
 void for_and_vector()
@@ -349,6 +349,14 @@ void library()
 	delete(library);
 }
 
+class Y y;
+
+class X;
+
+//using X = class { Y* p_y = &y; };
+using Y = class { Y yy; };
+
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -367,3 +375,4 @@ int main(int argc, char** argv)
 	system("pause");
 	return 0;
 }
+
