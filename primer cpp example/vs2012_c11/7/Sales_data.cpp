@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file contains code from "C++ Primer, Fifth Edition", by Stanley B.
  * Lippman, Josee Lajoie, and Barbara E. Moo, and is covered under the
  * copyright and warranty notices given in that book:
@@ -48,7 +48,7 @@ Sales_data::avg_price() const {
 
 // add the value of the given Sales_data into this object
 Sales_data& 
-Sales_data::combine(const Sales_data &rhs)
+Sales_data::combine(const Sales_data &rhs) 
 {
 	units_sold += rhs.units_sold; // add the members of rhs into 
 	revenue += rhs.revenue;       // the members of ``this'' object
