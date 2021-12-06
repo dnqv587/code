@@ -276,6 +276,7 @@ void func_pt()
 //salse_data类的使用
 void salse_data_book()
 {
+
 	Sales_data total;//保存当前结果求和的变量
 	if (read(cin, total))//读入第一笔交易
 	{
@@ -296,6 +297,7 @@ void salse_data_book()
 	{
 		cerr << "NO DATA ?" << endl;//通知用户
 	}
+
 }
 
 //图书管理系统
@@ -349,13 +351,16 @@ void library()
 	delete(library);
 }
 
-class Y y;
+void bug_test()
+{
+	 Debug test(false, true, false);
+	if (test.any())
+	{
+		cerr << "error message" << endl;
+	}
+}
 
-class X;
-
-//using X = class { Y* p_y = &y; };
-using Y = class { Y yy; };
-
+double Account::interestRate = 3.14;//定义静态成员
 
 int main(int argc, char** argv)
 {
@@ -371,8 +376,10 @@ int main(int argc, char** argv)
 	//printf("%d", (*get())[2]);//(*get())[2]：解引用指向数组的指针，再使用下标来获取对象的值
 	//func_pt();
 	//salse_data_book();
-	library();
+	//library();
+	//bug_test();
+	Account::rate(5.12);
+	printf("%f", Account::rate());
 	system("pause");
 	return 0;
 }
-

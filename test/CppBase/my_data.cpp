@@ -107,3 +107,7 @@ Screen & Screen::set(pos r , pos col, char ch)
 	return *this;
 }
 
+void Account::rate(double newRate)
+{
+	interestRate = newRate;
+}

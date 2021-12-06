@@ -6,7 +6,6 @@
 #include <time.h>
 
 
-
 struct book
 {
 	unsigned int book_no;
@@ -21,7 +20,7 @@ class my_Sales_data
 	friend void library();//友元
 public:
 	my_Sales_data() = default;//默认构造函数
-	my_Sales_data(const book&);
+	explicit my_Sales_data(const book&);
 	~my_Sales_data();
 	//添加
 	void add(const struct book&);
@@ -71,5 +70,40 @@ private:
 
 };
 
+class Debug 
+{
+public:
+	constexpr Debug(bool all=true):hw(all),io(all),other(all){ }
+
+	constexpr Debug(bool h,bool i,bool o) : hw(h), io(i), other(o) { }
+	
+	constexpr bool any() { return hw || io || other; }
+
+	void set_hw(bool h) { hw = h; }
+
+	void set_io(bool i) { io = i; }
+	
+	void set_other(bool o) { other = o; }
+
+private:
+	bool hw;    //硬件错误
+	bool io;	//io错误	
+	bool other; //其他错误
+};
+
+class Account
+{
+public:
+	void calculate() { amount += amount * interestRate; }
+
+	static double rate() { return interestRate; }
+
+	static void rate(double);
+private:
+	std::string owner;
+	double amount;
+	static double interestRate;
+	constexpr static double initRate = 2.71828;//静态成员的类内初始化
+};
 
 #endif
