@@ -6,6 +6,7 @@
 #include <exception>
 #include <windows.h>
 #include <assert.h>
+#include<fstream>
 
 #include "./1/Sales_item.h"
 #include "./7/Sales_data.h"
@@ -362,6 +363,44 @@ void bug_test()
 
 double Account::interestRate = 3.14;//定义静态成员
 
+
+
+void input(ifstream &is)
+{
+	string s;
+	while (is >> s)
+		cout << s << endl;
+}
+
+void output(ofstream &os)
+{
+	//string str;
+	string s;
+	while (cin>>s)
+	{
+		os << s << endl;
+	}
+}
+void ifstream_8_1(int &argc, char** &argv)
+{ 
+	const char* path = "C:/Users/UK2021/Documents/test/abc.txt";
+	string sss;
+	//ifstream in(path);  //打开文件读
+	//ofstream out(path);//打开文件写
+	ifstream in;  //先定义
+	ofstream out;
+	in.open(path);//后打开
+	out.open(path, ofstream::app || ofstream::out);
+
+	if (in&&out)            //如果文件打开正常
+	{
+		input(in);
+		//output(out);
+	}
+	else
+		cerr << "couldn't open: " + string(path);//输出无法打开的文件
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -378,8 +417,11 @@ int main(int argc, char** argv)
 	//salse_data_book();
 	//library();
 	//bug_test();
-	Account::rate(5.12);
-	printf("%f", Account::rate());
+	//Account::rate(5.12);
+	//printf("%f", Account::rate());
+	/*第八章*/
+	ifstream_8_1(argc,argv);
+
 	system("pause");
 	return 0;
 }
