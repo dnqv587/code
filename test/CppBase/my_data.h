@@ -1,10 +1,25 @@
 ﻿#ifndef __MY_DATA_H__
 #define __MY_DATA_H__
 
+#include <time.h>
+#include<stdio.h>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <time.h>
+#include <ctype.h>
+#include <exception>
+#include <windows.h>
+#include <assert.h>
+#include<fstream>
+#include <sstream>
 
+
+
+struct personInfo
+{
+	std::string name;
+	std::vector<std::string> phone;
+};
 
 struct book
 {

@@ -1,16 +1,7 @@
-﻿#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <ctype.h>
-#include <exception>
-#include <windows.h>
-#include <assert.h>
-#include<fstream>
-
+﻿#include "my_data.h"
 #include "./1/Sales_item.h"
 #include "./7/Sales_data.h"
-#include "my_data.h"
+
 
 using namespace std;
 void for_and_vector()
@@ -381,6 +372,8 @@ void output(ofstream &os)
 		os << s << endl;
 	}
 }
+
+//文件读写
 void ifstream_8_1(int &argc, char** &argv)
 { 
 	const char* path = "C:/Users/UK2021/Documents/test/abc.txt";
@@ -389,16 +382,65 @@ void ifstream_8_1(int &argc, char** &argv)
 	//ofstream out(path);//打开文件写
 	ifstream in;  //先定义
 	ofstream out;
-	in.open(path);//后打开
-	out.open(path, ofstream::app || ofstream::out);
+	in.open(path, ofstream::app);//后打开
+	out.open(path, ofstream::out || ofstream::app);
 
 	if (in&&out)            //如果文件打开正常
 	{
 		input(in);
-		//output(out);
+		output(out);
 	}
 	else
 		cerr << "couldn't open: " + string(path);//输出无法打开的文件
+}
+
+//string流的文件读写
+void stringstream_test()
+{
+	const char* path = "C:/Users/UK2021/Documents/test/abc.txt";
+	ifstream in;  //先定义
+	in.open(path, ofstream::app);
+
+	string line,word;
+	vector <personInfo> people;
+	while (getline(in, line))
+	{
+		personInfo info;//创建一个对象保存此记录对象
+		istringstream record(line);//将记录绑定到读入的行
+		record >> info.name;
+		while (record >> word)
+		{
+			info.phone.push_back(word);;
+		}
+		people.push_back(info);
+
+
+		
+		for (auto iter = people.begin(); iter != people.end(); ++iter)//输出保存的信息
+		{
+			cout << iter->name;
+			ostringstream outinfo;
+			for (auto iter2 = iter->phone.begin(); iter2 != iter->phone.end(); ++iter2)
+			{
+				outinfo <<"||"<< *iter2;
+			}
+			cout << outinfo.str();
+		}
+		cout << endl;
+	}
+	in.close();
+
+}
+
+
+
+
+void v_test()
+{
+	vector<int> a{1};
+	vector<int> b{2};
+	swap(a, b);
+	cout << a[0] << b[0] << endl;
 }
 
 int main(int argc, char** argv)
@@ -420,7 +462,10 @@ int main(int argc, char** argv)
 	//Account::rate(5.12);
 	//printf("%f", Account::rate());
 	/*第八章*/
-	ifstream_8_1(argc,argv);
+	//ifstream_8_1(argc,argv);
+	//stringstream_test();
+	//容器
+	v_test();
 
 	system("pause");
 	return 0;
