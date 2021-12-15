@@ -6,6 +6,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
+#include <list>
+#include <forward_list>
+#include <deque>
 #include <ctype.h>
 #include <exception>
 #include <windows.h>
@@ -109,14 +113,19 @@ private:
 class Account
 {
 public:
+	Account(std::string own,double amo):owner(own),amount(amo) { }
+
+	double getAmount() { return amount; }
+
 	void calculate() { amount += amount * interestRate; }
 
 	static double rate() { return interestRate; }
 
 	static void rate(double);
+
 private:
-	std::string owner;
-	double amount;
+	std::string owner;//用户
+	double amount;//总数
 	static double interestRate;
 	constexpr static double initRate = 2.71828;//静态成员的类内初始化
 };

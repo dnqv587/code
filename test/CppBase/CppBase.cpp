@@ -432,15 +432,196 @@ void stringstream_test()
 
 }
 
-
-
-
-void v_test()
+class ar
 {
-	vector<int> a{1};
-	vector<int> b{2};
-	swap(a, b);
-	cout << a[0] << b[0] << endl;
+public:
+	ar(int a) { b = a; }
+	ar() = default;
+private:
+	int b;
+};
+
+
+void list_to_vector()
+{
+	list<int> a{ 1,2,3,4,5,6};
+	//vector<double>b(a.cbegin(), a.cend());
+	vector<double>b;
+	for (auto iter = a.cbegin(); iter != a.cend(); ++iter)
+	{
+		b.push_back(*iter);
+	}
+	/*for ( auto iter=b.begin();iter!=b.end();++iter)
+	{
+		auto iiter = iter;
+
+		while (iiter != b.end())
+		{
+			if (iiter+1 == b.end())
+				break;
+			swap(*iiter, *(iiter + 1));
+
+			++iiter;
+		}
+
+	}*/
+	for (const auto &c : b)
+	{
+		cout << c << endl;
+	}
+
+}
+
+void swap_test()//有问题
+{
+	vector<string>vec;
+	list<char*>lis;
+	char *ss = new char[10];
+	while (cin >> ss)
+	{
+		if (ss[0] == '9')
+			break;
+		lis.push_back(ss);
+		for (auto iter = vec.begin(); iter != vec.end(); ++iter)
+		{
+			vec.assign(lis.cbegin(), lis.cend());
+		}
+		
+	}
+	for (auto &c : vec)
+	{
+		cout << c << endl;
+	}
+}
+
+//插入测试，二分法
+void insert_test()
+{
+	unsigned int ss;
+	vector<int> order_list;
+
+	auto start = order_list.begin(), end = order_list.end(), mid = order_list.begin() + (order_list.size()) / 2;
+	while (cin >> ss)
+	{
+		if (ss == 999)
+			break;
+
+		start = order_list.begin(); end = order_list.end(); mid = order_list.begin() + (order_list.size()) / 2;//重置start、end、mid
+
+		while (start != end)//二分法
+		{
+			if (*mid == ss)
+			{
+				//order_list.insert(mid, ss);
+				break;
+			}
+			if (ss > *mid)
+			{
+				start = mid+1;
+			}
+			else
+			{
+				end = mid;
+			}
+			mid = start + (end - start) / 2;
+		}
+
+		order_list.insert(mid, ss);
+
+		for (const auto &c : order_list)
+		{
+			cout << c <<"  ";
+		}
+		cout << endl;
+	}
+
+}
+
+void emplace_test()
+{
+	Account *acc = new Account("dai",99.99);
+	acc->calculate();
+	deque<Account> account;
+
+	account.emplace_back("dai", 99.99);//根据容器的类型的构造函数初始化一个对象，并压入容器中
+	account.push_back(*acc);//直接将对象压入容器中
+
+	for (auto & c : account)
+	{
+		cout << c.getAmount() << endl;
+	}
+}
+
+void test926()
+{
+	int ia[] = { 0,1,1,2,3,5,8,13,21,55,89 };
+	vector<int> ji(begin(ia), end(ia));
+	list<int>ou(begin(ia), end(ia));
+
+	auto jiiter = ji.begin();
+
+	while (jiiter != ji.end())
+	{
+		if (!(*jiiter % 2))
+		{
+			jiiter = ji.erase(jiiter);//删除当前元素后，返回指向原元素的指针
+		}
+		else 
+		{
+			jiiter++;
+		}
+	}
+
+	auto ouiter = ou.begin();
+	while (ouiter != ou.end()) 
+	{
+		if (*ouiter % 2)
+		{
+			ouiter = ou.erase(ouiter);
+		}
+		else 
+		{
+			ouiter++;
+		}
+	}
+
+	for (const auto &c : ji)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+
+	for (const auto &c : ou)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+}
+
+void test927()
+{
+	forward_list<int> f_list{ 0,1,2,3,4,5,6,7,8,9 };
+	auto pre = f_list.before_begin();
+	auto cur = f_list.begin();
+	
+	while (cur != f_list.end())
+	{
+		if (!(*cur % 2))
+		{
+			cur = f_list.erase_after(pre);
+		}
+		else
+		{
+			pre++;
+			cur++;
+		}
+	}
+
+	for (const auto& c : f_list)
+	{
+		cout << c;
+	}
+	cout << endl;
 }
 
 int main(int argc, char** argv)
@@ -465,7 +646,12 @@ int main(int argc, char** argv)
 	//ifstream_8_1(argc,argv);
 	//stringstream_test();
 	//容器
-	v_test();
+	//list_to_vector();
+	//swap_test();
+	//insert_test();
+	//emplace_test();
+	//test926();
+	test927();
 
 	system("pause");
 	return 0;
