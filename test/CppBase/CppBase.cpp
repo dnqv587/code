@@ -598,7 +598,7 @@ void test926()
 	cout << endl;
 }
 
-void test927()
+void forward_list_erase_after927()
 {
 	forward_list<int> f_list{ 0,1,2,3,4,5,6,7,8,9 };
 	auto pre = f_list.before_begin();
@@ -612,8 +612,10 @@ void test927()
 		}
 		else
 		{
-			pre++;
-			cur++;
+			++pre;
+			//advance(pre, 1);
+			++cur;
+			//advance(cur, 1);
 		}
 	}
 
@@ -622,6 +624,21 @@ void test927()
 		cout << c;
 	}
 	cout << endl;
+}
+
+void char_to_string941()
+{
+	vector<char> c{ 'h','e','l','l','o' };
+	string s(c.begin(),c.end());
+
+	cout << s << endl;
+}
+
+void string_test()
+{
+	string ss{"hello"};
+	ss.insert(ss.size(), 2, '!');//在末尾处插入两个！
+	ss.erase(ss.size() - 1, 1);//删除最后一个字符
 }
 
 int main(int argc, char** argv)
@@ -651,7 +668,10 @@ int main(int argc, char** argv)
 	//insert_test();
 	//emplace_test();
 	//test926();
-	test927();
+	//forward_list_erase_after927();
+	//字符串操作
+	char_to_string941();
+	string_test();
 
 	system("pause");
 	return 0;
