@@ -634,12 +634,47 @@ void char_to_string941()
 	cout << s << endl;
 }
 
-void string_test()
+//查找并替换
+void string_test946()
 {
-	string ss{"hello"};
-	ss.insert(ss.size(), 2, '!');//在末尾处插入两个！
-	ss.erase(ss.size() - 1, 1);//删除最后一个字符
+	string ss{ "bbaabbabbab" };
+	string n = "ab";
+	bool flag;
+	int count = 0;
+
+	for (auto iter = ss.begin(); iter != ss.end()-n.size()+1; ++iter)
+	{
+		auto p = iter;
+		if (*iter == *n.begin() )
+		{
+			flag = true;
+			
+			for (auto iiter = n.begin()+1; iiter != n.end(); ++iiter)
+			{
+				if (*++p != *iiter)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag)
+			{
+				//943
+				//ss.erase(count, n.size());
+				//ss.insert(iter, '2');
+				//ss.insert(iter, '2');
+				//944
+				ss.replace(iter, iter + n.size(), "22");
+			}
+		}
+		++count;
+	}
+
+	cout << ss << endl;
+
 }
+
+
 
 int main(int argc, char** argv)
 {
@@ -670,8 +705,8 @@ int main(int argc, char** argv)
 	//test926();
 	//forward_list_erase_after927();
 	//字符串操作
-	char_to_string941();
-	string_test();
+	//char_to_string941();
+	string_test946();
 
 	system("pause");
 	return 0;
