@@ -150,6 +150,7 @@
     <ClCompile Include="..\protobuf\service.pb.cc" />
     <ClCompile Include="..\Request.cpp" />
     <ClCompile Include="..\Response.cpp" />
+    <ClCompile Include="..\shm.cpp" />
     <ClCompile Include="..\TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="..\protobuf\service.pb.h" />
     <ClInclude Include="..\Request.h" />
     <ClInclude Include="..\Response.h" />
+    <ClInclude Include="..\shm.h" />
     <ClInclude Include="..\TcpSocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
