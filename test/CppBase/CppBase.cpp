@@ -674,7 +674,65 @@ void string_test946()
 
 }
 
+//分类数字字符和字母字符
+void string_find_test947()
+{
+	string text = "ab2c3d7R4E6",numtext="0123456789";
+	string num, alb;
+	string::size_type pos = 0;
+	while ((pos = text.find_first_of(numtext, pos)) != string::npos)
+	{
+		num.push_back(text[pos]);
+		++pos;
+	}
+	pos = 0;
+	for (pos = 0; (pos = text.find_first_not_of(numtext, pos)) != string::npos; ++pos)
+	{
+		alb.push_back(text[pos]);
+	}
+	cout << num << endl;
+	cout << alb << endl;
+}
 
+//表达式运算----未完成
+void stack_test952()
+{ 
+	stack<char>iner;
+	stack<char>final;
+	string expr = "(1+2)*3+(2+3)";
+	string num;
+	bool flag = false;
+
+	for (auto iter = expr.cbegin(); iter != expr.cend(); ++iter)
+	{
+		flag = false;
+		if (*iter == '(')
+		{
+			flag = true;
+			iner.push(*iter);
+		}
+		if (*iter == ')')
+		{
+			flag = true;
+			while (!iner.empty())
+			{
+				if (iner.top() != '(' && iner.top() != ')')
+				{
+					num.push_back(iner.top());
+					iner.pop();
+				}
+			}
+		}
+	}
+
+}
+
+void count_test101()
+{
+	vector<int> vec = { 1,2,3,4,5,6,7,8,9,1,2,1,1,2,2,3,3,4 };
+	cout << count(vec.cbegin(), vec.cend(), 1) << endl;
+
+}
 
 int main(int argc, char** argv)
 {
@@ -706,8 +764,11 @@ int main(int argc, char** argv)
 	//forward_list_erase_after927();
 	//字符串操作
 	//char_to_string941();
-	string_test946();
-
+	//string_test946();
+	//string_find_test947();
+	//stack_test952();
+	//泛型算法
+	//count_test101();
 	system("pause");
 	return 0;
 }

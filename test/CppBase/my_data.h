@@ -16,7 +16,8 @@
 #include <assert.h>
 #include<fstream>
 #include <sstream>
-
+#include <stack>
+#include <algorithm>
 
 
 struct personInfo
