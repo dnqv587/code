@@ -1,4 +1,4 @@
-#include "TcpSocket.h"
+ï»¿#include "TcpSocket.h"
 
 TcpSocket::TcpSocket()
 {
@@ -55,7 +55,9 @@ int TcpSocket::TcpConnect(string ip, unsigned short port, int timeout /*= TIMEOU
 #else
 	inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr);
 #endif
-	connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+	//connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+
+	connectTimeout(&addr, timeout);
 }
 
 int TcpSocket::setBlock(int fd)
@@ -64,7 +66,7 @@ int TcpSocket::setBlock(int fd)
 
 #ifdef WIN32
 	unsigned long ul = 0;
-	ret = ioctlsocket(fd, FIONBIO, &ul); //ÉèÖÃÎª×èÈûÄ£Ê½
+	ret = ioctlsocket(fd, FIONBIO, &ul); //è®¾ç½®ä¸ºé˜»å¡æ¨¡å¼
 
 #else
 	int flags = fcntl(fd, F_GETFL);
@@ -85,7 +87,7 @@ int TcpSocket::setNonBlock(int fd)
 
 #ifdef WIN32
 	unsigned long ul = 1;
-	ret = ioctlsocket(fd, FIONBIO, &ul); //ÉèÖÃÎª·Ç×èÈûÄ£Ê½
+	ret = ioctlsocket(fd, FIONBIO, &ul); //è®¾ç½®ä¸ºéé˜»å¡æ¨¡å¼
 
 #else
 	int flags = fcntl(fd, F_GETFL);
@@ -115,8 +117,8 @@ int TcpSocket::sendTimeout(size_t timeout /*= TIMEOUT*/)
 		do
 		{
 			ret = select(m_sock + 1, &read_fdset, NULL, NULL, &timeoutVal);
-		} while (ret < 0 && errno == EINTR);//±»ĞÅºÅ´ò¶Ï£¬¼ÌĞø
-		if (ret == 0)//¶ÁÊÂ¼ş³¬Ê±
+		} while (ret < 0 && errno == EINTR);//è¢«ä¿¡å·æ‰“æ–­ï¼Œç»§ç»­
+		if (ret == 0)//è¯»äº‹ä»¶è¶…æ—¶
 		{
 			ret = -1;
 			errno = ETIMEDOUT;
@@ -140,8 +142,8 @@ int TcpSocket::recvTimeout(size_t timeout /*= TIMEOUT*/)
 		do
 		{
 			ret = select(m_sock + 1, NULL, &recv_fdset, NULL, &timeoutVal);
-		} while (ret < 0 && errno == EINTR);//±»ĞÅºÅ´ò¶Ï£¬¼ÌĞø
-		if (ret == 0)//¶ÁÊÂ¼ş³¬Ê±
+		} while (ret < 0 && errno == EINTR);//è¢«ä¿¡å·æ‰“æ–­ï¼Œç»§ç»­
+		if (ret == 0)//è¯»äº‹ä»¶è¶…æ—¶
 		{
 			ret = -1;
 			errno = ETIMEDOUT;
@@ -157,11 +159,11 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 
 	if (timeout > 0)
 	{
-		setNonBlock(m_sock);	// ÉèÖÃ·Ç×èÈûIO
+		setNonBlock(m_sock);	// è®¾ç½®éé˜»å¡IO
 	}
 
 	ret = connect(m_sock, (struct sockaddr*)addr, addrlen);
-	// ·Ç×èÈûÄ£Ê½Á¬½Ó, ·µ»Ø-1, ²¢ÇÒerrnoÎªEINPROGRESS, ±íÊ¾Á¬½ÓÕıÔÚ½øĞĞÖĞ
+	// éé˜»å¡æ¨¡å¼è¿æ¥, è¿”å›-1, å¹¶ä¸”errnoä¸ºEINPROGRESS, è¡¨ç¤ºè¿æ¥æ­£åœ¨è¿›è¡Œä¸­
 	if (ret < 0 && errno == EINPROGRESS)
 	{
 		fd_set connect_fdset;
@@ -172,13 +174,13 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 		timeoutVal.tv_usec = 0;
 		do
 		{
-			// Ò»µ«Á¬½Ó½¨Á¢£¬ÔòÌ×½Ó×Ö¾Í¿ÉĞ´ ËùÒÔconnect_fdset·ÅÔÚÁËĞ´¼¯ºÏÖĞ
+			// ä¸€ä½†è¿æ¥å»ºç«‹ï¼Œåˆ™å¥—æ¥å­—å°±å¯å†™ æ‰€ä»¥connect_fdsetæ”¾åœ¨äº†å†™é›†åˆä¸­
 			ret = select(m_sock + 1, NULL, &connect_fdset, NULL, &timeoutVal);
 		} while (ret < 0 && errno == EINTR);
 
 		if (ret == 0)
 		{
-			// ³¬Ê±
+			// è¶…æ—¶
 			ret = -1;
 			errno = ETIMEDOUT;
 		}
@@ -188,8 +190,8 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 		}
 		else if (ret == 1)
 		{
-			/* ret·µ»ØÎª1£¨±íÊ¾Ì×½Ó×Ö¿ÉĞ´£©£¬¿ÉÄÜÓĞÁ½ÖÖÇé¿ö£¬Ò»ÖÖÊÇÁ¬½Ó½¨Á¢³É¹¦£¬Ò»ÖÖÊÇÌ×½Ó×Ö²úÉú´íÎó£¬*/
-			/* ´ËÊ±´íÎóĞÅÏ¢²»»á±£´æÖÁerrno±äÁ¿ÖĞ£¬Òò´Ë£¬ĞèÒªµ÷ÓÃgetsockoptÀ´»ñÈ¡¡£ */
+			/* retè¿”å›ä¸º1ï¼ˆè¡¨ç¤ºå¥—æ¥å­—å¯å†™ï¼‰ï¼Œå¯èƒ½æœ‰ä¸¤ç§æƒ…å†µï¼Œä¸€ç§æ˜¯è¿æ¥å»ºç«‹æˆåŠŸï¼Œä¸€ç§æ˜¯å¥—æ¥å­—äº§ç”Ÿé”™è¯¯ï¼Œ*/
+			/* æ­¤æ—¶é”™è¯¯ä¿¡æ¯ä¸ä¼šä¿å­˜è‡³errnoå˜é‡ä¸­ï¼Œå› æ­¤ï¼Œéœ€è¦è°ƒç”¨getsockoptæ¥è·å–ã€‚ */
 			char err;
 			socklen_t sockLen = sizeof(err);
 			int sockoptret = getsockopt(m_sock, SOL_SOCKET, SO_ERROR, &err, &sockLen);
@@ -199,11 +201,11 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 			}
 			if (err == 0)
 			{
-				ret = 0;	// ³É¹¦½¨Á¢Á¬½Ó
+				ret = 0;	// æˆåŠŸå»ºç«‹è¿æ¥
 			}
 			else
 			{
-				// Á¬½ÓÊ§°Ü
+				// è¿æ¥å¤±è´¥
 				errno = err;
 				ret = -1;
 			}
@@ -211,7 +213,7 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 	}
 	if (timeout > 0)
 	{
-		setBlock(m_sock);	// Ì×½Ó×ÖÉèÖÃ»Ø×èÈûÄ£Ê½
+		setBlock(m_sock);	// å¥—æ¥å­—è®¾ç½®å›é˜»å¡æ¨¡å¼
 	}
 	return ret;
 }
