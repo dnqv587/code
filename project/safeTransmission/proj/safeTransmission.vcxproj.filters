@@ -31,6 +31,12 @@
     <Filter Include="源文件\shm">
       <UniqueIdentifier>{8def584c-12fa-40ee-8c22-66feb65b4f13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Crypto">
+      <UniqueIdentifier>{49f393dc-ff62-434f-9c02-eeebd8fd43c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Crypto">
+      <UniqueIdentifier>{32a4fb84-b96c-4e00-9891-3a9641bf5b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -63,6 +69,9 @@
     <ClCompile Include="..\shm.cpp">
       <Filter>源文件\shm</Filter>
     </ClCompile>
+    <ClCompile Include="Hash.cpp">
+      <Filter>源文件\Crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf\client.pb.h">
@@ -85,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\shm.h">
       <Filter>头文件\shm</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash.h">
+      <Filter>头文件\Crypto</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

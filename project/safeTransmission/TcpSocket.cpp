@@ -57,7 +57,7 @@ int TcpSocket::TcpConnect(string ip, unsigned short port, int timeout /*= TIMEOU
 #endif
 	//connect(fd, (struct sockaddr*)&addr, sizeof(addr));
 
-	connectTimeout(&addr, timeout);
+	return connectTimeout(&addr, timeout);
 }
 
 int TcpSocket::setBlock(int fd)
@@ -111,12 +111,12 @@ int TcpSocket::sendTimeout(size_t timeout /*= TIMEOUT*/)
 		timeoutVal.tv_sec = timeout;
 		timeoutVal.tv_usec = 0;
 
-		fd_set read_fdset;
-		FD_ZERO(&read_fdset);
-		FD_SET(m_sock, &read_fdset);
+		fd_set send_fdset;
+		FD_ZERO(&send_fdset);
+		FD_SET(m_sock, &send_fdset);
 		do
 		{
-			ret = select(m_sock + 1, &read_fdset, NULL, NULL, &timeoutVal);
+			ret = select(m_sock + 1,NULL , &send_fdset, NULL, &timeoutVal);
 		} while (ret < 0 && errno == EINTR);//被信号打断，继续
 		if (ret == 0)//读事件超时
 		{
@@ -141,7 +141,7 @@ int TcpSocket::recvTimeout(size_t timeout /*= TIMEOUT*/)
 		FD_SET(m_sock, &recv_fdset);
 		do
 		{
-			ret = select(m_sock + 1, NULL, &recv_fdset, NULL, &timeoutVal);
+			ret = select(m_sock + 1, &recv_fdset,NULL , NULL, &timeoutVal);
 		} while (ret < 0 && errno == EINTR);//被信号打断，继续
 		if (ret == 0)//读事件超时
 		{
