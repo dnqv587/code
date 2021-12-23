@@ -25,6 +25,12 @@
     <Filter Include="源文件\protobuf">
       <UniqueIdentifier>{204361bd-09e4-4fa3-8a2b-bb72769659f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\shm">
+      <UniqueIdentifier>{52bb1241-30c6-4216-a229-d8930de3b19c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\shm">
+      <UniqueIdentifier>{8def584c-12fa-40ee-8c22-66feb65b4f13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">
@@ -54,6 +60,9 @@
     <ClCompile Include="..\TcpSocket.cpp">
       <Filter>源文件\TcpSocket</Filter>
     </ClCompile>
+    <ClCompile Include="..\shm.cpp">
+      <Filter>源文件\shm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf\client.pb.h">
@@ -73,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="..\TcpSocket.h">
       <Filter>头文件\TcpSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shm.h">
+      <Filter>头文件\shm</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
