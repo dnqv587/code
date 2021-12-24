@@ -727,10 +727,20 @@ void stack_test952()
 
 }
 
-void count_test101()
+void algo_test101()
 {
 	vector<int> vec = { 1,2,3,4,5,6,7,8,9,1,2,1,1,2,2,3,3,4 };
-	cout << count(vec.cbegin(), vec.cend(), 1) << endl;
+
+	vector<double>dob = { 3.14,2.718 };
+
+	char equal1[10] = "123456789";
+	char equal2[10] = "123456789";
+
+	cout << "count:" << count(vec.cbegin(), vec.cend(), 1) << endl;
+
+	cout << "accumulate:" << accumulate(dob.cbegin(), dob.cend(), 0) << endl;//初始值类型为int则double元素相加和的小数会被丢弃
+
+	cout << "equal:" << equal(begin(equal1), end(equal1), begin(equal2)) << endl;
 
 }
 
@@ -768,7 +778,7 @@ int main(int argc, char** argv)
 	//string_find_test947();
 	//stack_test952();
 	//泛型算法
-	//count_test101();
+	algo_test101();
 	system("pause");
 	return 0;
 }

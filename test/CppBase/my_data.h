@@ -18,6 +18,7 @@
 #include <sstream>
 #include <stack>
 #include <algorithm>
+#include <numeric>
 
 
 struct personInfo
