@@ -744,6 +744,46 @@ void algo_test101()
 
 }
 
+void elimDups109()
+{
+	vector<string> svec = { "the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle" };
+	sort(svec.begin(), svec.end());
+	auto end_unique = unique(svec.begin(), svec.end());
+
+	for (const auto & c : svec)
+	{
+		cout << c<<" " ;
+	}
+	cout << endl;
+
+	svec.erase(end_unique, svec.end());
+
+	for (const auto & c : svec)
+	{
+		cout << c<<" ";
+	}
+	cout << endl;
+}
+
+
+bool isFive(const string &s)
+{
+	return s.size() >= 5;
+}
+void partition1013()
+{
+	vector<string> svec = { "the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle" };
+	//auto end_partition = partition(svec.begin(), svec.end(), isFive);
+
+	auto end_partition = partition(svec.begin(), svec.end(), [](const string &s) {return s.size() >= 5; });//lambda写法
+	
+	for (auto iter = svec.begin(); iter != end_partition; ++iter)
+	{
+		cout << *iter << " ";
+	}
+	cout << endl;
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -778,7 +818,10 @@ int main(int argc, char** argv)
 	//string_find_test947();
 	//stack_test952();
 	//泛型算法
-	algo_test101();
+	//algo_test101();
+	//elimDups109();
+	partition1013();
+
 	system("pause");
 	return 0;
 }
