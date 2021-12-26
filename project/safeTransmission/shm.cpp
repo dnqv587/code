@@ -1,5 +1,5 @@
 #include "shm.h"
-
+#ifdef linux
 using namespace std;
 
 BaseShm::BaseShm(int key)
@@ -133,7 +133,7 @@ int SecKeyShm::shmWrite(NodeSHMInfo* pNodeInfo)
 	return ret;
 }
 
-int SecKeyShm::shmRead(string clientID, string serverID, NodeSHMInfo pNodeInfo)
+NodeSHMInfo SecKeyShm::shmRead(string clientID, string serverID)
 {
 	int ret = 0;
 	// 关联共享内存
@@ -175,3 +175,4 @@ int SecKeyShm::shmRead(string clientID, string serverID, NodeSHMInfo pNodeInfo)
 	unmapShm();
 	return info;
 }
+#endif 

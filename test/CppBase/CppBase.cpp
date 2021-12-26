@@ -820,7 +820,7 @@ int main(int argc, char** argv)
 	//泛型算法
 	//algo_test101();
 	//elimDups109();
-	partition1013();
+	//partition1013();
 
 	system("pause");
 	return 0;

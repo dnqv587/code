@@ -4,9 +4,20 @@
 #include "Response.h"
 #include "Factory.h"
 #include "TcpSocket.h"
+#include "Rsa.h"
+#include "Aes.h"
+#include "Hash.h"
 
-#include <openssl/aes.h>
+#include <json/json.h>
+#include <fstream>;
+
 using namespace std;
+using namespace Json;
+
+extern "C"
+{
+#include <openssl/applink.c>
+}
 
 //编码
 string encodeMsg(Codec* codec)//父类指针指向子类对象
@@ -95,6 +106,105 @@ void aestest()
 
 }
 
+void rsaclass()
+{
+	RsaCrypto* rsa = new RsaCrypto;
+
+	//rsa->generateRsaKey(4096);
+
+	rsa->openRsaKey();
+	string str = "123456789";
+	string encode=rsa->rsaPubKeyEncrypt(str);
+	cout << rsa->rsaPriKeyDecrypt(encode) << endl;
+
+	string sh = rsa->rsaSign(str, Type_SHA256);
+	cout<<rsa->rsaVerify("123456789", sh, Type_SHA256)<<endl;
+}
+
+void aesclass()
+{
+	AesCrypto* aes = new AesCrypto("1234567891234567");
+	string code = aes->aesCBCEncrypt("123456789111111111111111111111");
+	cout << aes->aesCBCDecrypt(code) << endl;
+}
+
+void hashclass()
+{
+	Hash* hash = new Hash(Hash_MD5);
+	hash->updateData("123456789");
+	cout << hash->finalData() << endl;
+}
+
+void jsonwrite()
+{
+	//[12, 13.45, "hello, world", true, false, [1,2,"aa"], {"a":"b"}]
+	//组织数据->放入Value对象中
+	Value json;//最外层的json数组
+	//json数组添加元素
+	json.append(12);//隐式类型转换->json.append(Value(12));
+	json.append(13.45);
+	json.append("hello,world");
+	json.append(true);
+	json.append(false);
+	//创建数组
+	Value sub;
+	sub.append(1);
+	sub.append(2);
+	sub.append("aa");
+	json.append(sub);//往json数组添加sub数组
+	//创建object对象->在value中
+	Value obj;
+	obj["a"] = "b";
+	json.append(obj);
+	//将value对象格式化->string 
+	//string jsonText = json.toStyledString();
+	FastWriter w;
+	string jsonText = w.write(json);
+	//写磁盘文件
+	ofstream ofs("test.json");
+	ofs << jsonText;
+	ofs.close();
+}
+
+void jsonread()
+{
+	//打开磁盘文件
+	ifstream ifs("test.json");
+	Reader r;
+	Value json;
+	//读取json数据
+	r.parse(ifs, json);
+	if (json.isArray())//如果是数组
+	{
+		//遍历数组
+		for (int i = 0; i < json.size(); ++i)
+		{
+			Value sub = json[i];
+			if (sub.isInt())
+			{
+				cout << sub.asInt() << " ";
+			}
+			else if (sub.isString())
+			{
+				cout << sub.asString() << " ";
+			}
+			else if (sub.isDouble())
+			{
+				cout << sub.asDouble() << " ";
+			}
+			else if (sub.isBool())
+			{
+				cout << sub.asBool() << " ";
+			}
+			else if (sub.isObject())
+			{
+				cout << sub["a"].asString() << endl;
+			}
+		}
+	}
+
+}
+
 int main(int argc, char* argv[])
 {
 #ifdef WIN32
@@ -113,7 +223,12 @@ int main(int argc, char* argv[])
 	//test();
 	//tcptest();
 
-	aestest();
+	//aestest();
+	//rsaclass();
+	//aesclass();
+	//hashclass();
+	//jsonwrite();
+	jsonread();
 
 	system("pause");
 	return 0;

@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;PROTOBUF_USE_DLLS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\Study\program\code\project\safeTransmission\openssl\include;E:\Study\program\code\project\safeTransmission\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -142,27 +142,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Aes.cpp" />
     <ClCompile Include="..\Codec.cpp" />
     <ClCompile Include="..\Factory.cpp" />
     <ClCompile Include="..\Factory.h" />
+    <ClCompile Include="..\Hash.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\protobuf\client.pb.cc" />
     <ClCompile Include="..\protobuf\service.pb.cc" />
     <ClCompile Include="..\Request.cpp" />
     <ClCompile Include="..\Response.cpp" />
+    <ClCompile Include="..\Rsa.cpp" />
     <ClCompile Include="..\shm.cpp" />
     <ClCompile Include="..\TcpSocket.cpp" />
-    <ClCompile Include="Hash.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Aes.h" />
     <ClInclude Include="..\Codec.h" />
+    <ClInclude Include="..\Hash.h" />
     <ClInclude Include="..\protobuf\client.pb.h" />
     <ClInclude Include="..\protobuf\service.pb.h" />
     <ClInclude Include="..\Request.h" />
     <ClInclude Include="..\Response.h" />
+    <ClInclude Include="..\Rsa.h" />
     <ClInclude Include="..\shm.h" />
     <ClInclude Include="..\TcpSocket.h" />
-    <ClInclude Include="Hash.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

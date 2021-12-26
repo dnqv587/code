@@ -24,6 +24,16 @@ public:
 
 	void updateData(string data);//添加数据
 
+	string finalData();//生成hash
+
+private:
+	string md5Result();
+	string sha1Result();
+	string sha224Result();
+	string sha256Result();
+	string sha384Result();
+	string sha512Result();
+
 private:
 	HashType m_type;
 

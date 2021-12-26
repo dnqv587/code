@@ -1,12 +1,9 @@
 #pragma once
+#ifdef linux
 #include <iostream>
-
-#ifdef WIN32
-#include <Windows.h>
-#else
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#endif
+
 
 using namespace std;
 
@@ -15,9 +12,9 @@ class NodeSHMInfo
 public:
 	NodeSHMInfo() : status(0), seckeyID(0)
 	{
-		bzero(clientID, sizeof(clientID));
-		bzero(serverID, sizeof(serverID));
-		bzero(seckey, sizeof(seckey));
+		memset(clientID, 0x00, sizeof(clientID));
+		memset(serverID, 0x00, sizeof(serverID));
+		memset(seckey, 0x00, sizeof(seckey));
 	}
 	int status;		// 秘钥状态: 1可用, 0:不可用
 	int seckeyID;	// 秘钥的编号
@@ -59,19 +56,20 @@ private:
 };
 
 
-class SecKeyShm:public BaseShm
+class SecKeyShm :public BaseShm
 {
 public:
 
-	SecKeyShm(int key,int maxNode);
+	SecKeyShm(int key, int maxNode);
 	SecKeyShm(string path, int maxNode);
 
 	~SecKeyShm();
 
 	int shmWrite(NodeSHMInfo* pNodeInfo);
 
-	int shmRead(string clientID, string serverID, NodeSHMInfo pNodeInfo);
+	NodeSHMInfo shmRead(string clientID, string serverID);
 
 private:
 	int m_maxNode;
 };
+#endif
