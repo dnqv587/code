@@ -147,7 +147,7 @@
     <ClCompile Include="..\Factory.cpp" />
     <ClCompile Include="..\Factory.h" />
     <ClCompile Include="..\Hash.cpp" />
-    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\test.cpp" />
     <ClCompile Include="..\protobuf\client.pb.cc" />
     <ClCompile Include="..\protobuf\service.pb.cc" />
     <ClCompile Include="..\Request.cpp" />
