@@ -776,14 +776,25 @@ void partition1013()
 	//auto end_partition = partition(svec.begin(), svec.end(), isFive);
 
 	auto end_partition = partition(svec.begin(), svec.end(), [](const string &s) {return s.size() >= 5; });//lambda写法
+
+	int count = count_if(svec.begin(), svec.end(), [](string s) {return s.size() >= 5; });
 	
 	for (auto iter = svec.begin(); iter != end_partition; ++iter)
 	{
 		cout << *iter << " ";
 	}
 	cout << endl;
+
+	cout << count << endl;
 }
 
+//小写转大写
+void upper_test()
+{
+	string ss = "abcdefgz";
+	transform(ss.begin(), ss.end(), ss.begin(), [](char s) {return s >= 'a' || s <= 'z' ? s - 32 : s; });
+	cout << ss << endl;
+}
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -820,7 +831,9 @@ int main(int argc, char** argv)
 	//泛型算法
 	//algo_test101();
 	//elimDups109();
-	//partition1013();
+	partition1013();
+	//upper_test();
+	
 
 	system("pause");
 	return 0;
