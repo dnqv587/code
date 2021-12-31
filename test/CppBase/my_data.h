@@ -19,7 +19,7 @@
 #include <stack>
 #include <algorithm>
 #include <numeric>
-
+#include <functional>
 
 struct personInfo
 {

@@ -4,6 +4,8 @@
 
 
 using namespace std;
+using namespace std::placeholders;
+
 void for_and_vector()
 {
 	string s;
@@ -765,7 +767,6 @@ void elimDups109()
 	cout << endl;
 }
 
-
 bool isFive(const string &s)
 {
 	return s.size() >= 5;
@@ -777,7 +778,8 @@ void partition1013()
 
 	auto end_partition = partition(svec.begin(), svec.end(), [](const string &s) {return s.size() >= 5; });//lambda写法
 
-	int count = count_if(svec.begin(), svec.end(), [](string s) {return s.size() >= 5; });
+	//int count = count_if(svec.begin(), svec.end(), [](string s) {return s.size() >= 5; });
+	int count = count_if(svec.begin(), svec.end(), bind(isFive, _1));
 	
 	for (auto iter = svec.begin(); iter != end_partition; ++iter)
 	{
@@ -795,6 +797,92 @@ void upper_test()
 	transform(ss.begin(), ss.end(), ss.begin(), [](char s) {return s >= 'a' || s <= 'z' ? s - 32 : s; });
 	cout << ss << endl;
 }
+
+void unique_copy_test1027()
+{
+	list<string> copy(10);//注意list要分配空间，否则没有地方拷贝，程序core掉
+	vector<string> str = { "the", "quick", "red", "fox", "jumps", "over", "the", "slow", "red", "turtle" };
+	sort(str.begin(), str.end());
+	auto unique_end = unique_copy(str.begin(), str.end(), copy.begin());
+
+	for (auto c : copy)
+	{
+		cout << c <<" ";
+	}
+	cout << endl;
+	for (auto c : str)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+
+	//for (auto iter = str.begin(); iter != unique_end; ++iter)
+	//{
+	//	cout << *iter << " ";
+	//}
+	cout << endl;
+}
+
+void text_string_test1029()
+{
+	ifstream in("test.txt");
+	vector<string> txt;
+
+	istream_iterator<string>in_iter(in);
+	istream_iterator<string> eof;
+	while (in_iter != eof)
+	{
+		txt.push_back(*in_iter++);
+	}
+	
+
+	for (auto c : txt)
+	{
+		cout << c << endl;
+	}
+
+	cout << txt[0] << endl;
+	
+	
+}
+
+//输入并进行排序后输出
+void iter_copy_sort1030()
+{
+	istream_iterator<int> in_iter(cin);
+	istream_iterator<int> eof;
+	ostream_iterator<int> out_iter(cout," ");
+	vector<int> vec;
+
+	while (in_iter != eof)
+	{
+		
+		vec.push_back(*in_iter++);
+	}
+	sort(vec.begin(), vec.end());
+
+	copy(vec.begin(), vec.end(), out_iter);
+
+	cout << endl;
+
+}
+
+void odd_even1033()
+{
+	ifstream in("test.txt");
+	ofstream out_odd("add.txt");
+	ofstream out_even("even.txt");
+
+	istream_iterator<int> in_iter(in);
+	istream_iterator<int> eof;
+	ostream_iterator<int> out_odd_iter(out_odd, " ");
+	ostream_iterator<int> out_even_iter(out_even, "\n");
+
+
+	for_each(in_iter, eof, [&](const int i) {(i % 2 ? out_odd_iter : out_even_iter)++ = i; });
+
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -831,9 +919,12 @@ int main(int argc, char** argv)
 	//泛型算法
 	//algo_test101();
 	//elimDups109();
-	partition1013();
+	//partition1013();
 	//upper_test();
-	
+	//unique_copy_test1027();
+	//text_string_test1029();
+	//iter_copy_sort1030();
+	//odd_even1033();
 
 	system("pause");
 	return 0;
