@@ -24,19 +24,111 @@ int TcpSocket::TcpSend(string sendMsg, size_t timeout )
 	int ret = sendTimeout(timeout);
 	if (ret == 0)
 	{
-		ret = send(m_sock, sendMsg.c_str(), sendMsg.length(), 0);
+
+		int writed = 0;
+		int dataLen = sendMsg.size() + 4;
+		// 添加的4字节作为数据头, 存储数据块长度
+		unsigned char* netdata = (unsigned char*)malloc(dataLen);
+		if (netdata == NULL)
+		{
+			ret = -1;
+			printf("func sckClient_send() mlloc Err:%d\n ", ret);
+			return ret;
+		}
+		// 转换为网络字节序
+		int netlen = htonl(sendMsg.size());
+		memcpy(netdata, &netlen, 4);
+		memcpy(netdata + 4, sendMsg.data(), sendMsg.size());
+
+		// 没问题返回发送的实际字节数, 应该 == 第二个参数: dataLen
+		// 失败返回: -1
+		writed = writen(netdata, dataLen);
+		if (writed < dataLen)	// 发送失败
+		{
+			if (netdata != NULL)
+			{
+				free(netdata);
+				netdata = NULL;
+			}
+			return writed;
+		}
+		// 释放内存
+		if (netdata != NULL)
+		{
+			free(netdata);
+			netdata = NULL;
+		}
 	}
+	else
+	{
+		//失败返回-1，超时返回-1并且errno = ETIMEDOUT
+		if (ret == -1 && errno == ETIMEDOUT)
+		{
+			ret = -1;
+			printf("func sckClient_send() mlloc Err:%d\n ", ret);
+		}
+	}
+
 	return ret;
 }
 
 string TcpSocket::TcpRecv( int timeout)
 {
-	string data;
 	int ret = recvTimeout(timeout);
-	if (ret == 0)
+	if (ret != 0)
 	{
-		int n = recv(m_sock, (char*)&data, 1024, 0);
+		if (ret == -1 || errno == ETIMEDOUT)
+		{
+			printf("readTimeout(timeout) err: TimeoutError \n");
+			return string();
+		}
+		else
+		{
+			printf("readTimeout(timeout) err: %d \n", ret);
+			return string();
+		}
 	}
+
+	int netdatalen = 0;
+	ret = readn(&netdatalen, 4); //读包头 4个字节
+	if (ret == -1)
+	{
+		printf("func readn() err:%d \n", ret);
+		return string();
+	}
+	else if (ret < 4)
+	{
+		printf("func readn() err peer closed:%d \n", ret);
+		return string();
+	}
+
+	int n = ntohl(netdatalen);
+	// 根据包头中记录的数据大小申请内存, 接收数据
+	char* tmpBuf = (char*)malloc(n + 1);
+	if (tmpBuf == NULL)
+	{
+		ret = -1;
+		printf("malloc() err \n");
+		return NULL;
+	}
+
+	ret = readn(tmpBuf, n); //根据长度读数据
+	if (ret == -1)
+	{
+		printf("func readn() err:%d \n", ret);
+		return string();
+	}
+	else if (ret < n)
+	{
+		printf("func readn() err peer closed:%d \n", ret);
+		return string();
+	}
+
+	tmpBuf[n] = '\0'; //多分配一个字节内容，兼容可见字符串 字符串的真实长度仍然为n
+	string data = string(tmpBuf);
+	// 释放内存
+	free(tmpBuf);
+
 	return data;
 }
 
@@ -97,7 +189,7 @@ int TcpSocket::setNonBlock(int fd)
 	}
 
 	flags |= O_NONBLOCK;
-	int ret = fcntl(fd, F_SETFL, flags);
+	ret = fcntl(fd, F_SETFL, flags);
 #endif
 	return ret;
 }
@@ -122,6 +214,10 @@ int TcpSocket::sendTimeout(size_t timeout /*= TIMEOUT*/)
 		{
 			ret = -1;
 			errno = ETIMEDOUT;
+		}
+		else
+		{
+			ret = 0;
 		}
 	}
 	return ret;
@@ -148,6 +244,8 @@ int TcpSocket::recvTimeout(size_t timeout /*= TIMEOUT*/)
 			ret = -1;
 			errno = ETIMEDOUT;
 		}
+		else
+			ret = 0;
 	}
 	return ret;
 }
@@ -218,6 +316,62 @@ int TcpSocket::connectTimeout(struct sockaddr_in *addr, size_t timeout /*= TIMEO
 	return ret;
 }
 
+int TcpSocket::writen(const void* buf, unsigned int len)
+{
+	size_t nleft = len;
+	ssize_t nwritten;
+	char* bufp = (char*)buf;
+
+	while (nleft > 0)
+	{
+		if ((nwritten = write(m_sock, bufp, nleft)) < 0)
+		{
+			if (errno == EINTR)	// 被信号打断
+			{
+				continue;
+			}
+			return -1;
+		}
+		else if (nwritten == 0)
+		{
+			continue;
+		}
+
+		bufp += nwritten;
+		nleft -= nwritten;
+}
+
+	return len;
+}
+
+int TcpSocket::readn(const void* buf, unsigned int len)
+{
+	size_t nleft = len;
+	ssize_t nread;
+	char* bufp = (char*)buf;
+
+	while (nleft > 0)
+	{
+		if ((nread = read(m_sock, bufp, nleft)) < 0)
+		{
+			if (errno == EINTR)
+			{
+				continue;
+			}
+			return -1;
+		}
+		else if (nread == 0)
+		{
+			return len - nleft;
+		}
+
+		bufp += nread;
+		nleft -= nread;
+}
+
+	return len;
+}
+
 TcpServer::TcpServer():m_listenFd(0),m_tcpScok(nullptr)
 {
 #ifdef WIN32
@@ -239,9 +393,9 @@ TcpServer::TcpServer():m_listenFd(0),m_tcpScok(nullptr)
 TcpServer::TcpServer(int port):m_listenFd(0), m_tcpScok(nullptr)
 {
 #ifdef WIN32
-	int m_listenFd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	m_listenFd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 #else
-	int m_listenFd = socket(PF_INET, SOCK_STREAM, 0);
+	m_listenFd = socket(PF_INET, SOCK_STREAM, 0);
 #endif
 
 	struct sockaddr_in addr;
@@ -306,6 +460,7 @@ TcpSocket* TcpClient::TcpConnectPoll(string ip, unsigned short port, int pollSiz
 TcpSocket* TcpClient::TcpConnect(string ip, unsigned short port, int timeout /*= TIMEOUT*/)
 {
 	m_tcpSock = new TcpSocket;
+	m_tcpSock->TcpConnect(ip, port, timeout);
 	if (m_tcpSock != NULL)
 	{
 		return m_tcpSock;

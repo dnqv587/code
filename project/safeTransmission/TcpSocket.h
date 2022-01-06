@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <string.h>
+#include <stdlib.h>
 
 #ifdef WIN32
 #include <WInSock2.h>
@@ -16,6 +18,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <ctype.h>
+#include <fcntl.h>
 #endif
 
 #define TIMEOUT 10000
@@ -47,6 +50,10 @@ private:
 	int recvTimeout(size_t timeout = TIMEOUT);
 	//连接超时检测
 	int connectTimeout(struct sockaddr_in *addr, size_t timeout = TIMEOUT);
+	//写数据
+	int writen(const void* buf, unsigned int len);
+	//读数据
+	int readn(const void* buf, unsigned int len);
 private:
 	int m_sock;
 };

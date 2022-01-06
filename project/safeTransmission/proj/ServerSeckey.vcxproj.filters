@@ -36,6 +36,15 @@
     <ClInclude Include="..\TcpSocket.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\serverOP.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protobuf\client.pb.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protobuf\service.pb.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Codec.cpp">
@@ -63,6 +72,18 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\smain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\serverOP.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf\service.pb.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf\client.pb.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Aes.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

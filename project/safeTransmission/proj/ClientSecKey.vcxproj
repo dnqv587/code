@@ -83,6 +83,8 @@
     <ClInclude Include="..\Codec.h" />
     <ClInclude Include="..\Factory.h" />
     <ClInclude Include="..\Hash.h" />
+    <ClInclude Include="..\protobuf\client.pb.h" />
+    <ClInclude Include="..\protobuf\service.pb.h" />
     <ClInclude Include="..\Request.h" />
     <ClInclude Include="..\Response.h" />
     <ClInclude Include="..\Rsa.h" />
@@ -96,6 +98,8 @@
     <ClCompile Include="..\Factory.cpp" />
     <ClCompile Include="..\Hash.cpp" />
     <ClCompile Include="..\cmain.cpp" />
+    <ClCompile Include="..\protobuf\client.pb.cc" />
+    <ClCompile Include="..\protobuf\service.pb.cc" />
     <ClCompile Include="..\Request.cpp" />
     <ClCompile Include="..\Response.cpp" />
     <ClCompile Include="..\Rsa.cpp" />
@@ -109,7 +113,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>crypto;protobuf;json;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>crypto;protobuf;jsoncpp;%(LibraryDependencies)</LibraryDependencies>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>

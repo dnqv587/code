@@ -188,7 +188,7 @@ std::string RsaCrypto::rsaSign(string data, Type type)
 
 bool RsaCrypto::rsaVerify(string data, string signData, Type type)
 {
-	int ret = RSA_verify(type, (const unsigned char*)data.c_str(), data.size(), (const unsigned char*)signData.c_str(), signData.size(), m_publicKey);
+	int ret = RSA_verify(type, (const unsigned char*)data.c_str(), data.size(), (const unsigned char*)signData.c_str(), RSA_size(m_publicKey), m_publicKey);
 	if (ret == 1)
 	{
 		return true;

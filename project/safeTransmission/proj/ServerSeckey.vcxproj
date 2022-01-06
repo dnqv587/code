@@ -74,29 +74,52 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>E:\Study\program\code\project\safeTransmission\openssl\include;E:\Study\program\code\project\safeTransmission\protobuf\include;E:\Study\program\code\project\safeTransmission\json\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\Aes.h" />
     <ClInclude Include="..\Codec.h" />
     <ClInclude Include="..\Factory.h" />
     <ClInclude Include="..\Hash.h" />
+    <ClInclude Include="..\protobuf\client.pb.h" />
+    <ClInclude Include="..\protobuf\service.pb.h" />
     <ClInclude Include="..\Request.h" />
     <ClInclude Include="..\Response.h" />
     <ClInclude Include="..\Rsa.h" />
+    <ClInclude Include="..\serverOP.h" />
     <ClInclude Include="..\shm.h" />
     <ClInclude Include="..\TcpSocket.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Aes.cpp" />
     <ClCompile Include="..\Codec.cpp" />
     <ClCompile Include="..\Factory.cpp" />
     <ClCompile Include="..\Hash.cpp" />
+    <ClCompile Include="..\protobuf\client.pb.cc" />
+    <ClCompile Include="..\protobuf\service.pb.cc" />
     <ClCompile Include="..\Request.cpp" />
     <ClCompile Include="..\Response.cpp" />
     <ClCompile Include="..\Rsa.cpp" />
+    <ClCompile Include="..\serverOP.cpp" />
     <ClCompile Include="..\shm.cpp" />
     <ClCompile Include="..\smain.cpp" />
     <ClCompile Include="..\TcpSocket.cpp" />
   </ItemGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>PROTOBUF_USE_DLLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>crypto;protobuf;jsoncpp;pthread;%(LibraryDependencies)</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PreprocessorDefinitions>linux</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

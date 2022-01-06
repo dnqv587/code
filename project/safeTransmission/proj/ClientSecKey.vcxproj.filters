@@ -39,6 +39,12 @@
     <ClInclude Include="..\clientOP.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\protobuf\client.pb.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protobuf\service.pb.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Aes.cpp">
@@ -72,6 +78,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\clientOP.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf\client.pb.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protobuf\service.pb.cc">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

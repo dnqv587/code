@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
+#include "TcpSocket.h"
 
 using namespace std;
 
@@ -41,6 +42,7 @@ private:
 	void analysisConf();
 
 private:
-
+	TcpClient* m_tcp;
+	TcpSocket* m_client;
 	clientConf m_conf;
 };

@@ -65,14 +65,24 @@ void test()
 
 void tcptest()
 {
-	TcpClient* client = new TcpClient;
-	TcpSocket* cfd = client->TcpConnectPoll("192.168.80.1", 8888, 10000);
-	cfd->TcpSend("hello!");
+	//TcpClient* client = new TcpClient;
+	//TcpSocket* cfd = client->TcpConnectPoll("192.168.80.1", 8888, 10000);
+	//cfd->TcpSend("hello!");
+	//while (1)
+	//{
+	//	cfd->TcpSend("hello!");
+	//	cfd->TcpRecv(10000);
+	//	//cout << cfd->get_data() << endl;
+	//}
+
+	TcpServer* server = new TcpServer(8888);
+	cout << "µÈ´ýÁ¬½Ó..." << endl;
+	TcpSocket* tcp = server->TcpCreate();
 	while (1)
 	{
-		cfd->TcpSend("hello!");
-		cfd->TcpRecv(10000);
-		//cout << cfd->get_data() << endl;
+		tcp->TcpSend("hello!");
+		string data = tcp->TcpRecv(10000);
+		cout << data << endl;
 	}
 }
 
@@ -221,14 +231,14 @@ int main(int argc, char* argv[])
 #endif
 
 	//test();
-	//tcptest();
+	tcptest();
 
 	//aestest();
 	//rsaclass();
 	//aesclass();
 	//hashclass();
 	//jsonwrite();
-	jsonread();
+	//jsonread();
 
 	system("pause");
 	return 0;

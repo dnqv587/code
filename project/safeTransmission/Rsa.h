@@ -3,7 +3,11 @@
 #include <string>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
+#ifdef linux
 #include <unistd.h>
+#else
+#include <direct.h>
+#endif
 
 
 
