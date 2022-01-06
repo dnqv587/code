@@ -883,6 +883,11 @@ void odd_even1033()
 
 }
 
+void list_algo_test()
+{
+
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -925,6 +930,7 @@ int main(int argc, char** argv)
 	//text_string_test1029();
 	//iter_copy_sort1030();
 	//odd_even1033();
+	list_algo_test();
 
 	system("pause");
 	return 0;
