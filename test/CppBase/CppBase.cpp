@@ -885,6 +885,50 @@ void odd_even1033()
 
 void list_algo_test()
 {
+	list<int> test{ 9,7,5,3,1,1,3,5,7,9 };
+	list<int> temp{ 8,6,4,2,2,4,6,8 };
+
+	test.sort();//排序
+	temp.sort();
+	test.unique();//删除重复
+	temp.unique();
+
+	test.merge(temp);//合并并排序---前提：两者都有序
+
+	test.reverse();//翻转
+	
+
+
+	for (auto c : test)
+	{
+		cout << c << endl;
+	}
+}
+
+void dici_test113()
+{
+	map<string, size_t>dici;
+	set<string> exclude{ "in","the","and","or" };
+	string str;
+	while (getline(cin, str))
+	{
+		if (str == "99")
+		{
+			break;
+		}
+		if (exclude.find(str) == exclude.end())
+		{
+			if (dici.find(str) == dici.end())
+			{
+				dici.insert(pair<string, size_t>(str, 1));
+			}
+			else
+			{
+				++dici[str];
+			}
+		}
+	}
+
 
 }
 
@@ -930,7 +974,10 @@ int main(int argc, char** argv)
 	//text_string_test1029();
 	//iter_copy_sort1030();
 	//odd_even1033();
-	list_algo_test();
+	//list_algo_test();
+	//关联容器
+	dici_test113();
+
 
 	system("pause");
 	return 0;
