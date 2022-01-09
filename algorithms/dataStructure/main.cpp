@@ -129,8 +129,8 @@ int main(int argc, char* argv[])
 {
 	
 	//arrayTest();
-	//linkListTest();
-	stackTest();
+	linkListTest();
+	//stackTest();
 
 	system("pause");
 }

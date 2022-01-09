@@ -4,12 +4,7 @@
 using namespace std;
 
 //单向链表
-template<class T>
-struct linkNode
-{
-	T data;//数据域
-	linkNode* next;//指针域---下一个节点指针
-};
+//template<class T>
 
 template<class T>
 class DLinkList
@@ -161,6 +156,14 @@ public:
 	}
 
 private:
+
+	template<class T>
+	struct linkNode
+	{
+		T data;//数据域
+		linkNode* next;//指针域---下一个节点指针
+	};
+
 	//定位前驱节点
 	linkNode<T>* locatePreNode(int pos)
 	{
@@ -171,6 +174,8 @@ private:
 		}
 		return curNode;
 	}
+
+
 
 
 private:
