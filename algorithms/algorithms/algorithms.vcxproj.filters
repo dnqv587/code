@@ -15,18 +15,4 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="linkList.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="array.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sqList.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sqStack.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{95220c71-8bf7-4e15-9214-32c12af9ca27}</ProjectGuid>
-    <RootNamespace>dataStructure</RootNamespace>
+    <ProjectGuid>{194ed3e0-a4c6-4c26-b22e-9dbc3edbc58b}</ProjectGuid>
+    <RootNamespace>algorithms</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -140,12 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="array.hpp" />
-    <ClInclude Include="sqList.hpp" />
-    <ClInclude Include="linkList.hpp" />
-    <ClInclude Include="sqStack.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
