@@ -141,6 +141,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\dataStructure\array.hpp" />
+    <ClInclude Include="..\dataStructure\linkList.hpp" />
+    <ClInclude Include="..\dataStructure\linkStack.hpp" />
+    <ClInclude Include="..\dataStructure\sqList.hpp" />
+    <ClInclude Include="..\dataStructure\sqStack.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

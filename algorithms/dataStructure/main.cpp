@@ -8,6 +8,7 @@
 #include "sqList.hpp"
 #include "linkList.hpp"
 #include "sqStack.hpp"
+#include "linkStack.hpp"
 
 using namespace std;
 
@@ -128,12 +129,34 @@ void stackTest()
 
 }
 
+void linkStackTest()
+{
+	DLinkStack<Person> test;
+	Person p1("abc", 1);
+	Person p2("测试", 2);
+	Person p3("haha", 3);
+
+	test.push(p1);
+	test.push(p2);
+	test.push(p3);
+
+	for (int i = 0; i < 3; ++i)
+	{
+		cout << test.top().m_name << test.top().m_age << endl;
+		test.pop();
+	}
+
+	
+
+}
+
 int main(int argc, char* argv[])
 {
 	
 	//arrayTest();
 	//linkListTest();
-	stackTest();
+	//stackTest();
+	linkStackTest();
 
 	system("pause");
 }

@@ -10,19 +10,12 @@ public:
 
 	DLinkStack():m_size(0)
 	{
-		m_base = new linkNode;
-		if (m_head == NULL)
-		{
-			cerr << "内存申请失败" << endl;
-			return;
-		}
-		m_top = m_base;
-
+		m_stack = nullptr;
 	}
 
 	~DLinkStack()
 	{
-		linkNode* curNode = m_base;
+		linkNode* curNode = m_stack;
 		linkNode* nextNode;
 		for (int i = 0; i < m_size; ++i)
 		{
@@ -33,22 +26,59 @@ public:
 		m_size = 0;
 	}
 
+	//入栈
 	void push(const T& val)
 	{
-		m_top->next = new linkNode;
-		m_top->next->data = val;
-		m_top = m_top->next;
+		linkNode* curNode = new linkNode;
+		curNode->data = val;
+		curNode->next = m_stack;
+		m_stack = curNode;
+
 		++m_size;
 
 	}
 
+	//出栈
 	void pop()
 	{
-		linkNode* preNode = m_base;
-		for (int i = 0; i < m_size; ++i)
+		if (m_size == NULL)
 		{
-			preNode = preNode->next;
+			return;
 		}
+
+		linkNode* preNode = m_stack->next;
+		delete m_stack;
+		m_stack = preNode;
+		--m_size;
+	}
+
+	//返回栈顶元素
+	T& top()
+	{
+		if (m_size == NULL)
+		{
+			cerr << "栈空" << endl;
+			T t;
+			return t;
+		}
+
+		return m_stack->data;
+	}
+
+	//栈大小
+	size_t size()
+	{
+		return m_size;
+	}
+
+	//栈是否为空
+	bool isEmpty()
+	{
+		if (m_size == NULL)
+		{
+			return true;
+		}
+		return false;
 	}
 
 private:
@@ -61,8 +91,7 @@ private:
 
 private:
 
-	linkNode* m_base;//栈底
-	linkNode* m_top;//栈顶
+	linkNode* m_stack;
 
 	size_t m_size;
 };

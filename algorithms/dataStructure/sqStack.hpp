@@ -31,7 +31,7 @@ public:
 	}
 
 	//入栈
-	void push(const T data)
+	void push(const T& val)
 	{
 		if (m_size >= m_capacity)
 		{
@@ -39,7 +39,7 @@ public:
 			return;
 		}
 
-		m_stack[m_size] = data;
+		m_stack[m_size] = val;
 		++m_size;
 
 	}
@@ -55,7 +55,7 @@ public:
 		--m_size;
 	}
 	//返回栈顶元素
-	T top()
+	T& top()
 	{
 		if (m_size == 0)
 		{
