@@ -1,7 +1,8 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 
 #include "array.hpp"
 #include "sqList.hpp"
@@ -51,7 +52,7 @@ void arrayTest()
 	DsqList<Person>arr3(*arr2);
 
 	Person p1("abc", 1);
-	Person p2("²âÊÔ", 2);
+	Person p2("æµ‹è¯•", 2);
 	Person p3("haha", 3);
 
 
@@ -84,7 +85,7 @@ void linkListTest()
 {
 	DLinkList<Person> link1;
 	Person p1("abc", 1);
-	Person p2("²âÊÔ", 2);
+	Person p2("æµ‹è¯•", 2);
 	Person p3("haha", 3);
 
 	link1.pushBack(p1);
@@ -110,7 +111,7 @@ void stackTest()
 {
 	DsqStack<Person>* test = new DsqStack<Person>(10);
 	Person p1("abc", 1);
-	Person p2("²âÊÔ", 2);
+	Person p2("æµ‹è¯•", 2);
 	Person p3("haha", 3);
 	
 	test->push(p1);
@@ -123,14 +124,16 @@ void stackTest()
 		test->pop();
 	}
 
+	cout << test->top().m_name << endl;
+
 }
 
 int main(int argc, char* argv[])
 {
 	
 	//arrayTest();
-	linkListTest();
-	//stackTest();
+	//linkListTest();
+	stackTest();
 
 	system("pause");
 }

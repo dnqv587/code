@@ -1,9 +1,9 @@
-#pragma once
+Ôªø#pragma once
 #include <iostream>
 
 using namespace std;
 
-//À≥–Ú’ª
+//È°∫Â∫èÊ†à
 template <class T>
 class DsqStack
 {
@@ -14,7 +14,7 @@ public:
 		m_stack = new T[m_capacity];
 		if (m_stack == NULL)
 		{
-			cerr << "ƒ⁄¥Ê…Í«Î ß∞‹" << endl;
+			cerr << "ÂÜÖÂ≠òÁî≥ËØ∑Â§±Ë¥•" << endl;
 			return;
 		}
 
@@ -30,12 +30,12 @@ public:
 		return m_stack[index];
 	}
 
-	//»Î’ª
+	//ÂÖ•Ê†à
 	void push(const T data)
 	{
 		if (m_size >= m_capacity)
 		{
-			cerr << "»›¡ø≤ª◊„" << endl;
+			cerr << "ÂÆπÈáè‰∏çË∂≥" << endl;
 			return;
 		}
 
@@ -44,34 +44,36 @@ public:
 
 	}
 
-	//≥ˆ’ª
+	//Âá∫Ê†à
 	void pop()
 	{
 		if (m_size == 0)
 		{
 			return;
 		}
-		//memset(m_stack[m_size - 1], NULL, sizeof(m_stack[0]));
+		//memset(m_stack[m_size - 1], 0, sizeof(T));
 		--m_size;
 	}
-	//∑µªÿ’ª∂•‘™Àÿ
+	//ËøîÂõûÊ†àÈ°∂ÂÖÉÁ¥†
 	T top()
 	{
-		if (m_size != 0)
+		if (m_size == 0)
 		{
-			return m_stack[m_size - 1];
+			cerr << "Ê†à‰∏∫Á©∫" << endl; 
+			T t;
+			return  t;
 		}
 		
-		cerr << "’ªŒ™ø’" << endl;
+		return m_stack[m_size - 1];
 	}
 
-	//∑µªÿ’ª¥Û–°
+	//ËøîÂõûÊ†àÂ§ßÂ∞è
 	unsigned int size()
 	{
 		return m_size;
 	}
 
-	//’ª «∑ÒŒ™ø’
+	//Ê†àÊòØÂê¶‰∏∫Á©∫
 	bool isEmpty()
 	{
 		if (m_size == 0)
@@ -86,8 +88,8 @@ public:
 
 private:
 
-	//T* m_base;//’ªµ◊
-	//T* m_top;//’ª∂•
+	//T* m_base;//Ê†àÂ∫ï
+	//T* m_top;//Ê†àÈ°∂
 
 	T* m_stack;
 

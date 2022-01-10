@@ -28,5 +28,8 @@
     <ClInclude Include="sqStack.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="linkStack.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
