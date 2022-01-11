@@ -146,6 +146,7 @@
     <ClInclude Include="linkStack.hpp" />
     <ClInclude Include="sqList.hpp" />
     <ClInclude Include="linkList.hpp" />
+    <ClInclude Include="sqQueue.hpp" />
     <ClInclude Include="sqStack.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
