@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.hpp" />
+    <ClInclude Include="linkQueue.hpp" />
     <ClInclude Include="linkStack.hpp" />
     <ClInclude Include="sqList.hpp" />
     <ClInclude Include="linkList.hpp" />

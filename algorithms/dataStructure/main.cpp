@@ -9,6 +9,8 @@
 #include "linkList.hpp"
 #include "sqStack.hpp"
 #include "linkStack.hpp"
+#include "sqQueue.hpp"
+#include "linkQueue.hpp"
 
 using namespace std;
 
@@ -150,13 +152,63 @@ void linkStackTest()
 
 }
 
+void sqQueueTest()
+{
+	DsqQueue<Person> test(4);
+	Person p1("abc", 1);
+	Person p2("测试", 2);
+	Person p3("haha", 3);
+
+	test.push(p1);
+	test.push(p2);
+	test.push(p3);
+
+	for (int i = 0; i < 3; ++i)
+	{
+		cout << test.front().m_name << test.front().m_age << endl;
+		test.pop();
+	}
+
+	test.push(p2);
+	cout << test.rear().m_name << test.size() << test.isEmpty() << endl;
+
+}
+
+void linkQueueTest()
+{
+	DLinkQueue<Person> test;
+	Person p1("abc", 1);
+	Person p2("测试", 2);
+	Person p3("haha", 3);
+
+	test.push(p1);
+	test.push(p2);
+	test.push(p3);
+	test.push(p3);
+	test.push(p3);
+	test.push(p3);
+	test.push(p3);
+	test.push(p3);
+
+	for (int i = test.size(); i > 0; --i)
+	{
+		cout << test.front().m_name << test.front().m_age << endl;
+		test.pop();
+	}
+
+	test.push(p2);
+	cout << test.rear().m_name << test.size() << test.isEmpty() << endl;
+}
+
 int main(int argc, char* argv[])
 {
 	
 	//arrayTest();
 	//linkListTest();
 	//stackTest();
-	linkStackTest();
+	//linkStackTest();
+	//sqQueueTest();
+	linkQueueTest();
 
 	system("pause");
 }
