@@ -1,7 +1,7 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 
 #include "../dataStructure/sqStack.hpp"
 #include "../dataStructure/array.hpp"
@@ -9,19 +9,19 @@
 using namespace std;
 
 
-/*ÖÐ×º×ªºó×º
+/*ä¸­ç¼€è½¬åŽç¼€
 * 
-* ¶ÔÓÚÊý×Ö£ºÖ±½ÓÊä³ö
+* å¯¹äºŽæ•°å­—ï¼šç›´æŽ¥è¾“å‡º
 * 
-* ¶ÔÓÚ·ûºÅ£º
-*			×óÀ¨ºÅ£º½øÕ»
-*			ÔËËã·ûºÅ£ºÓëÕ»¶¥·ûºÅ½øÐÐÓÅÏÈ¼¶±È½Ï£ºÈôÕ»¶¥·ûºÅÓÅÏÈ¼¶µÍ£¬´Ë·ûºÅ½øÕ»£¨Ä¬ÈÏ×óÀ¨ºÅÓÅÏÈ¼¶×îµÍ£©£»ÈôÕ»¶¥·ûºÅÓÅÏÈ¼¶²»µÍ£¬Ôò½«Õ»¶¥·ûºÅµ¯³ö²¢Êä³ö£¬Ö®ºó½øÕ»
-*			ÓÒÀ¨ºÅ£º½«Õ»¶¥·ûºÅµ¯³ö²¢Êä³ö£¬Ö±µ½Æ¥Åä×óÀ¨ºÅ£¬½«×óÀ¨ºÅºÍÓÒÀ¨ºÅÍ¬Ê±ÉáÆú
-*			±éÀú½áÊø£º½«Õ»ÖÐËùÓÐ·ûºÅµ¯³ö²¢Êä³ö
+* å¯¹äºŽç¬¦å·ï¼š
+*			å·¦æ‹¬å·ï¼šè¿›æ ˆ
+*			è¿ç®—ç¬¦å·ï¼šä¸Žæ ˆé¡¶ç¬¦å·è¿›è¡Œä¼˜å…ˆçº§æ¯”è¾ƒï¼šè‹¥æ ˆé¡¶ç¬¦å·ä¼˜å…ˆçº§ä½Žï¼Œæ­¤ç¬¦å·è¿›æ ˆï¼ˆé»˜è®¤å·¦æ‹¬å·ä¼˜å…ˆçº§æœ€ä½Žï¼‰ï¼›è‹¥æ ˆé¡¶ç¬¦å·ä¼˜å…ˆçº§ä¸ä½Žï¼Œåˆ™å°†æ ˆé¡¶ç¬¦å·å¼¹å‡ºå¹¶è¾“å‡ºï¼Œä¹‹åŽè¿›æ ˆ
+*			å³æ‹¬å·ï¼šå°†æ ˆé¡¶ç¬¦å·å¼¹å‡ºå¹¶è¾“å‡ºï¼Œç›´åˆ°åŒ¹é…å·¦æ‹¬å·ï¼Œå°†å·¦æ‹¬å·å’Œå³æ‹¬å·åŒæ—¶èˆå¼ƒ
+*			éåŽ†ç»“æŸï¼šå°†æ ˆä¸­æ‰€æœ‰ç¬¦å·å¼¹å‡ºå¹¶è¾“å‡º
 */
-void infillToSuffix()
+DArray<char> infillToSuffix()
 {
-	string infill = "8+(3-1)*5";
+	string infill = "(1+2*3+(3-1))-(8-2*3)/2";
 	DsqStack<char> oper(100);
 	DArray<char> suffix(100);
 
@@ -30,6 +30,7 @@ void infillToSuffix()
 		if (c >= '0' && c <= '9')
 		{
 			suffix.pushBack(c);
+			//suffix.pushBack(' ');
 			continue;
 		}
 		if (c == '(')
@@ -44,6 +45,7 @@ void infillToSuffix()
 			while (temp != '(')
 			{
 				suffix.pushBack(temp);
+				//suffix.pushBack(' ');
 				temp = oper.top();
 				oper.pop();
 			}
@@ -64,7 +66,9 @@ void infillToSuffix()
 			else
 			{
 				suffix.pushBack(oper.top());
+				//suffix.pushBack(' ');
 				oper.pop();
+				oper.push(c);
 			}
 			break;
 		case '-':
@@ -75,7 +79,9 @@ void infillToSuffix()
 			else
 			{
 				suffix.pushBack(oper.top());
+				//suffix.pushBack(' ');
 				oper.pop();
+				oper.push(c);
 			}
 			break;
 		case '*':
@@ -86,7 +92,9 @@ void infillToSuffix()
 			else
 			{
 				suffix.pushBack(oper.top());
+				//suffix.pushBack(' ');
 				oper.pop();
+				oper.push(c);
 			}
 			break;
 		case '/':
@@ -97,7 +105,9 @@ void infillToSuffix()
 			else
 			{
 				suffix.pushBack(oper.top());
+				//suffix.pushBack(' ');
 				oper.pop();
+				oper.push(c);
 			}
 			break;
 		}
@@ -105,36 +115,88 @@ void infillToSuffix()
 	while (!oper.isEmpty())
 	{
 		suffix.pushBack(oper.top());
+		//suffix.pushBack(' ');
 		oper.pop();
 	}
 
-
+	
 	for (int i = 0; i < suffix.getSize(); ++i)
 	{
-		cout << suffix[i];
+		cout << suffix[i] << " ";
 	}
 	cout << endl;
+
+	return suffix;
 }
 
 
-/*ºó×º±í´ïÊ½ÔËËã
+/*åŽç¼€è¡¨è¾¾å¼è¿ç®—
 * 
-*	¶ÔÓÚÊý×Ö£º½øÕ»
+*	å¯¹äºŽæ•°å­—ï¼šè¿›æ ˆ
 * 
-*	¶ÔÓÚ·ûºÅ£º
-*			1.´ÓÕ»ÖÐµ¯³öÓÐ²Ù×÷Êý
-*			2.´ÓÕ»ÖÐµ¯³ö×ó²Ù×÷Êý
-*			3.¸ù¾Ý·ûºÅ½øÐÐÔËËã
-*			4.½«ÔËËã½á¹ûÑ¹ÈëÕ»ÖÐ
+*	å¯¹äºŽç¬¦å·ï¼š
+*			1.ä»Žæ ˆä¸­å¼¹å‡ºå³æ“ä½œæ•°
+*			2.ä»Žæ ˆä¸­å¼¹å‡ºå·¦æ“ä½œæ•°
+*			3.æ ¹æ®ç¬¦å·è¿›è¡Œè¿ç®—
+*			4.å°†è¿ç®—ç»“æžœåŽ‹å…¥æ ˆä¸­
 * 
-*	±éÀú½áÊø£ºÕ»ÖÐµÄÎ¨Ò»Êý×ÖÎª¼ÆËã½á¹û
+*	éåŽ†ç»“æŸï¼šæ ˆä¸­çš„å”¯ä¸€æ•°å­—ä¸ºè®¡ç®—ç»“æžœ
 * 
 */
+
+void operation(DArray<char> suffix)
+{
+	DsqStack<string> oper(100);
+	//DArray<char> suffix(100);
+	int right;
+	int left;
+
+	for (int i = 0; i < suffix.getSize(); ++i)
+	{
+		if (suffix[i] >= '0'&&suffix[i] <= '9')
+		{
+			oper.push(string (1,suffix[i]));
+		}
+		switch (suffix[i])
+		{
+		case '+':
+			right = atoi(oper.top().c_str());
+			oper.pop();
+			left = atoi(oper.top().c_str());
+			oper.pop();
+			oper.push(to_string(left + right));
+			break;
+		case '-':
+			right = atoi(oper.top().c_str());
+			oper.pop();
+			left = atoi(oper.top().c_str());
+			oper.pop();
+			oper.push(to_string(left - right));
+			break;
+		case '*':
+			right = atoi(oper.top().c_str());
+			oper.pop();
+			left = atoi(oper.top().c_str());
+			oper.pop();
+			oper.push(to_string(left * right));
+			break;
+		case '/':
+			right = atoi(oper.top().c_str());
+			oper.pop();
+			left = atoi(oper.top().c_str());
+			oper.pop();
+			oper.push(to_string(left / right));
+			break;
+		}
+	}
+
+	cout << oper.top() << endl;
+}
 
 int main(int argc, char* argv[])
 {
 
-	infillToSuffix();
+	operation(infillToSuffix());
 
 
 	return 0;
