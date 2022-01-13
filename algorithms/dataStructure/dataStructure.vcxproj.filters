@@ -37,5 +37,11 @@
     <ClInclude Include="linkQueue.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryTree.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="matrixGraph.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

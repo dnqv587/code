@@ -143,8 +143,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.hpp" />
+    <ClInclude Include="BinaryTree.hpp" />
     <ClInclude Include="linkQueue.hpp" />
     <ClInclude Include="linkStack.hpp" />
+    <ClInclude Include="matrixGraph.hpp" />
     <ClInclude Include="sqList.hpp" />
     <ClInclude Include="linkList.hpp" />
     <ClInclude Include="sqQueue.hpp" />
