@@ -1,26 +1,30 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 
 using namespace std;
 
 
-//Êı×é
+//æ•°ç»„
 template<class T>
 class DArray
 {
 public:
-	//ÓĞ²Î¹¹Ôì
+	//æœ‰å‚æ„é€ 
 	DArray(size_t capacity) :m_capacity(capacity),m_size(0)
 	{
 		pAddress = new T[m_capacity];
 	}
-	//¿½±´¹¹Ôì
+	//æ‹·è´æ„é€ 
 	DArray(const DArray& arr)
 	{
 		m_capacity = arr.m_capacity;
 		m_size = arr.m_size;
 		pAddress = new T[m_capacity];
-		memcpy(pAddress, arr.pAddress, arr.m_size);
+		//memcpy(pAddress, arr.pAddress, sizeof(T)*arr.m_size);
+		for (int i = 0; i < m_size; ++i)
+		{
+			pAddress[i] = arr.pAddress[i];
+		}
 	}
 
 	~DArray()
@@ -32,7 +36,7 @@ public:
 		}
 	}
 
-	//ÖØÔØ=
+	//é‡è½½=
 	DArray& operator= (const DArray& arr)
 	{
 		if (pAddress)
@@ -46,13 +50,13 @@ public:
 		memcpy(pAddress, arr.pAddress, arr.m_size);
 	}
 
-	//ÖØÔØ[]
+	//é‡è½½[]
 	T& operator[] (unsigned int index)
 	{
 		return pAddress[index];
 	}
 
-	//Î²²å·¨
+	//å°¾æ’æ³•
 	void pushBack(const T& val)
 	{
 		if (m_size >= m_capacity)
@@ -63,13 +67,13 @@ public:
 		++m_size;
 	}
 
-	//±éÀú
+	//éå†
 
 	void foreach(void (*print)(const T&))
 	{
 		if (print == NULL)
 		{
-			cerr << "»Øµ÷º¯ÊıÎª¿Õ" << endl;
+			cerr << "å›è°ƒå‡½æ•°ä¸ºç©º" << endl;
 			return;
 		}
 		for (int i = 0; i < m_size;++i)
@@ -79,13 +83,13 @@ public:
 	}
 
 
-	//»ñÈ¡Êı×éÈİÁ¿
+	//è·å–æ•°ç»„å®¹é‡
 	size_t getCapacity()
 	{
 		return m_capacity;
 	}
 
-	//»ñÈ¡Êı×é´óĞ¡
+	//è·å–æ•°ç»„å¤§å°
 	size_t getSize()
 	{
 		return m_size;
@@ -94,9 +98,9 @@ public:
 
 
 private:
-	T* pAddress;//Êı×éÖ¸Õë
+	T* pAddress;//æ•°ç»„æŒ‡é’ˆ
 
-	size_t m_capacity;//ÈİÁ¿
+	size_t m_capacity;//å®¹é‡
 
-	size_t m_size;//´óĞ¡
+	size_t m_size;//å¤§å°
 };

@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 
 using namespace std;
 
@@ -11,7 +11,7 @@ public:
 		m_queue = new T[m_capacity];
 		if (m_queue == NULL)
 		{
-			cerr << "ÄÚ´æÉêÇëÊ§°Ü" << endl;
+			cerr << "å†…å­˜ç”³è¯·å¤±è´¥" << endl;
 		}
 	}
 
@@ -20,12 +20,12 @@ public:
 		delete[] m_queue;
 	}
 
-	//Èë¶Ó
+	//å…¥é˜Ÿ
 	void push(const T& val)
 	{
 		if ((m_rear + 1) % m_capacity == m_front)
 		{
-			cerr << "¶ÓÂú" << endl;
+			cerr << "é˜Ÿæ»¡" << endl;
 			return;
 		}
 
@@ -34,12 +34,12 @@ public:
 		m_rear = (m_rear + 1) % m_capacity;
 	}
 	 
-	//³ö¶Ó
-	T pop()
+	//å‡ºé˜Ÿ
+	T& pop()
 	{
 		if (isEmpty())
 		{
-			cerr << "¶Ó¿Õ" << endl;
+			cerr << "é˜Ÿç©º" << endl;
 			T t;
 			return t;
 		}
@@ -49,19 +49,19 @@ public:
 		return top;
 	}
 
-	//·µ»Ø¶ÓÍ·
+	//è¿”å›žé˜Ÿå¤´
 	T& front()
 	{
 		return m_queue[m_front];
 	}
 
-	//·µ»Ø¶ÓÎ²
+	//è¿”å›žé˜Ÿå°¾
 	T& rear()
 	{
 		return m_queue[m_rear];
 	}
 
-	//¶ÓÊÇ·ñÎª¿Õ
+	//é˜Ÿæ˜¯å¦ä¸ºç©º
 	bool isEmpty()
 	{
 		if (m_front == m_rear)
@@ -80,9 +80,9 @@ private:
 
 	T* m_queue;
 
-	size_t m_front;//Í·Ö¸Õë
+	size_t m_front;//å¤´æŒ‡é’ˆ
 
-	size_t m_rear;//Î²Ö¸Õë
+	size_t m_rear;//å°¾æŒ‡é’ˆ
 
 	size_t m_capacity;
 

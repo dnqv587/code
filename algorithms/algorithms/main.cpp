@@ -5,6 +5,7 @@
 
 #include "../dataStructure/sqStack.hpp"
 #include "../dataStructure/array.hpp"
+#include "../dataStructure/sqQueue.hpp"
 
 using namespace std;
 
@@ -19,30 +20,33 @@ using namespace std;
 *			右括号：将栈顶符号弹出并输出，直到匹配左括号，将左括号和右括号同时舍弃
 *			遍历结束：将栈中所有符号弹出并输出
 */
-DArray<char> infillToSuffix()
+DArray<string> infillToSuffix()
 {
-	string infill = "(1+2*3+(3-1))-(8-2*3)/2";
-	DsqStack<char> oper(100);
-	DArray<char> suffix(100);
+	string infill = "100+100*(999+1)-50/5";
+	DsqStack<string> oper(100);
+	DsqQueue<char> digit(10);
+	DArray<string> suffix(100);
+	string dig;
 
 	for (const auto& c : infill)
 	{
+	
 		if (c >= '0' && c <= '9')
 		{
-			suffix.pushBack(c);
-			//suffix.pushBack(' ');
+			//suffix.pushBack(c);
+			digit.push(c);
 			continue;
 		}
 		if (c == '(')
 		{
-			oper.push(c);
+			oper.push(string(1, c));
 			continue;
 		}
 		if (c == ')')
 		{
-			char temp = oper.top();
+			string temp = oper.top();
 			oper.pop();
-			while (temp != '(')
+			while (temp != "(")
 			{
 				suffix.pushBack(temp);
 				//suffix.pushBack(' ');
@@ -51,67 +55,96 @@ DArray<char> infillToSuffix()
 			}
 			continue;
 		}
-		char top = ' ';
+		string top = "";
 		if (!oper.isEmpty())
 		{
 			top = oper.top();
 		}
+
+		
 		switch (c)
 		{
 		case '+':
-			if (top == '('||oper.isEmpty())
+			while (!digit.isEmpty())
 			{
-				oper.push(c);
+				dig.push_back(digit.pop());
+			}
+			suffix.pushBack(dig);
+			if (top == "(" || oper.isEmpty())
+			{
+				oper.push(string(1, c));
 			}
 			else
 			{
 				suffix.pushBack(oper.top());
 				//suffix.pushBack(' ');
 				oper.pop();
-				oper.push(c);
+				oper.push(string(1,c));
 			}
 			break;
 		case '-':
-			if (top == '(' || oper.isEmpty())
+			while (!digit.isEmpty())
 			{
-				oper.push(c);
+				dig.push_back(digit.pop());
+			}
+			suffix.pushBack(dig);
+			if (top == "(" || oper.isEmpty())
+			{
+				oper.push(string(1, c));
 			}
 			else
 			{
 				suffix.pushBack(oper.top());
 				//suffix.pushBack(' ');
 				oper.pop();
-				oper.push(c);
+				oper.push(string(1, c));
 			}
 			break;
 		case '*':
-			if (top == '(' || top == '-' || top == '+' || oper.isEmpty())
+			while (!digit.isEmpty())
 			{
-				oper.push(c);
+				dig.push_back(digit.pop());
+			}
+			suffix.pushBack(dig);
+			if (top == "(" || top == "-" || top == "+" || oper.isEmpty())
+			{
+				oper.push(string(1, c));
 			}
 			else
 			{
 				suffix.pushBack(oper.top());
 				//suffix.pushBack(' ');
 				oper.pop();
-				oper.push(c);
+				oper.push(string(1, c));
 			}
 			break;
 		case '/':
-			if (top == '(' || top == '-' || top == '+' || oper.isEmpty())
+			while (!digit.isEmpty())
 			{
-				oper.push(c);
+				dig.push_back(digit.pop());
+			}
+			suffix.pushBack(dig);
+			if (top == "(" || top == "-" || top == "+" || oper.isEmpty())
+			{
+				oper.push(string(1, c));
 			}
 			else
 			{
 				suffix.pushBack(oper.top());
 				//suffix.pushBack(' ');
 				oper.pop();
-				oper.push(c);
+				oper.push(string(1, c));
 			}
 			break;
 		}
+		dig.clear();
 	}
+
+	while (!digit.isEmpty())
+	{
+		dig.push_back(digit.pop());
+	}
+	suffix.pushBack(dig);
 	while (!oper.isEmpty())
 	{
 		suffix.pushBack(oper.top());
@@ -119,7 +152,6 @@ DArray<char> infillToSuffix()
 		oper.pop();
 	}
 
-	
 	for (int i = 0; i < suffix.getSize(); ++i)
 	{
 		cout << suffix[i] << " ";
@@ -144,50 +176,52 @@ DArray<char> infillToSuffix()
 * 
 */
 
-void operation(DArray<char> suffix)
+void operation(DArray<string> suffix)
 {
 	DsqStack<string> oper(100);
 	//DArray<char> suffix(100);
 	int right;
 	int left;
 
+
 	for (int i = 0; i < suffix.getSize(); ++i)
 	{
-		if (suffix[i] >= '0'&&suffix[i] <= '9')
+
+		if (suffix[i] == "+")
 		{
-			oper.push(string (1,suffix[i]));
-		}
-		switch (suffix[i])
-		{
-		case '+':
 			right = atoi(oper.top().c_str());
 			oper.pop();
 			left = atoi(oper.top().c_str());
 			oper.pop();
 			oper.push(to_string(left + right));
-			break;
-		case '-':
+		}
+		else if (suffix[i] == "-")
+		{
 			right = atoi(oper.top().c_str());
 			oper.pop();
 			left = atoi(oper.top().c_str());
 			oper.pop();
 			oper.push(to_string(left - right));
-			break;
-		case '*':
+		}
+		else if (suffix[i] == "*")
+		{
 			right = atoi(oper.top().c_str());
 			oper.pop();
 			left = atoi(oper.top().c_str());
 			oper.pop();
 			oper.push(to_string(left * right));
-			break;
-		case '/':
+		}
+		else if (suffix[i] == "/")
+		{
 			right = atoi(oper.top().c_str());
 			oper.pop();
 			left = atoi(oper.top().c_str());
 			oper.pop();
 			oper.push(to_string(left / right));
-			break;
 		}
+		else
+			oper.push(suffix[i]);
+
 	}
 
 	cout << oper.top() << endl;
