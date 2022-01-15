@@ -62,7 +62,7 @@ void insert(int s[], int len)
 			{
 				s[j + 1] = s[j];
 			}
-			s[j] = temp;
+			s[j+1] = temp;
 		}
 	}
 }
@@ -75,6 +75,7 @@ int main()
 	//select(s, len);
 	insert(s, len);
 	myPut(s,len);
+	system("pause");
 	return 0;
 }
 
