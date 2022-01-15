@@ -78,7 +78,16 @@ public:
 	//先序遍历
 	void preOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void {if (root == nullptr) { return; }print(root->data); recursion(root->lChild); recursion(root->rChild); };
+		auto recursion = [&](treeNode* root)->void
+		{
+			if (root == nullptr)
+			{
+				return;
+			}
+			print(root->data);
+			recursion(root->lChild);
+			recursion(root->rChild);
+		};
 
 		recursion(m_root);
 	}
@@ -86,7 +95,16 @@ public:
 	//中序遍历
 	void inOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void {if (root == nullptr) { return; } recursion(root->lChild); print(root->data); recursion(root->rChild); };
+		auto recursion = [&](treeNode* root)->void
+		{
+			if (root == nullptr)
+			{
+				return;
+			}
+			recursion(root->lChild);
+			print(root->data);
+			recursion(root->rChild);
+		};
 
 		recursion(m_root);
 	}
@@ -94,7 +112,16 @@ public:
 	//后序遍历
 	void postOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void {if (root == nullptr) { return; } recursion(root->lChild);  recursion(root->rChild); print(root->data); };
+		auto recursion = [&](treeNode* root)->void
+		{
+			if (root == nullptr)
+			{
+				return;
+			}
+			recursion(root->lChild);
+			recursion(root->rChild);
+			print(root->data);
+		};
 
 		recursion(m_root);
 	}

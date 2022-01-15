@@ -93,14 +93,54 @@ void jz6()
 	};
 
 	NODE *head = new NODE;
+	NODE* pNode = head;
 	int cin_int;
+	int size = 0;
 	while (cin >> cin_int)
 	{
 		if (cin_int == 999)
 			break;
-		pnode->data = cin_int;
-		pnode->next = new NODE;
+		NODE* newNode = new NODE;
+		newNode->data = cin_int;
+		newNode->next = nullptr;
+		pNode->next = newNode;
+		pNode = pNode->next;
+		++size;
 	}
+
+	int node[100];
+	NODE* curNode = head->next;
+	for (int i = 0; i < size; ++i)
+	{
+		node[i] = curNode->data;
+		curNode = curNode->next;
+	}
+
+	for (int i = size-1; i >= 0; --i)
+	{
+		cout << node[i] << " " << endl;
+	}
+	
+}
+
+void jz7()
+{
+	struct NODE
+	{
+		int data;
+		NODE* lChild;
+		NODE* rChild;
+	};
+	
+	int pre[8]{ 1,2,4,7,3,5,6,8 };
+	int vin[8]{ 4,7,2,1,5,3,8,6 };
+
+	auto func = [&](const int& i)
+	{
+		
+
+	};
+
 	
 }
 
@@ -109,6 +149,7 @@ int main()
 	//jz3();
 	//jz4();
 	//jz5();
-	jz6();
+	//jz6();
+	jz7();//*
 	system("pause");
 }
