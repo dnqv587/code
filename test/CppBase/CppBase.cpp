@@ -932,6 +932,66 @@ void dici_test113()
 
 }
 
+void pair_test()
+{
+	vector<pair<int, string>> test;
+	pair<int, string> p;
+	istream_iterator<string> in(cin);
+	ostream_iterator<string> out(cout, " ");
+
+	bool flag = true;
+	int count = 0;
+	int pair_int;
+	string pair_string;
+	while (*in != "999")
+	{
+		if (flag)
+		{
+			pair_int = atoi((*in++).c_str());
+			flag = false;
+			++count;
+		}
+		else
+		{
+			pair_string = *in++;
+			flag = true;
+			++count;
+		}
+		if (count == 2)
+		{
+			test.push_back(make_pair(pair_int, pair_string));
+			count = 0;
+		}
+	}
+
+	for (auto c : test)
+	{
+		cout << c.first << " " << c.second << endl;
+	}
+}
+
+void word_test1120()
+{
+	map<string, size_t> dici;
+	string str;
+	while (getline(cin, str))
+	{
+		if (str == "999")
+			break;
+		auto ret = dici.insert({ str,1 });
+		if (!ret.second)
+		{
+			++ret.first->second;
+		}
+	}
+
+	for (auto c : dici)
+	{
+		cout << c.first << " " << c.second << endl;
+	}
+
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -976,8 +1036,9 @@ int main(int argc, char** argv)
 	//odd_even1033();
 	//list_algo_test();
 	//关联容器
-	dici_test113();
-
+	//dici_test113();
+	//pair_test();
+	word_test1120();
 
 	system("pause");
 	return 0;
