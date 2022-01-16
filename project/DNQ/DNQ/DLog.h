@@ -8,13 +8,15 @@
 #include <iostream>
 #include <vector>
 #include <tuple>
+#include <map>
+#include <functional>
 
 using namespace std;
 
 
 namespace DNQ
 {
-	class Logger;
+	class Logger ;
 
 	//日志级别
 	class LogLevel
@@ -39,7 +41,7 @@ namespace DNQ
 		typedef shared_ptr<LogEvent> ptr;//智能指针
 
 	public:
-		LogEvent();
+		LogEvent(const char* file,int32_t line,uint32_t elpase,uint32_t threadId,uint32_t fiberId,uint64_t time);
 
 		const char* getFile() const { return m_file; }
 
@@ -53,7 +55,9 @@ namespace DNQ
 
 		uint64_t getTime() const { return m_time; }
 
-		const string getContent() const { return m_content; }
+		string getContent() const { return m_ss.str(); }
+
+		stringstream& getSS() { return m_ss; }
 
 	private:
 		const char* m_file = nullptr;//文件名
@@ -63,7 +67,7 @@ namespace DNQ
 		uint32_t m_threadId = 0;//线程号
 		uint32_t m_fiberId = 0;//携程号
 		uint64_t m_time = 0;//时间戳
-		string m_content;//内容
+		stringstream m_ss;//内容
 	};
 
 	//日志格式器
@@ -75,13 +79,15 @@ namespace DNQ
 		LogFormatter(const string& pattern);
 
 		string format(shared_ptr<Logger> logger,LogLevel::Level level, LogEvent::ptr event);//提供给Appender去输出
-	private:
+	public:
 
 		//格式化日志的基类
 		class FormatItem
 		{
 		public:
 			typedef shared_ptr<FormatItem> ptr;
+
+			//FormatItem(const string& fmt = "") {}
 
 			virtual ~FormatItem() {}
 
@@ -93,8 +99,9 @@ namespace DNQ
 		class MessageFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			MessageFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		};
 
@@ -102,8 +109,8 @@ namespace DNQ
 		class LevelFormatItem :public LogFormatter::FormatItem
 		{
 		public:
-
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			LevelFormatItem(const string& str = "") {}
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 
 		};
@@ -112,8 +119,9 @@ namespace DNQ
 		class ElapseFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			ElapseFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		};
 
@@ -121,8 +129,9 @@ namespace DNQ
 		class NameFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			NameFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		};
 
@@ -130,8 +139,19 @@ namespace DNQ
 		class ThreadIdFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			ThreadIdFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
+
+		};
+
+		//格式化携程ID的子类
+		class FiberIdFormatItem :public LogFormatter::FormatItem
+		{
+		public:
+			FiberIdFormatItem(const string& str = "") {}
+
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		};
 
@@ -141,7 +161,7 @@ namespace DNQ
 		public:
 			DateTimeFormatItem(const string& format = "%Y:%m%d %H:%M%S");
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		private:
 			string m_format;
@@ -152,8 +172,9 @@ namespace DNQ
 		class FileNameFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			FileNameFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 		};
 
@@ -161,9 +182,31 @@ namespace DNQ
 		class LineFormatItem :public LogFormatter::FormatItem
 		{
 		public:
+			LineFormatItem(const string& str = "") {}
 
-			virtual string format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
+		};
+
+		//换行的子类
+		class NewLineFormatItem :public LogFormatter::FormatItem
+		{
+		public:
+			NewLineFormatItem(const string& str = "") {}
+
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
+
+		};
+
+		//格式化字符串的子类
+		class StringFormatItem :public LogFormatter::FormatItem
+		{
+		public:
+			StringFormatItem(const string& str);
+
+			virtual string format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
+		private:
+			string m_string;
 		};
 
 
@@ -219,7 +262,7 @@ namespace DNQ
 	public:
 		typedef shared_ptr<StdoutLogAppender> ptr;
 
-		virtual void log(shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+		virtual void log(Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
 	private:
 
@@ -233,9 +276,9 @@ namespace DNQ
 
 		FileLogAppender(const string& filename);
 
-		virtual void log(shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+		virtual void log(Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override;
 
-		//冲新打开文件，成功返回true
+		//重新打开文件，成功返回true
 		bool reOpen();
 
 	private:
@@ -244,13 +287,13 @@ namespace DNQ
 	};
 
 	//日志器
-	class Logger
+	class Logger:public enable_shared_from_this<Logger>//获取自己的指针
 	{
 	public:
 
 		typedef shared_ptr<Logger> ptr;
 	public:
-		Logger();
+		Logger() {};
 
 		Logger(const string& name = "root");
 
@@ -282,8 +325,9 @@ namespace DNQ
 
 		list<LogAppender::ptr> m_appenders;//Appender集合
 
-	};
+		LogFormatter::ptr m_formatter;
 
+	};
 
 
 }

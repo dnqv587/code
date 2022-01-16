@@ -2,6 +2,8 @@
 
 namespace DNQ
 {
+
+
 	const char* LogLevel::ToString(LogLevel::Level level)
 	{
 		switch (level)
@@ -26,9 +28,15 @@ namespace DNQ
 		}
 	}
 
-	Logger::Logger(const string& name /*= "root"*/):m_name(name)
+	LogEvent::LogEvent(const char* file, int32_t line, uint32_t elapse, uint32_t threadId, uint32_t fiberId, uint64_t time)
+		:m_file(file),m_line(line),m_elapse(elapse),m_threadId(threadId),m_fiberId(fiberId),m_time(time),
 	{
 
+	}
+
+	Logger::Logger(const string& name /*= "root"*/):m_name(name),m_level(LogLevel::DEUBG)
+	{
+		m_formatter.reset(new LogFormatter("%d [%p] %f %l %m %n"));
 	}
 
 	void Logger::log(LogLevel::Level level, LogEvent::ptr event)
@@ -37,7 +45,7 @@ namespace DNQ
 		{
 			for (const auto& c : m_appenders)
 			{
-				c->log(level, event);
+				c->log(self,level, event);
 			}
 		}
 	}
@@ -69,6 +77,10 @@ namespace DNQ
 
 	void Logger::addAppender(LogAppender::ptr appender)
 	{
+		if (!appender->getFormatter())
+		{
+			appender->setFormatter(m_formatter);
+		}
 		m_appenders.push_back(appender);
 	}
 
@@ -84,7 +96,7 @@ namespace DNQ
 		}
 	}
 
-	void StdoutLogAppender::log(shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
+	void StdoutLogAppender::log(Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
 	{
 		if (level >= m_level)
 		{
@@ -97,7 +109,7 @@ namespace DNQ
 
 	}
 
-	void FileLogAppender::log(shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
+	void FileLogAppender::log(Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
 	{
 		if (level >= m_level)
 		{
@@ -117,7 +129,7 @@ namespace DNQ
 
 	LogFormatter::LogFormatter(const string& pattern):m_pattern(pattern)
 	{
-
+		init();
 	}
 
 	std::string LogFormatter::format(shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
@@ -130,6 +142,73 @@ namespace DNQ
 		return ss.str();
 	}
 
+	std::string LogFormatter::MessageFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getContent();
+	}
+
+	std::string LogFormatter::LevelFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << LogLevel::ToString(level);
+	}
+
+	std::string LogFormatter::ElapseFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getElapse();
+	}
+
+	std::string LogFormatter::NameFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << logger->getName();
+	}
+
+	std::string LogFormatter::ThreadIdFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getThreadId();
+	}
+
+
+	std::string LogFormatter::FiberIdFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getFiberId() << endl;
+	}
+
+
+	LogFormatter::DateTimeFormatItem::DateTimeFormatItem(const string& format /*= "%Y:%m%d %H:%M%S"*/) :m_format(format)
+	{
+
+	}
+
+	std::string LogFormatter::DateTimeFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getTime();
+	}
+
+	std::string LogFormatter::FileNameFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getFile();
+	}
+
+	std::string LogFormatter::LineFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << event->getLine();
+	}
+
+	LogFormatter::StringFormatItem::StringFormatItem(const string& str) :m_string(str)
+	{
+
+	}
+
+	std::string LogFormatter::StringFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << m_string;
+	}
+
+	std::string LogFormatter::NewLineFormatItem::format(ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event)
+	{
+		os << endl;
+	}
+
 	/*
 	三种格式：
 		1:%xxx
@@ -138,9 +217,9 @@ namespace DNQ
 	*/
 	void LogFormatter::init()
 	{
-		//str,format,type
-		vector<tuple<string, string, int>> vec;
-		string nstr;
+		
+		vector<tuple<string, string, int>> vec;//存储---字符串，格式，类型---
+		string nstr;													//---0：普通字符串  1：字符串格式 2：
 		for (size_t i = 0; i < m_pattern.size(); ++i)
 		{
 			if (m_pattern[i] != '%')
@@ -152,7 +231,7 @@ namespace DNQ
 			{
 				if (m_pattern[i + 1] == '%')
 				{
-					nstr.append(1, '%');//真%
+					nstr.append(1, '%');//转义%
 					continue;
 				}
 			}
@@ -164,7 +243,7 @@ namespace DNQ
 			string fmt;
 			while (n < m_pattern.size())
 			{
-				if (isspace(m_pattern[n]))
+				if (!isalpha(m_pattern[n] && m_pattern[n] != '{' && m_pattern[n] != '}'))
 				{
 					break;
 				}
@@ -196,7 +275,8 @@ namespace DNQ
 			{
 				if (!nstr.empty())
 				{
-					vec.push_back(make_tuple(nstr, "", 0));
+					vec.push_back(make_tuple(nstr, string(), 0));
+					nstr.clear();
 				}
 				str = m_pattern.substr(i + 1, n - i - 1);
 				vec.push_back(make_tuple(str, fmt, 1));
@@ -209,6 +289,11 @@ namespace DNQ
 			}
 			else if (fmt_status == 2)
 			{
+				if (!nstr.empty())
+				{
+					vec.push_back(make_tuple(nstr, "", 0));
+					nstr.clear();
+				}
 				vec.push_back(make_tuple(str, fmt, 1));
 				i = n;
 			}	
@@ -217,52 +302,50 @@ namespace DNQ
 		{
 			vec.push_back(make_tuple(nstr, "", 0));
 		}
+
+		static map<string, function< FormatItem::ptr(const string& str)> > s_format_items =
+		{
+	#define XX(str,C) \
+			{#str,[](const string fmt) {return FormatItem::ptr(new C(fmt)); }}
+
+			XX(m,MessageFormatItem),
+			XX(p,LevelFormatItem),
+			XX(r,ElapseFormatItem),
+			XX(c,NameFormatItem),
+			XX(t,ThreadIdFormatItem),
+			XX(n,NewLineFormatItem),
+			XX(d,DateTimeFormatItem),
+			XX(f,FileNameFormatItem),
+			XX(l,LineFormatItem),
+	#undef XX
+		};
+
+		for (auto& i : vec)
+		{
+			if(get<2>(i)==0)
+			{
+				m_items.push_back(FormatItem::ptr(new StringFormatItem(get<0>(i))));//普通字符串
+
+			}
+			else
+			{
+				auto iter = s_format_items.find(get<0>(i));
+				if (iter == s_format_items.end())
+				{
+					m_items.push_back(FormatItem::ptr(new StringFormatItem("<<error_format %" + get<0>(i) + ">>")));//错误类型
+				}
+				else
+				{
+					m_items.push_back(iter->second(get<1>(i)));
+				}
+			}
+
+			cout << "(" << get<0>(i) << ") - " << "(" << get<1>(i) << ") - " << "(" << get<2>(i) << ")" << endl;
+		}
 	}
 
-	std::string LogFormatter::MessageFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getContent();
-	}
-
-	std::string LogFormatter::LevelFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << LogLevel::ToString(level);
-	}
-
-	std::string LogFormatter::ElapseFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getElapse();
-	}
-
-	std::string LogFormatter::NameFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << logger->getName();
-	}
-
-	std::string LogFormatter::ThreadIdFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getThreadId();
-	}
 
 
-	LogFormatter::DateTimeFormatItem::DateTimeFormatItem(const string& format /*= "%Y:%m%d %H:%M%S"*/):m_format(format)
-	{
 
-	}
-
-	std::string LogFormatter::DateTimeFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getTime();
-	}
-
-	std::string LogFormatter::FileNameFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getFile();
-	}
-
-	std::string LogFormatter::LineFormatItem::format(ostream& os, shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event)
-	{
-		os << event->getLine();
-	}
 
 }
