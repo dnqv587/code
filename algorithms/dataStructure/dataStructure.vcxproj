@@ -146,6 +146,7 @@
     <ClInclude Include="BinaryTree.hpp" />
     <ClInclude Include="linkQueue.hpp" />
     <ClInclude Include="linkStack.hpp" />
+    <ClInclude Include="ListGraph.hpp" />
     <ClInclude Include="matrixGraph.hpp" />
     <ClInclude Include="sqList.hpp" />
     <ClInclude Include="linkList.hpp" />

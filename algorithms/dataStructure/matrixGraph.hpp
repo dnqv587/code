@@ -27,26 +27,95 @@ using namespace std;
 连通图的生成树是一个极小的连通子图，它含有图中全部的n个顶点，但只有足以构成一棵树的n-1条边。
 */
 
+
 //邻接矩阵
 
 template <class T>
 class DMatrixGraph
 {
 public:
-	DMatrixGraph(size_t vertexNum):m_vertexNum(0), m_edgeNum(0), m_maxVertex(vertexNum)
+	DMatrixGraph(size_t vertexNum):m_vertexNum(vertexNum), m_edgeNum(0)
 	{
-		m_graph = new T(m_maxVertex);
+		if (vertexNum > 0)
+		{
+			m_graph = new T*[m_vertexNum];
+			memset(m_graph, 0x00, sizeof(T) * m_vertexNum);
+
+			for (int i = 0; i < m_vertexNum; ++i)
+			{
+				m_graph[i] = new T[m_vertexNum];
+				memset(m_graph[i], 0x00, sizeof(T) * m_vertexNum);
+			}
+
+		}
+		else
+		{
+			return;
+		}
 	}
+
+	DMatrixGraph(const DMatrixGraph& graph)
+	{
+		m_graph = new T* [graph.m_vertexNum];
+		for (int i = 0; i < graph.m_vertexNum; ++i)
+		{
+			m_graph[i] = new T[graph.m_vertexNum];
+		}
+
+		for (int i = 0; i < graph.m_vertexNum; ++i)
+		{
+			for (int j = 0; j < graph.m_vertexNum; ++j)
+			{
+				m_graph[i][j] = graph.m_graph[i][j];
+			}
+		}
+		
+		m_vertexNum = graph.m_vertexNum;
+		m_edgeNum = m_edgeNum;
+	}
+
 	~DMatrixGraph()
 	{
-		delete m_graph;
+		for (int i = 0; i < m_vertexNum; ++i)
+		{
+			delete[] m_graph[i];
+		}
+		delete[] m_graph;
 	}
+
+	//添加对称弧---无向图
+	void insertSymArc(unsigned int v1, unsigned int v2, const T& value)
+	{
+		m_graph[v1][v2] = value;
+		m_graph[v2][v1] = value;
+		++m_edgeNum;
+	}
+
+	//添加弧---有向图
+	void insertArc(unsigned int v1, unsigned int v2, const T& value)
+	{
+		m_graph[v1][v2] = value;
+		++m_edgeNum;
+	}
+
+	//遍历
+	void foreach(void (*print)(const T& val))
+	{
+		for (int i = 0; i < m_vertexNum; ++i)
+		{
+			cout << endl;
+			for (int j = 0; j < m_vertexNum; ++j)
+			{
+				print(m_graph[i][j]);
+			}
+		}
+		cout << endl;
+	}
+
 
 
 private:
-	T* m_graph;
-
-	size_t m_maxVertex;
+	T** m_graph;
 
 	size_t m_vertexNum;//顶点的个数
 

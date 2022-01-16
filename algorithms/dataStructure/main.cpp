@@ -11,6 +11,7 @@
 #include "linkStack.hpp"
 #include "sqQueue.hpp"
 #include "linkQueue.hpp"
+#include "matrixGraph.hpp"
 
 using namespace std;
 
@@ -200,6 +201,30 @@ void linkQueueTest()
 	cout << test.rear().m_name << test.size() << test.isEmpty() << endl;
 }
 
+void printGtaph(const int& val)
+{
+	cout << " " << val<<" , ";
+}
+void matrixGraphTest()
+{
+
+	DMatrixGraph<int> test(5);
+
+	test.insertArc(0, 4, 6);
+	test.insertArc(1, 0, 9);
+	test.insertArc(1, 2, 3);
+	test.insertArc(2, 0, 2);
+	test.insertArc(2, 3, 5);
+	test.insertArc(3, 4, 1);
+
+
+
+	DMatrixGraph<int> test2(test);
+
+	test2.foreach(printGtaph);
+
+}
+
 int main(int argc, char* argv[])
 {
 	
@@ -208,7 +233,8 @@ int main(int argc, char* argv[])
 	//stackTest();
 	//linkStackTest();
 	//sqQueueTest();
-	linkQueueTest();
+	//linkQueueTest();
+	matrixGraphTest();
 
 	system("pause");
 }

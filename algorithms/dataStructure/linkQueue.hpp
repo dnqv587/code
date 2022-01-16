@@ -2,6 +2,7 @@
 
 using namespace std;
 
+//Á´¶Ó
 template<class T>
 class DLinkQueue
 {
