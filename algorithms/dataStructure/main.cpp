@@ -12,6 +12,7 @@
 #include "sqQueue.hpp"
 #include "linkQueue.hpp"
 #include "matrixGraph.hpp"
+#include "ListGraph.hpp"
 
 using namespace std;
 
@@ -203,12 +204,12 @@ void linkQueueTest()
 
 void printGtaph(const int& val)
 {
-	cout << " " << val<<" , ";
+	cout << val << " ";
 }
 void matrixGraphTest()
 {
 
-	DMatrixGraph<int> test(5);
+	DMatrixGraph<int> test(6);
 
 	test.insertArc(0, 4, 6);
 	test.insertArc(1, 0, 9);
@@ -225,6 +226,18 @@ void matrixGraphTest()
 
 }
 
+void ListGraphTest()
+{
+	DListGraph<int > test(5);
+	test.insertSymArc(0, 4, 6);
+	test.insertSymArc(1, 0, 9);
+	test.insertSymArc(1, 2, 3);
+	test.insertArc(2, 0, 2);
+	test.insertArc(2, 3, 5);
+
+	test.foreach(printGtaph);
+}
+
 int main(int argc, char* argv[])
 {
 	
@@ -234,7 +247,8 @@ int main(int argc, char* argv[])
 	//linkStackTest();
 	//sqQueueTest();
 	//linkQueueTest();
-	matrixGraphTest();
+	//matrixGraphTest();
+	ListGraphTest();
 
 	system("pause");
 }
