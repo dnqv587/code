@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <array>
 #include <string>
+#include <functional>
 
 using namespace std;
 
@@ -135,13 +136,69 @@ void jz7()
 	int pre[8]{ 1,2,4,7,3,5,6,8 };
 	int vin[8]{ 4,7,2,1,5,3,8,6 };
 
-	auto func = [&](const int& i)
+
+	//NODE* root = new NODE;
+	//root->lChild = nullptr;
+	//root->rChild = nullptr;
+	//root->data = pre[0];
+
+	//NODE* curNode = root;
+
+	function<NODE* (int preBegin, int preEnd, int InBegin, int InEnd)> func = [&](int preBegin, int preEnd, int InBegin, int InEnd)->NODE*
 	{
-		
+		if (preBegin==preEnd||InBegin==InEnd)
+		{
+			return nullptr;
+		}
+
+		int vinPos;
+
+		for (int i = InBegin; i < InEnd; ++i)
+		{
+			if (pre[preBegin] == vin[i])
+			{
+				vinPos = i;
+				break;
+			}
+		}
+
+		NODE* newNODE = new NODE;
+		newNODE->lChild = nullptr;
+		newNODE->rChild = nullptr;
+		newNODE->data = pre[preBegin];
+
+
+		newNODE->lChild = func(preBegin + 1, vinPos , InBegin, vinPos);
+		newNODE->rChild = func(vinPos + 1, preEnd , vinPos + 1, InEnd);
+
+		return newNODE;
 
 	};
 
+
+	NODE* root = func(0,7,0,7);
+
+	function<void (NODE* root)> recursion = [&](NODE* root)->void
+	{
+		if (root == nullptr)
+		{
+			return;
+		}
+		cout << root->data << endl;
+		recursion(root->lChild);
+		recursion(root->rChild);
+	};
+
+	recursion(root);
 	
+}
+
+void jz8()
+{
+	int tree[] = { 8,6,10,5,7,9,11 };
+
+
+
 }
 
 int main()
@@ -151,5 +208,9 @@ int main()
 	//jz5();
 	//jz6();
 	jz7();//*
+	//jz8();
+
+
 	system("pause");
+	return 0;
 }
