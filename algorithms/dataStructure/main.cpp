@@ -154,6 +154,7 @@ void linkStackTest()
 
 }
 
+
 void sqQueueTest()
 {
 	DsqQueue<Person> test(4);
@@ -228,14 +229,20 @@ void matrixGraphTest()
 
 void ListGraphTest()
 {
-	DListGraph<int > test(5);
-	test.insertSymArc(0, 4, 6);
-	test.insertSymArc(1, 0, 9);
-	test.insertSymArc(1, 2, 3);
-	test.insertArc(2, 0, 2);
-	test.insertArc(2, 3, 5);
+	DListGraph<int > test(6);
+	//test.insertSymArc(0, 4, 0, 6);
+	//test.insertSymArc(1, 0, 1, 9);
+	//test.insertSymArc(1, 2, 1, 3);
+	test.insertArc(1, 2, 2, 2);
+	test.insertArc(1, 3, 2, 5);
+	test.insertArc(1, 4, 2, 5);
+	test.insertArc(2, 5, 2, 5);
+	test.insertArc(1, 5, 2, 5);
 
-	test.foreach(printGtaph);
+	//test.foreach(printGtaph);
+
+	//test.DFS(1, printGtaph);
+	test.BFS(1, printGtaph);
 }
 
 int main(int argc, char* argv[])
