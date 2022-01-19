@@ -2,6 +2,9 @@
 #include "./1/Sales_item.h"
 #include "./7/Sales_data.h"
 
+#include <initializer_list>
+#include <memory>
+
 
 using namespace std;
 using namespace std::placeholders;
@@ -992,6 +995,74 @@ void word_test1120()
 
 }
 
+class StrBlob
+{
+public:
+	typedef std::vector<string>::size_type size_type;
+
+	StrBlob() = default;
+	StrBlob(std::initializer_list<string> list) //initializer_list---列表初始化容器
+	{
+
+		data = make_shared<vector<string>>(list);
+		
+	}
+
+	void push_back(const std::string& val)
+	{
+		data->push_back(val);
+	}
+
+	void pop_back()
+	{
+		check(0, "pop_back on empty");
+		return data->pop_back();
+	}
+
+	std::string& front()
+	{
+		check(0, "front on empty");
+		return data->front();
+	}
+
+	std::string& back()
+	{
+		check(0, "back on empty");
+		return data->back();
+	}
+
+	size_type size()
+	{
+		return data->size();
+	}
+
+	bool empty()
+	{
+		return data->empty();
+	}
+
+private:
+
+	void check(size_type i, const std::string &msg) const//检测data[i]是否合法，不合法抛出异常
+	{
+		if (i >= data->size())
+		{
+			throw out_of_range(msg);
+		}
+	}
+
+private:
+	std::shared_ptr<std::vector<std::string>> data;
+
+};
+
+void StrBlob_122()
+{
+	StrBlob str{ "123456","abcdef","1a2b3c" };
+	
+	cout << str.front() << " " << str.back() << endl;
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -1038,7 +1109,9 @@ int main(int argc, char** argv)
 	//关联容器
 	//dici_test113();
 	//pair_test();
-	word_test1120();
+	//word_test1120();
+	//智能指针
+	StrBlob_122();
 
 	system("pause");
 	return 0;
