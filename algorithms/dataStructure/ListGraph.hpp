@@ -204,22 +204,22 @@ public:
 	}
 
 	//最短路径---迪杰斯特拉算法
-	void shortestPath_DIJ(int v)
-	{
-		//初始化
-		int dist[m_vertexNum] ;//出发点到各个点的最短距离
-		int path[m_vertexNum] ;//到当前点的最近邻接点
-		bool* visited = new bool[m_vertexNum];//标记是否被访问过
-		for (int i = 0; i < m_vertexNum; ++i)
-		{
-			visited[i] = false;
-			if (i != v)//排除顶点为出发点
-			{
-				path[i] 
-			}
-		}
+	//void shortestPath_DIJ(int v)
+	//{
+	//	//初始化
+	//	int dist[m_vertexNum] ;//出发点到各个点的最短距离
+	//	int path[m_vertexNum] ;//到当前点的最近邻接点
+	//	bool* visited = new bool[m_vertexNum];//标记是否被访问过
+	//	for (int i = 0; i < m_vertexNum; ++i)
+	//	{
+	//		visited[i] = false;
+	//		if (i != v)//排除顶点为出发点
+	//		{
+	//			path[i] 
+	//		}
+	//	}
 
-	}
+	//}
 
 private:
 

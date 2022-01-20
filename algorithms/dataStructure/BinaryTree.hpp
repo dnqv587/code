@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <functional>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ template <class T>
 class DBinaryTree
 {
 public:
-	DBinaryTree()
+	DBinaryTree():m_NodeNum(0)
 	{
 		m_root = new treeNode;
 		if (m_root == NULL)
@@ -33,13 +34,15 @@ public:
 			cerr << "内存申请失败" << endl;
 			return;
 		}
+		m_root->lChild = nullptr;
+		m_root->rChild = nullptr;
 	}
 
-	DBinaryTree(const DBinaryTree* binaryTree)
+	DBinaryTree(const DBinaryTree* binaryTree):m_NodeNum(0)
 	{
-		auto recursion = [](treeNode* root)->treeNode*
+		function<treeNode* (treeNode* root)> recursion = [&](treeNode* root)->treeNode*
 		{
-			if (root = nullptr)
+			if (root == nullptr)
 			{
 				return nullptr;
 			}
@@ -51,6 +54,8 @@ public:
 			newNode->data = root->data;
 			newNode->lChild = lChild;
 			newNode->rChild = rChild;
+
+			++m_NodeNum;
 			return newNode;
 		};
 
@@ -59,11 +64,11 @@ public:
 
 	~DBinaryTree()
 	{
-		auto recursion = [](treeNode* root)->void
+		function<void(treeNode* root)> recursion = [&](treeNode* root)->void
 		{
-			if (root = nullptr)
+			if (root == nullptr)
 			{
-				return nullptr;
+				return ;
 			}
 
 			treeNode* lChild = root->lChild;
@@ -76,10 +81,89 @@ public:
 		recursion(m_root);
 	}
 	
+	//二叉排序数的插入
+	//中序遍历结果是一个升序排列
+	//极值：最小值--最左子节点；最大值---最右子节点
+	void insertBST(const T& val, bool(*compare)(const T& a, const T& b))//a比b大返回true
+	{
+		if (m_NodeNum == 0)
+		{
+			m_root->data = val;
+			++m_NodeNum;
+			return;
+		}
+
+		function<void(treeNode* root)> recursion = [&](treeNode* root)
+		{
+			if (compare(val, root->data))
+			{
+				if (root->rChild == nullptr)
+				{
+					treeNode* newNode = new treeNode;
+					newNode->data = val;
+					newNode->lChild = nullptr;
+					newNode->rChild = nullptr;
+					root->rChild = newNode;
+					++m_NodeNum;
+					return;
+				}
+				recursion(root->rChild);
+			}
+			else
+			{
+				if (root->lChild == nullptr)
+				{
+					treeNode* newNode = new treeNode;
+					newNode->data = val;
+					newNode->lChild = nullptr;
+					newNode->rChild = nullptr;
+					root->lChild = newNode;
+					++m_NodeNum;
+					return;
+				}
+				recursion(root->lChild);
+
+			}
+		};
+
+		recursion(m_root);
+	}
+
+	//二叉排序树的查找
+	//查找到返回true，否则返回false
+	void searchBST(const T& val,int (*compare)(const T& a,const T& b))//compare---相等返回0，小于返回-1，大于返回1
+	{
+
+		function<void (treeNode* root)> recursion = [&](treeNode* root)
+		{
+			if (root == nullptr)
+			{
+				cout << "值:" << val << ",查找失败" << endl;
+				return ;
+			}
+			if (compare(val, root->data) == 0)
+			{
+				cout << "值:" << val << ",查找成功" << endl;
+				return ;
+			}
+			if (compare(val, root->data) == 1)
+			{
+				recursion(root->rChild);
+			}
+			if (compare(val, root->data) == -1)
+			{
+				recursion(root->lChild);
+			}
+		};
+
+		recursion(m_root);
+	}
+
+
 	//先序遍历
 	void preOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void
+		function<void (treeNode* root)> recursion = [&](treeNode* root)->void
 		{
 			if (root == nullptr)
 			{
@@ -96,7 +180,7 @@ public:
 	//中序遍历
 	void inOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void
+		function<void (treeNode* root)> recursion = [&](treeNode* root)->void
 		{
 			if (root == nullptr)
 			{
@@ -113,7 +197,7 @@ public:
 	//后序遍历
 	void postOrderForeach(void print(const T& val))
 	{
-		auto recursion = [&](treeNode* root)->void
+		function<void (treeNode* root)> recursion = [&](treeNode* root)->void
 		{
 			if (root == nullptr)
 			{
@@ -131,9 +215,9 @@ public:
 	size_t leafNumber()
 	{
 		size_t size = 0;
-		auto recursion = [&](treeNode* root)->void
+		function<void(treeNode* root)> recursion = [&](treeNode* root)->void
 		{
-			if (root = nullptr)
+			if (root == nullptr)
 			{
 				return ;
 			}
@@ -149,7 +233,7 @@ public:
 	//树的高度/深度
 	size_t depth()
 	{
-		auto recursion = [](treeNode* root)->size_t
+		function<void (treeNode* root)> recursion = [](treeNode* root)->size_t
 		{
 			if (root == nullptr)
 			{
@@ -177,4 +261,6 @@ private:
 
 private:
 	treeNode* m_root;
+
+	size_t m_NodeNum;
 };

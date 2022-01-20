@@ -13,6 +13,7 @@
 #include "linkQueue.hpp"
 #include "matrixGraph.hpp"
 #include "ListGraph.hpp"
+#include "BinaryTree.hpp"
 
 using namespace std;
 
@@ -245,6 +246,43 @@ void ListGraphTest()
 	test.BFS(1, printGtaph);
 }
 
+inline bool compare(const int& a, const int& b)
+{
+	return a > b;
+}
+
+inline void print(const int& val)
+{
+	cout << val << endl;
+}
+
+int comp(const int& a, const int& b)
+{
+	if (a == b)
+	{
+		return 0;
+	}
+	return a > b ? 1 : -1;
+}
+
+void BinaryTreeTest()
+{
+	DBinaryTree<int> test;
+
+	test.insertBST(5, compare);
+	test.insertBST(2, compare);
+	test.insertBST(8, compare);
+	test.insertBST(888, compare);
+	test.insertBST(16, compare);
+	test.insertBST(75, compare);
+	test.insertBST(111, compare);
+	test.insertBST(0, compare);
+
+	test.inOrderForeach(print);
+
+	test.searchBST(111, comp);
+}
+
 int main(int argc, char* argv[])
 {
 	
@@ -255,7 +293,8 @@ int main(int argc, char* argv[])
 	//sqQueueTest();
 	//linkQueueTest();
 	//matrixGraphTest();
-	ListGraphTest();
+	//ListGraphTest();
+	BinaryTreeTest();
 
 	system("pause");
 }
