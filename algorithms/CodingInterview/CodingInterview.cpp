@@ -195,9 +195,57 @@ void jz7()
 
 void jz8()
 {
+	struct NODE
+	{
+		int data;
+		NODE* lChild;
+		NODE* rChild;
+		NODE* next;
+	};
+
 	int tree[] = { 8,6,10,5,7,9,11 };
+	int flag = 8;
 
+	NODE* root[sizeof(tree) / sizeof(tree[0])];
+	root[0] = new NODE;
+	root[0]->lChild = nullptr;
+	root[0]->rChild = nullptr;
+	root[0]->next = nullptr;
+	root[0]->data = tree[0];
 
+	for (int i = 1; i < sizeof(tree) / sizeof(tree[0]); ++i)
+	{
+		root[i] = new NODE;
+		root[i]->lChild = nullptr;
+		root[i]->rChild = nullptr;
+		root[i]->data = tree[i];
+		root[i]->next = root[(i + 1) / 2 - 1];
+
+	}
+	for (int i = 0; i < sizeof(tree) / sizeof(tree[0]) /2; ++i)
+	{
+		root[i]->lChild = root[(i + 1) * 2 - 1];
+		root[i]->rChild = root[(i + 1) * 2];
+	}
+
+	NODE* cur = root[0];
+	function<void(NODE* curNode)>func = [&](NODE* curNode)->void  
+	{
+		if (curNode == nullptr)
+		{
+			return;
+		}
+		func(curNode->lChild);
+		if (curNode->data == flag)
+		{
+			cout << curNode->rChild->data << endl;
+		}
+
+		func(curNode->rChild);
+
+	};
+
+	func(root[0]);
 
 }
 
@@ -207,8 +255,8 @@ int main()
 	//jz4();
 	//jz5();
 	//jz6();
-	jz7();//*
-	//jz8();
+	//jz7();//*
+	jz8();
 
 
 	system("pause");
