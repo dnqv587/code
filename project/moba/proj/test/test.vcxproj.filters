@@ -14,6 +14,9 @@
     <ClInclude Include="win_sock.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="mysql.cpp">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_sock.cpp">
