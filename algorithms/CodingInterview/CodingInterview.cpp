@@ -3,6 +3,7 @@
 #include <array>
 #include <string>
 #include <functional>
+#include <vector>
 
 using namespace std;
 
@@ -195,16 +196,17 @@ void jz7()
 
 void jz8()
 {
+	//组建二叉树
 	struct NODE
 	{
 		int data;
 		NODE* lChild;
 		NODE* rChild;
-		NODE* next;
+		NODE* next;//父节点
 	};
 
-	int tree[] = { 8,6,10,5,7,9,11 };
-	int flag = 8;
+	int tree[] = { 1,2,-1,-1,3,-1,4 };
+	int flag = 4;
 
 	NODE* root[sizeof(tree) / sizeof(tree[0])];
 	root[0] = new NODE;
@@ -215,21 +217,69 @@ void jz8()
 
 	for (int i = 1; i < sizeof(tree) / sizeof(tree[0]); ++i)
 	{
-		root[i] = new NODE;
-		root[i]->lChild = nullptr;
-		root[i]->rChild = nullptr;
-		root[i]->data = tree[i];
-		root[i]->next = root[(i + 1) / 2 - 1];
+		if (tree[i] != -1)
+		{
+			root[i] = new NODE;
+			root[i]->lChild = nullptr;
+			root[i]->rChild = nullptr;
+			root[i]->data = tree[i];
+			root[i]->next = root[(i + 1) / 2 - 1];
+		}
+		else
+		{
+			root[i] = nullptr;
+		}
 
 	}
-	for (int i = 0; i < sizeof(tree) / sizeof(tree[0]) /2; ++i)
+	for (int i = 0; i < sizeof(tree) / sizeof(tree[0])-2 ; ++i)//有问题
 	{
-		root[i]->lChild = root[(i + 1) * 2 - 1];
-		root[i]->rChild = root[(i + 1) * 2];
+		if (tree[i] != -1)
+		{
+
+			root[i]->lChild = root[2 * (i + 1) - 1];
+
+			root[i]->rChild = root[2 * (i + 1)];
+
+		}
 	}
 
-	NODE* cur = root[0];
+	//方法一：
+	/*------暴力解法
+
+	vector<int> vec;
 	function<void(NODE* curNode)>func = [&](NODE* curNode)->void  
+	{
+		if (curNode == nullptr)
+		{
+			return;
+		}
+		func(curNode->lChild);
+		vec.push_back(curNode->data);
+		func(curNode->rChild);
+
+	};
+
+	func(root[0]);
+
+	for (auto iter = vec.begin(); iter != vec.end(); ++iter)
+	{
+		if (*iter == flag)
+		{
+			cout << "下一个节点为：" << *++iter << endl;
+			break;
+		}
+	}
+	*/
+
+
+	//方法二：
+	/*仔细观察，可以把中序下一结点归为几种类型：
+1、有右子树，下一结点是右子树中的最左结点
+2、无右子树，且结点是该结点父结点的左子树，则下一结点是该结点的父结点
+3、无右子树，且结点是该结点父结点的右子树，则一直沿着父结点追朔，直到找到某个结点是其父结点的左子树，如果存在这样的结点，那么这个结点的父结点就是我们要找的下一结点。
+4、以上都不存在，则没有下一个节点*/
+
+	function<void(NODE* curNode)>func = [&](NODE* curNode)->void
 	{
 		if (curNode == nullptr)
 		{
@@ -238,15 +288,158 @@ void jz8()
 		func(curNode->lChild);
 		if (curNode->data == flag)
 		{
-			cout << curNode->rChild->data << endl;
+			if (curNode->rChild != nullptr)//有右子树
+			{
+				curNode = curNode->rChild;
+				while (curNode->lChild != nullptr)
+				{
+					curNode = curNode->lChild;
+				}
+				cout << "下一个节点:" << curNode->data << endl;
+				return;
+			}
+			//无右子树
+			while (curNode->next != nullptr)
+			{
+				if (curNode == curNode->next->lChild)
+				{
+					cout << "下一个节点:" << curNode->next->data << endl;
+					return;
+				}
+				curNode = curNode->next;
+			}
+			
+			
+			cout << "没有下一个节点" << endl;
+			return;
 		}
-
 		func(curNode->rChild);
-
 	};
 
 	func(root[0]);
 
+}
+
+void jz9()
+{
+	struct NODE
+	{
+		int data;
+		NODE* next;
+	};
+
+	class stack
+	{
+	public:
+		stack():m_top(nullptr),m_size(0)
+		{
+
+		}
+
+		~stack()
+		{
+			while (m_top != nullptr)
+			{
+				NODE* curNODE = m_top;
+				m_top = m_top->next;
+				delete curNODE;
+			}
+		}
+
+		void push(const int& val)
+		{
+			NODE* newNODE = new NODE;
+			newNODE->data = val;
+			newNODE->next = m_top;
+			m_top = newNODE;
+			++m_size;
+		}
+
+		int pop()
+		{
+			if (isEmpty())
+			{
+				throw length_error("栈为空");
+			}
+			int val = m_top->data;
+			NODE* curNODE = m_top;
+			m_top = m_top->next;
+			delete curNODE;
+			--m_size;
+			return val;
+		}
+
+		bool isEmpty()
+		{
+			return !m_size;
+		}
+
+	private:
+
+		NODE* m_top;
+		unsigned int m_size;
+	};
+	
+
+	stack stack1;
+	stack stack2;
+
+	NODE* Queue = nullptr;
+	function<void (const int& val)> insert = [&](const int& val)->void
+	{
+		while (!stack2.isEmpty())
+		{
+			stack2.pop();
+		}
+		stack1.push(val);
+	};
+
+	function<int ()> front = [&]()->int
+	{
+
+
+		while (!stack1.isEmpty())
+		{
+			stack2.push(stack1.pop());
+		}
+
+		if (stack2.isEmpty())
+		{
+			throw length_error("stack2 is empty");
+		}
+		return stack2.pop();
+	};
+
+	insert(1);
+	insert(2);
+	insert(3);
+
+	cout << front() << endl;
+	cout << front() << endl;
+	cout << front() << endl;
+
+}
+
+void jz10()
+{
+	function<int(int val)> func = [&](int val)->int 
+	{
+		if (val <= 2)
+		{
+			return 1;
+		}
+		return func(val - 1) + func(val - 2);
+
+	};
+
+	cout << func(4) << endl;
+}
+
+void jz11()
+{
+	int loacte[] = { 3,4,5,1,2 };
+	int min;
+	
 }
 
 int main()
@@ -255,8 +448,11 @@ int main()
 	//jz4();
 	//jz5();
 	//jz6();
-	//jz7();//*
-	jz8();
+	//jz7();//**
+	//jz8();//*
+	//jz9();
+	//jz10();
+	jz11();
 
 
 	system("pause");
