@@ -995,12 +995,23 @@ void word_test1120()
 
 }
 
+class StrBlobPtr;
 class StrBlob
 {
+	friend class StrBlobPtr;
 public:
 	typedef std::vector<string>::size_type size_type;
 
-	StrBlob() = default;
+	// begin()和end()函数的定义必须在StrBlobPtr类定义之后，否则会报错（StrBlobPtr是不完全类型）
+	StrBlobPtr begin();
+
+	StrBlobPtr end();
+
+
+	StrBlob() 
+	{
+		data = make_shared<std::vector<std::string>>(std::vector<std::string>());
+	};
 	StrBlob(std::initializer_list<string> list) //initializer_list---列表初始化容器
 	{
 
@@ -1041,6 +1052,7 @@ public:
 		return data->empty();
 	}
 
+
 private:
 
 	void check(size_type i, const std::string &msg) const//检测data[i]是否合法，不合法抛出异常
@@ -1061,6 +1073,119 @@ void StrBlob_122()
 	StrBlob str{ "123456","abcdef","1a2b3c" };
 	
 	cout << str.front() << " " << str.back() << endl;
+}
+
+class StrBlobPtr
+{
+
+public:
+	StrBlobPtr() :curr(0) {}
+
+	StrBlobPtr(StrBlob& a, std::size_t size = 0) :wptr(a.data), curr(size) {}
+
+	//返回所指对象的string内容
+	std::string deref() const 
+	{
+		auto p = check(curr, "dereference past end");
+		return (*p)[curr];
+	}
+
+	//前缀递减,返回递增后的对象的引用
+	StrBlobPtr& incr()
+	{
+		check(curr, "increment past end of StrBlobStr");
+		++curr;
+		return *this;
+	}
+
+	bool operator!=(StrBlobPtr& blob)
+	{
+		if (this->curr != blob.curr)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+private:
+	//检查成功，则返回一个指向vector的shared_prt
+	std::shared_ptr<std::vector<std::string>> check(std::size_t i, const std::string& msg) const 
+	{
+		auto ret = wptr.lock();
+		if (!ret)
+		{
+			throw std::runtime_error("unbound StrBlobStr");
+		}
+		if (i >= ret->size())
+		{
+			throw std::out_of_range(msg);
+		}
+
+		return ret;
+	}
+
+	std::weak_ptr<std::vector<std::string >> wptr;
+
+	std::size_t curr;//在数组中的当前位置
+
+};
+
+StrBlobPtr StrBlob::begin()
+{
+	return StrBlobPtr(*this);
+}
+
+StrBlobPtr StrBlob::end()
+{
+	auto ret = StrBlobPtr(*this, data->size());
+	return ret;
+}
+
+void StrBlobPtr_1220()
+{
+	std::string str;
+	StrBlob blob;
+	StrBlobPtr pbegin, pend;
+
+	while (getline(std::cin, str))
+	{
+		if (str == "999")
+		{
+			break;
+		}
+		blob.push_back(str);
+
+	}
+
+	for (pbegin = blob.begin(), pend = blob.end(); pbegin != pend; pbegin.incr())
+	{
+		std::cout << pbegin.deref() << std::endl;
+	}
+
+}
+
+void allocator_test1226()
+{
+	allocator<std::string> alloc;
+	auto const pbeg = alloc.allocate(10);
+	auto pend = pbeg;
+	std::string line;
+
+	while (getline(std::cin, line)&&pend!=pbeg+10)
+	{
+		alloc.construct(pend++, line);
+	}
+
+	while (pend != pbeg)
+	{
+		std::cout << *--pend << std::endl;
+		alloc.destroy(pend);
+	}
+	alloc.deallocate(pbeg,10);
+
 }
 
 int main(int argc, char** argv)
@@ -1111,7 +1236,9 @@ int main(int argc, char** argv)
 	//pair_test();
 	//word_test1120();
 	//智能指针
-	StrBlob_122();
+	//StrBlob_122();
+	//StrBlobPtr_1220();
+	allocator_test1226();
 
 	system("pause");
 	return 0;
