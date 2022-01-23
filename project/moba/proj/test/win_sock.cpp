@@ -91,31 +91,11 @@ void client()
 	closesocket(cfd);
 }
 
-int main(int argc, char* argv[])
+int sock()
 {
-	int ret;
-#ifdef WIN32
-	//配置windows socket版本
-	WORD wVersionRequested;
-	WSADATA WSAData;
-	wVersionRequested = MAKEWORD(2, 2);
-	ret = WSAStartup(wVersionRequested, &WSAData);
-	if (ret != 0)
-	{
-		perror("WSAStartup error");
-		return -1;
-	}
-#endif
-
 
 	//service();
 	client();
-
-	//结束时清理定义的版本
-#ifdef WIN32
-	WSACleanup();
-#endif
-
-	system("pause");
+	return 0;
 }
 

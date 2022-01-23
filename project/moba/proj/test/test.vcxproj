@@ -113,13 +113,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>E:\Study\program\code\project\moba\3rd\include;E:\Study\program\code\project\moba\proj\mysql\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>E:\Study\program\code\project\moba\proj\mysql\lib\vs14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,10 +141,66 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\3rd\include\pthread-barrier.h" />
+    <ClInclude Include="..\..\3rd\include\stdint-msvc2008.h" />
+    <ClInclude Include="..\..\3rd\include\tree.h" />
+    <ClInclude Include="..\..\3rd\include\uv-aix.h" />
+    <ClInclude Include="..\..\3rd\include\uv-bsd.h" />
+    <ClInclude Include="..\..\3rd\include\uv-darwin.h" />
+    <ClInclude Include="..\..\3rd\include\uv-errno.h" />
+    <ClInclude Include="..\..\3rd\include\uv-sunos.h" />
+    <ClInclude Include="..\..\3rd\include\uv-threadpool.h" />
+    <ClInclude Include="..\..\3rd\include\uv-version.h" />
+    <ClInclude Include="..\..\3rd\include\uv-win.h" />
+    <ClInclude Include="..\..\3rd\include\uv.h" />
+    <ClInclude Include="..\..\3rd\src\heap-inl.h" />
+    <ClInclude Include="..\..\3rd\src\queue.h" />
+    <ClInclude Include="..\..\3rd\src\uv-common.h" />
+    <ClInclude Include="..\..\3rd\src\win\atomicops-inl.h" />
+    <ClInclude Include="..\..\3rd\src\win\handle-inl.h" />
+    <ClInclude Include="..\..\3rd\src\win\internal.h" />
+    <ClInclude Include="..\..\3rd\src\win\req-inl.h" />
+    <ClInclude Include="..\..\3rd\src\win\stream-inl.h" />
+    <ClInclude Include="..\..\3rd\src\win\winapi.h" />
+    <ClInclude Include="..\..\3rd\src\win\winsock.h" />
+    <ClInclude Include="libuv.h" />
     <ClInclude Include="mysql.cpp" />
     <ClInclude Include="win_sock.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rd\src\fs-poll.c" />
+    <ClCompile Include="..\..\3rd\src\inet.c" />
+    <ClCompile Include="..\..\3rd\src\threadpool.c" />
+    <ClCompile Include="..\..\3rd\src\uv-common.c" />
+    <ClCompile Include="..\..\3rd\src\version.c" />
+    <ClCompile Include="..\..\3rd\src\win\async.c" />
+    <ClCompile Include="..\..\3rd\src\win\core.c" />
+    <ClCompile Include="..\..\3rd\src\win\dl.c" />
+    <ClCompile Include="..\..\3rd\src\win\error.c" />
+    <ClCompile Include="..\..\3rd\src\win\fs-event.c" />
+    <ClCompile Include="..\..\3rd\src\win\fs.c" />
+    <ClCompile Include="..\..\3rd\src\win\getaddrinfo.c" />
+    <ClCompile Include="..\..\3rd\src\win\getnameinfo.c" />
+    <ClCompile Include="..\..\3rd\src\win\handle.c" />
+    <ClCompile Include="..\..\3rd\src\win\loop-watcher.c" />
+    <ClCompile Include="..\..\3rd\src\win\pipe.c" />
+    <ClCompile Include="..\..\3rd\src\win\poll.c" />
+    <ClCompile Include="..\..\3rd\src\win\process-stdio.c" />
+    <ClCompile Include="..\..\3rd\src\win\process.c" />
+    <ClCompile Include="..\..\3rd\src\win\req.c" />
+    <ClCompile Include="..\..\3rd\src\win\signal.c" />
+    <ClCompile Include="..\..\3rd\src\win\snprintf.c" />
+    <ClCompile Include="..\..\3rd\src\win\stream.c" />
+    <ClCompile Include="..\..\3rd\src\win\tcp.c" />
+    <ClCompile Include="..\..\3rd\src\win\thread.c" />
+    <ClCompile Include="..\..\3rd\src\win\timer.c" />
+    <ClCompile Include="..\..\3rd\src\win\tty.c" />
+    <ClCompile Include="..\..\3rd\src\win\udp.c" />
+    <ClCompile Include="..\..\3rd\src\win\util.c" />
+    <ClCompile Include="..\..\3rd\src\win\winapi.c" />
+    <ClCompile Include="..\..\3rd\src\win\winsock.c" />
+    <ClCompile Include="libuv.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="win_sock.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

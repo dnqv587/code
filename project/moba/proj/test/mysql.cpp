@@ -10,7 +10,7 @@
 
 #include "mysql.h"
 
-int main(int argc, char* argv[])
+int sql()
 {
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
