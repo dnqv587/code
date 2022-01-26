@@ -1188,6 +1188,53 @@ void allocator_test1226()
 
 }
 
+
+
+class HasPtr
+{
+public:
+	HasPtr(const std::string& s = std::string()) :ps(new std::string(s)), i(0)
+	{
+		
+	}
+	HasPtr(const HasPtr& ptr):ps(new std::string(*ptr.ps)),i(ptr.i)
+	{
+		
+	}
+
+	~HasPtr()
+	{
+		delete ps;
+	}
+
+	HasPtr& operator=(const HasPtr& ptr)
+	{
+		this->ps = new std::string(*ptr.ps);
+		this->i = ptr.i;
+		return *this;
+	}
+
+	std::string getPs()
+	{
+		return *this->ps;
+	}
+
+private:
+	std::string* ps;
+	int i;
+
+};
+
+void hasptr_test135()
+{
+	HasPtr test("12345");
+
+	HasPtr copy = test;
+	
+	std::cout << test.getPs() << endl;
+	
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -1238,7 +1285,10 @@ int main(int argc, char** argv)
 	//智能指针
 	//StrBlob_122();
 	//StrBlobPtr_1220();
-	allocator_test1226();
+	//allocator_test1226();
+	//拷贝控制
+	hasptr_test135();
+
 
 	system("pause");
 	return 0;
