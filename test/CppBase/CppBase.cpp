@@ -1007,7 +1007,7 @@ public:
 
 	StrBlobPtr end();
 
-
+	~StrBlob() = delete;
 	StrBlob() 
 	{
 		data = make_shared<std::vector<std::string>>(std::vector<std::string>());
@@ -1017,6 +1017,13 @@ public:
 
 		data = make_shared<vector<string>>(list);
 		
+	}
+
+	StrBlob& operator=(const StrBlob& str)
+	{
+		this->data = make_shared<std::string>(*str.data);
+
+		return *this;
 	}
 
 	void push_back(const std::string& val)
@@ -1202,6 +1209,7 @@ public:
 		
 	}
 
+
 	~HasPtr()
 	{
 		delete ps;
@@ -1209,7 +1217,12 @@ public:
 
 	HasPtr& operator=(const HasPtr& ptr)
 	{
-		this->ps = new std::string(*ptr.ps);
+		auto newptr= new std::string(*ptr.ps);
+		if (this->ps)
+		{
+			delete ps;
+		}
+		this->ps = newptr;
 		this->i = ptr.i;
 		return *this;
 	}
@@ -1220,11 +1233,10 @@ public:
 	}
 
 private:
-	std::string* ps;
+	std::string* ps = nullptr;
 	int i;
 
 };
-
 void hasptr_test135()
 {
 	HasPtr test("12345");
@@ -1233,6 +1245,41 @@ void hasptr_test135()
 	
 	std::cout << test.getPs() << endl;
 	
+}
+
+class Employee
+{
+public:
+	Employee() = default;
+
+	Employee(const Employee&) = delete;
+
+	Employee& operator=(const Employee&) = delete;
+
+	Employee(const std::string& name) :m_name(name) 
+	{
+		m_ID = ++count;
+	}
+
+	unsigned int getID()
+	{
+		return m_ID;
+	}
+private:
+	static unsigned int count;
+	std::string m_name;
+	unsigned int m_ID;
+
+};
+
+unsigned int Employee::count = 0;
+
+void employee1318()
+{
+	Employee test;
+	Employee test2("123");
+	std::cout << test.getID() << " " << test2.getID() << std::endl;
+
 }
 
 int main(int argc, char** argv)
@@ -1287,8 +1334,8 @@ int main(int argc, char** argv)
 	//StrBlobPtr_1220();
 	//allocator_test1226();
 	//拷贝控制
-	hasptr_test135();
-
+	//hasptr_test135();
+	employee1318();
 
 	system("pause");
 	return 0;
