@@ -1007,7 +1007,7 @@ public:
 
 	StrBlobPtr end();
 
-	~StrBlob() = delete;
+	//~StrBlob() = delete;
 	StrBlob() 
 	{
 		data = make_shared<std::vector<std::string>>(std::vector<std::string>());
@@ -1019,12 +1019,12 @@ public:
 		
 	}
 
-	StrBlob& operator=(const StrBlob& str)
-	{
-		this->data = make_shared<std::string>(*str.data);
+	//StrBlob& operator=(const StrBlob& str)
+	//{
+	//	this->data = make_shared<std::string>(*str.data);
 
-		return *this;
-	}
+	//	return *this;
+	//}
 
 	void push_back(const std::string& val)
 	{
@@ -1196,34 +1196,49 @@ void allocator_test1226()
 }
 
 
-
+//引用计数
 class HasPtr
 {
 public:
-	HasPtr(const std::string& s = std::string()) :ps(new std::string(s)), i(0)
+	HasPtr(const std::string& s = std::string()) :ps(new std::string(s)), i(0),use(new std::size_t (1))//初始化对象，将引用计数置为1
 	{
-		
+		std::cout << "引用计数置为1" << std::endl;
 	}
-	HasPtr(const HasPtr& ptr):ps(new std::string(*ptr.ps)),i(ptr.i)
+	HasPtr(const HasPtr& ptr):ps(ptr.ps),i(ptr.i),use(ptr.use)
 	{
-		
+		++*use;//拷贝构造，引用计数加1
+		std::cout << "引用计数加1" << std::endl;
 	}
 
 
 	~HasPtr()
 	{
-		delete ps;
+		std::cout << "引用计数减1" << std::endl;
+		if (--*use == 0)//析构，引用计数减1
+		{//引用计数为0，销毁对象
+			std::cout << "销毁对象" << std::endl;
+			delete ps;
+			delete use;
+		}
 	}
 
 	HasPtr& operator=(const HasPtr& ptr)
 	{
-		auto newptr= new std::string(*ptr.ps);
-		if (this->ps)
-		{
-			delete ps;
-		}
-		this->ps = newptr;
+		//auto newptr= new std::string(*ptr.ps);//防止自己赋值自己后先销毁了自己
+		//if (this->ps)
+		//{
+		//	this->~HasPtr();
+		//	//delete ps;
+		//}
+
+		++*ptr.use;//拷贝赋值运算符，引用计数加1
+		std::cout << "右侧引用计数加1" << std::endl;
+		--*use;
+		std::cout << "左侧引用计数减1" << std::endl;
+		this->ps = ptr.ps;
 		this->i = ptr.i;
+		this->use = ptr.use;
+		
 		return *this;
 	}
 
@@ -1235,6 +1250,8 @@ public:
 private:
 	std::string* ps = nullptr;
 	int i;
+
+	std::size_t* use;//引用计数
 
 };
 void hasptr_test135()
@@ -1279,6 +1296,20 @@ void employee1318()
 	Employee test;
 	Employee test2("123");
 	std::cout << test.getID() << " " << test2.getID() << std::endl;
+
+}
+
+
+void HasPtr_count1327()
+{
+	HasPtr test1;
+	HasPtr test2 = test1;
+	HasPtr test3("123");
+	test3 = test2;
+
+	//test1.~HasPtr();
+	//test2.~HasPtr();
+	//test3.~HasPtr();
 
 }
 
@@ -1335,7 +1366,8 @@ int main(int argc, char** argv)
 	//allocator_test1226();
 	//拷贝控制
 	//hasptr_test135();
-	employee1318();
+	//employee1318();
+	HasPtr_count1327();
 
 	system("pause");
 	return 0;
