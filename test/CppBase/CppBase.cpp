@@ -1200,6 +1200,8 @@ void allocator_test1226()
 class HasPtr
 {
 public:
+	friend void swap(HasPtr& lhs, HasPtr& rhs);
+
 	HasPtr(const std::string& s = std::string()) :ps(new std::string(s)), i(0),use(new std::size_t (1))//初始化对象，将引用计数置为1
 	{
 		std::cout << "引用计数置为1" << std::endl;
@@ -1234,12 +1236,22 @@ public:
 		++*ptr.use;//拷贝赋值运算符，引用计数加1
 		std::cout << "右侧引用计数加1" << std::endl;
 		--*use;
+		if (this->use == 0)
+		{
+			delete ps;
+			delete use;
+		}
 		std::cout << "左侧引用计数减1" << std::endl;
 		this->ps = ptr.ps;
 		this->i = ptr.i;
 		this->use = ptr.use;
 		
 		return *this;
+	}
+
+	bool operator<(const HasPtr& ptr)
+	{
+		return *this->ps < *ptr.ps;
 	}
 
 	std::string getPs()
@@ -1313,6 +1325,123 @@ void HasPtr_count1327()
 
 }
 
+
+
+void treenode1328()
+{
+
+	class TreeNode
+	{
+	public:
+
+		TreeNode() :value(std::string()), count(new int(1)), left(nullptr), right(nullptr) 
+		{
+			cout << "置1" << endl;
+		}
+
+		TreeNode(std::string str) :value(str), count(new int(1)), left(nullptr), right(nullptr)
+		{
+			cout << "置1" << endl;
+		}
+
+		~TreeNode()
+		{
+			cout << "递减" << endl;
+			if (--* count == 0)
+			{
+				cout << "销毁" << endl;
+				delete count;
+				delete left;
+				delete right;
+			}
+		}
+
+		TreeNode(const TreeNode& node):value(node.value),left(node.left),right(node.right),count(node.count)
+		{
+			++* count;
+			cout << "递增" << endl;
+		}
+
+		TreeNode& operator=(const TreeNode& node)
+		{
+			cout << "递增" << endl;
+			++*node.count;
+
+			this->~TreeNode();
+
+			this->value = node.value;
+			this->left = node.left;
+			this->right = node.right;
+			this->count = node.count;
+
+			return *this;
+
+		}
+
+
+
+	private:
+		std::string value;
+		int* count;
+		TreeNode* left;
+		TreeNode* right;
+	};
+
+
+	TreeNode test1;
+	TreeNode test2();
+	TreeNode test3("123");
+	TreeNode test4 = test3;
+	TreeNode test5("  ");
+	test5 = test4;
+
+
+}
+
+inline void swap(HasPtr& lhs,HasPtr& rhs)
+{
+	using std::swap;
+	swap(lhs.ps, rhs.ps);
+	swap(lhs.i,rhs.i);
+	swap(lhs.use, rhs.use);
+	std::cout << "使用swap" << std::endl;
+}
+
+void hasptr_swap1330()
+{
+	HasPtr test1("123");
+	HasPtr test2("abc");
+
+	swap(test1, test2);
+	std::cout << test1.getPs() << std::endl;
+	std::cout << test2.getPs() << std::endl;
+
+}
+
+void hasptr_sort1331()
+{
+	vector<HasPtr> vec;
+	vec.emplace_back("4");
+	vec.emplace_back("2");
+	vec.emplace_back("1");
+	vec.emplace_back("3");
+
+	std::sort(vec.begin(), vec.end());
+
+	for (auto& i : vec)
+	{
+		std::cout << i.getPs() << std::endl;
+	}
+
+}
+
+
+void Massage_Folder()
+{
+	
+
+}
+
 int main(int argc, char** argv)
 {
 	//vector_half();
@@ -1367,7 +1496,11 @@ int main(int argc, char** argv)
 	//拷贝控制
 	//hasptr_test135();
 	//employee1318();
-	HasPtr_count1327();
+	//HasPtr_count1327();
+	//treenode1328();
+	//hasptr_swap1330();
+	//hasptr_sort1331();
+	Massage_Folder();//拷贝控制示例
 
 	system("pause");
 	return 0;

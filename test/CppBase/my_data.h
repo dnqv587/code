@@ -23,6 +23,176 @@
 #include <map>
 #include <set>
 
+
+
+
+class Folder;
+class Massage
+{
+	friend class Folder;
+	friend void swap(Massage& lhs, Massage& rhs);
+public:
+	explicit Massage(const std::string& msg = "") :content(msg)//有参构造
+	{
+		//addToFolder(*this);
+	}
+
+	Massage(const Massage& msg) :content(msg.content)//拷贝构造
+	{
+		addToFolder(msg);//将本消息添加到指定的Folder中
+	}
+
+	Massage& operator=(const Massage& rhs)
+	{
+		removeFromFolder();
+		this->content = rhs.content;
+		this->folders = rhs.folders;
+		addToFolder(rhs);
+		return *this;
+
+	}
+
+	~Massage()
+	{
+		removeFromFolder();
+	}
+
+	void save(Folder& fld)
+	{
+		folders.insert(&fld);
+		fld.addMsg(this);
+	}
+
+	void remove(Folder& fld)
+	{
+		folders.erase(&fld);
+		fld.remMsg(this);
+	}
+
+	void addFolder(Folder* fld)
+	{
+		folders.insert(fld);
+	}
+
+	void removeFolder(Folder* fld)
+	{
+		folders.erase(fld);
+	}
+
+private:
+	//将本Massage添加到指向参数的Folder中
+	void addToFolder(const Massage& msg)
+	{
+		for (auto i : msg.folders)
+		{
+			i->addMsg(this);
+		}
+	}
+
+	//将folders中的每个Folder删除本Massage
+	void  removeFromFolder()
+	{
+		for (auto i : folders)
+		{
+			i->remMsg(this);
+		}
+	}
+
+private:
+	std::string content;//实际内容
+
+	std::set<Folder*> folders;//包含本Massage的Folder
+
+};
+
+
+class Folder
+{
+public:
+	Folder() = default;
+
+	Folder(const Folder& fld)
+	{
+		addToMsg(fld);
+	}
+
+	Folder& operator=(const Folder& fld)
+	{
+		removeFromMsg();
+		this->massages = fld.massages;
+		addToMsg(fld);
+	}
+	~Folder()
+	{
+		removeFromMsg();
+	}
+
+	void addMsg(Massage* msg)
+	{
+		massages.insert(msg);
+	}
+
+	void remMsg(Massage* msg)
+	{
+		massages.erase(msg);
+	}
+
+private:
+	void addToMsg(const Folder& fld)
+	{
+		for (auto i : fld.massages)
+		{
+			i->addFolder((Folder*)&fld);
+		}
+	}
+
+	void removeFromMsg()
+	{
+		for (auto i : massages)
+		{
+			i->removeFolder(this);
+		}
+	}
+
+private:
+	std::set<Massage*>massages;
+
+};
+
+void swap(Massage& lhs, Massage& rhs)
+{
+	using std::swap;
+
+	for (auto i : lhs.folders)
+	{
+		i->remMsg(&lhs);
+	}
+
+	for (auto i : rhs.folders)
+	{
+		i->remMsg(&rhs);
+	}
+
+	swap(lhs.folders, rhs.folders);
+	swap(lhs.content, rhs.content);
+
+	for (auto i : lhs.folders)
+	{
+		i->addMsg(&lhs);
+	}
+
+	for (auto i : rhs.folders)
+	{
+		i->addMsg(&rhs);
+	}
+
+}
+
+
+
+
+
+
 struct personInfo
 {
 	std::string name;
