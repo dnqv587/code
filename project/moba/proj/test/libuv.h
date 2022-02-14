@@ -42,8 +42,14 @@ static unsigned int get_cur_ms()
 
 #endif
 
-
+void websocket();
 
 void  UDP();
+void TCP();
 void timer_test();
 void timer_indi();
+void file();
+void std_out_in();
+void http_server();
+
+void workQueue();

@@ -18,7 +18,7 @@ int sql()
 	//创建mysql连接
 	MYSQL* pConn = mysql_init(NULL);
 
-	mysql_real_connect(pConn, "192.168.76.128", "root", "20171028", "mydb", 3306, NULL, 0);
+	mysql_real_connect(pConn, "127.0.0.1", "root", "20171028", "test", 3306, NULL, 0);
 
 	mysql_query(pConn, "set names utf8");//设置编码
 	//插入一条记录

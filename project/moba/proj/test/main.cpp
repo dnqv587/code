@@ -5,6 +5,8 @@
 
 
 #include "libuv.h"
+#include "http.h"
+#include "redis.h"
 
 
 int main(int argc, char* argv[])
@@ -27,11 +29,17 @@ int main(int argc, char* argv[])
 
 	//UDP();
 	//timer_test();
-	timer_indi();
+	//timer_indi();
+	//file();
+	//std_out_in();
+	//http();
+	//TCP();
+	//websocket();
 
+	//http_server();
+	//redis();
 
-
-
+	workQueue();
 
 
 	//结束时清理定义的版本
