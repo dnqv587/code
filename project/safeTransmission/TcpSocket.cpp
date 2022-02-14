@@ -324,7 +324,7 @@ int TcpSocket::writen(const void* buf, unsigned int len)
 
 	while (nleft > 0)
 	{
-		if ((nwritten = write(m_sock, bufp, nleft)) < 0)
+		if ((nwritten = send(m_sock, bufp, nleft,0)) < 0)
 		{
 			if (errno == EINTR)	// 被信号打断
 			{
@@ -352,7 +352,7 @@ int TcpSocket::readn(const void* buf, unsigned int len)
 
 	while (nleft > 0)
 	{
-		if ((nread = read(m_sock, bufp, nleft)) < 0)
+		if ((nread = recv(m_sock, bufp, nleft,0)) < 0)
 		{
 			if (errno == EINTR)
 			{

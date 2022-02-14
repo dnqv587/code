@@ -146,10 +146,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Aes.cpp" />
+    <ClCompile Include="..\Base64.cpp" />
     <ClCompile Include="..\Codec.cpp" />
     <ClCompile Include="..\Factory.cpp" />
     <ClCompile Include="..\Factory.h" />
     <ClCompile Include="..\Hash.cpp" />
+    <ClCompile Include="..\TaskQueue.cpp" />
     <ClCompile Include="..\test.cpp" />
     <ClCompile Include="..\protobuf\client.pb.cc" />
     <ClCompile Include="..\protobuf\service.pb.cc" />
@@ -158,9 +160,11 @@
     <ClCompile Include="..\Rsa.cpp" />
     <ClCompile Include="..\shm.cpp" />
     <ClCompile Include="..\TcpSocket.cpp" />
+    <ClCompile Include="..\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Aes.h" />
+    <ClInclude Include="..\Base64.h" />
     <ClInclude Include="..\Codec.h" />
     <ClInclude Include="..\Hash.h" />
     <ClInclude Include="..\protobuf\client.pb.h" />
@@ -169,9 +173,10 @@
     <ClInclude Include="..\Response.h" />
     <ClInclude Include="..\Rsa.h" />
     <ClInclude Include="..\shm.h" />
+    <ClInclude Include="..\TaskQueue.h" />
     <ClInclude Include="..\TcpSocket.h" />
+    <ClInclude Include="..\ThreadPool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

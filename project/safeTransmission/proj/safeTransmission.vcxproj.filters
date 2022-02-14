@@ -74,6 +74,15 @@
     <ClCompile Include="..\Rsa.cpp">
       <Filter>源文件\Crypto</Filter>
     </ClCompile>
+    <ClCompile Include="..\Base64.cpp">
+      <Filter>源文件\Crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\TaskQueue.cpp">
+      <Filter>源文件\TcpSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ThreadPool.cpp">
+      <Filter>源文件\TcpSocket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf\client.pb.h">
@@ -105,6 +114,15 @@
     </ClInclude>
     <ClInclude Include="..\Rsa.h">
       <Filter>头文件\Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base64.h">
+      <Filter>头文件\Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TaskQueue.h">
+      <Filter>头文件\TcpSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThreadPool.h">
+      <Filter>头文件\TcpSocket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

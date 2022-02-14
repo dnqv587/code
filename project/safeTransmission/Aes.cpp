@@ -1,6 +1,8 @@
 #include "Aes.h"
 #include <time.h>
 
+using namespace std;
+
 AesCrypto::AesCrypto(string key)
 {
 	if (key.size() == 16 || key.size() == 24 || key.size() == 32)

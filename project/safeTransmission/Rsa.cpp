@@ -1,5 +1,7 @@
 #include "Rsa.h"
+#include "Base64.h"
 
+using namespace std;
 
 string RsaCrypto::m_cwd = getcwd(NULL, 0);
 RsaCrypto::RsaCrypto():m_priKeySize(0), m_pubKeySize(0)
@@ -20,7 +22,7 @@ void RsaCrypto::generateRsaKey(int bits /*= 1024*/, string path/*=m_pwd */)
 {
 	RSA* rsa = RSA_new();
 	BIGNUM* e = BN_new();
-	BN_set_word(e, rand()+10000);
+	BN_set_word(e, rand() % 10 * 10000 + rand() % 10 * 1000 + rand() % 10 * 100 + rand() % 10 * 10 + rand() % 10);
 
 	//生成秘钥对
 	RSA_generate_key_ex(rsa, bits, e, NULL);
@@ -90,7 +92,8 @@ std::string RsaCrypto::rsaPubKeyEncrypt(string data)
 		//加密成功
 		string retStr = string(encode, ret);
 		delete[]encode;
-		return retStr;
+		Base64 b64;
+		return b64.encode(retStr);
 	}
 	delete[]encode;
 	cerr << "rsaPubKeyEncrypt error" << endl;
@@ -101,6 +104,9 @@ std::string RsaCrypto::rsaPubKeyDecrypt(string encData)
 {
 	//申请存储密文空间
 	char* decode = new char[m_pubKeySize + 1];
+
+	Base64 bs64;
+	encData = bs64.decode(encData);
 
 	if (encData.size() > m_pubKeySize)
 	{
@@ -137,7 +143,8 @@ std::string RsaCrypto::rsaPriKeyEncrypt(string data)
 		//加密成功
 		string retStr = string(encode, ret);
 		delete[]encode;
-		return retStr;
+		Base64 b64;
+		return b64.encode(retStr);
 	}
 	delete[]encode;
 	cerr << "rsaPriKeyEncrypt error" << endl;
@@ -148,6 +155,9 @@ std::string RsaCrypto::rsaPriKeyDecrypt(string encData)
 {
 	//申请存储密文空间
 	char* decode = new char[m_priKeySize + 1];
+
+	Base64 bs64;
+	encData = bs64.decode(encData);
 
 	if (encData.size() > m_priKeySize)
 	{
@@ -183,12 +193,16 @@ std::string RsaCrypto::rsaSign(string data, Type type)
 
 	ret = string(sigret, len);
 	delete[]sigret;
-	return ret;
+	Base64 bs64;
+	return bs64.encode(ret);
+	//return ret;
 }
 
 bool RsaCrypto::rsaVerify(string data, string signData, Type type)
 {
-	int ret = RSA_verify(type, (const unsigned char*)data.c_str(), data.size(), (const unsigned char*)signData.c_str(), RSA_size(m_publicKey), m_publicKey);
+	Base64 bs64;
+	char* sign = bs64.decode(signData);
+	int ret = RSA_verify(type, (const unsigned char*)data.c_str(), data.size(), (const unsigned char*)sign, RSA_size(m_publicKey), m_publicKey);
 	if (ret == 1)
 	{
 		return true;

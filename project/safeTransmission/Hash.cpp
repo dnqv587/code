@@ -1,5 +1,6 @@
 #include "Hash.h"
 
+using namespace std;
 
 Hash::Hash(HashType type)
 {

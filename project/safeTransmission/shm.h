@@ -67,9 +67,11 @@ public:
 
 	~SecKeyShm();
 
-	int shmWrite(NodeSHMInfo* pNodeInfo);
+	void shmInit();//初始化共享内存
 
-	NodeSHMInfo shmRead(string clientID, string serverID);
+	int shmWrite(NodeSHMInfo* pNodeInfo);//写
+
+	NodeSHMInfo shmRead(string clientID, string serverID);//读
 
 private:
 	int m_maxNode;

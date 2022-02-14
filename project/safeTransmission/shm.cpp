@@ -79,6 +79,14 @@ SecKeyShm::~SecKeyShm()
 
 }
 
+void SecKeyShm::shmInit()
+{
+	if (m_shmAddr != nullptr)
+	{
+		memset(m_shmAddr, 0x00, m_maxNode * sizeof(NodeSHMInfo));
+	}
+}
+
 int SecKeyShm::shmWrite(NodeSHMInfo* pNodeInfo)
 {
 	int ret = -1;

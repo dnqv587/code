@@ -7,6 +7,9 @@
 #include "Rsa.h"
 #include "Aes.h"
 #include "Hash.h"
+#include "Base64.h"
+#include "TaskQueue.h"
+#include "ThreadPool.h"
 
 #include <json/json.h>
 #include <fstream>;
@@ -120,15 +123,15 @@ void rsaclass()
 {
 	RsaCrypto* rsa = new RsaCrypto;
 
-	//rsa->generateRsaKey(4096);
+	rsa->generateRsaKey(1024);
 
 	rsa->openRsaKey();
-	string str = "123456789";
+	string str = "1234";
 	string encode=rsa->rsaPubKeyEncrypt(str);
 	cout << rsa->rsaPriKeyDecrypt(encode) << endl;
 
 	string sh = rsa->rsaSign(str, Type_SHA256);
-	cout<<rsa->rsaVerify("123456789", sh, Type_SHA256)<<endl;
+	cout<<rsa->rsaVerify("1234", sh, Type_SHA256)<<endl;
 }
 
 void aesclass()
@@ -215,6 +218,50 @@ void jsonread()
 
 }
 
+
+
+void base64test()
+{
+	Base64 test;
+
+	string data = test.encode("6Èø·ÒÈöµã5·¢ÉúµÄß¹15Èø¸ñºÇ5g6a1dsf51sad1f6ìª¸£ÍÞf6s5fa165f1a65f15asd6faw");
+
+	cout << data << endl;
+	
+	Base64 bs;
+	cout << bs.decode(data) << endl;
+}
+
+void* poolcb(void* arg)
+{
+	int a=100;
+	int b=88;
+	int c=77;
+	while (1)
+	{
+		a = a * b * c;
+		b = a / b + c;
+		c = a + c / b;
+	}
+}
+
+void threadPoolTest()
+{
+	ThreadPool test;
+	Task task;
+	task.function = poolcb;
+	task.arg = 0;
+	for (int i = 0; i < 10; ++i)
+	{
+		test.addPoolTask(task);
+	}
+
+	while (1)
+	{
+
+	}
+}
+
 int main(int argc, char* argv[])
 {
 #ifdef WIN32
@@ -231,7 +278,7 @@ int main(int argc, char* argv[])
 #endif
 
 	//test();
-	tcptest();
+	//tcptest();
 
 	//aestest();
 	//rsaclass();
@@ -239,6 +286,10 @@ int main(int argc, char* argv[])
 	//hashclass();
 	//jsonwrite();
 	//jsonread();
+
+	//base64test();
+
+	threadPoolTest();
 
 	system("pause");
 	return 0;

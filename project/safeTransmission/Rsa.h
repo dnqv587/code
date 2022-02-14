@@ -10,11 +10,7 @@
 #endif
 
 
-
-
-using namespace std;
-
-enum Type
+enum  Type
 {
 	Type_MD5 = NID_md5,
 	Type_SHA1 = NID_sha1,
@@ -33,30 +29,30 @@ public:
 	~RsaCrypto();
 
 	//生成密钥对
-	void generateRsaKey(int bits = 1024, string path=m_cwd );
+	void generateRsaKey(int bits = 1024, std::string path=m_cwd );
 
 	//读入秘钥文件
 	void openRsaKey(const char* publicKeyPath = m_cwd.c_str(), const char* privateKeyPath = m_cwd.c_str());
 
 	//公钥加密
-	string rsaPubKeyEncrypt(string data);
+	std::string rsaPubKeyEncrypt(std::string data);
 	//公钥解密
-	string rsaPubKeyDecrypt(string encData);
+	std::string rsaPubKeyDecrypt(std::string encData);
 
 	//私钥加密
-	string rsaPriKeyEncrypt(string data);
+	std::string rsaPriKeyEncrypt(std::string data);
 	//私钥解密
-	string rsaPriKeyDecrypt(string encData);
+	std::string rsaPriKeyDecrypt(std::string encData);
 
 	//RSA签名
-	string rsaSign(string data, Type type);
+	std::string rsaSign(std::string data, Type type);
 	//RSA校验
-	bool rsaVerify(string data, string signData, Type type);
+	bool rsaVerify(std::string data, std::string signData, Type type);
 
 private:
-	bool initPublicKey(string path);
+	bool initPublicKey(std::string path);
 	
-	bool initPrivateKey(string path);
+	bool initPrivateKey(std::string path);
 private:
 	//秘钥
 	RSA* m_publicKey;
@@ -64,6 +60,6 @@ private:
 	//秘钥长度
 	int m_priKeySize;
 	int m_pubKeySize;
-	static string m_cwd ;//工作路径
+	static std::string m_cwd ;//工作路径
 };
 

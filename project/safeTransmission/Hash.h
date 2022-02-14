@@ -4,7 +4,6 @@
 #include <openssl/md5.h>
 #include <openssl/sha.h>
 
-using namespace std;
 
 enum HashType
 {
@@ -22,17 +21,17 @@ public:
 	Hash(HashType type);
 	~Hash();
 
-	void updateData(string data);//添加数据
+	void updateData(std::string data);//添加数据
 
-	string finalData();//生成hash
+	std::string finalData();//生成hash
 
 private:
-	string md5Result();
-	string sha1Result();
-	string sha224Result();
-	string sha256Result();
-	string sha384Result();
-	string sha512Result();
+	std::string md5Result();
+	std::string sha1Result();
+	std::string sha224Result();
+	std::string sha256Result();
+	std::string sha384Result();
+	std::string sha512Result();
 
 private:
 	HashType m_type;
