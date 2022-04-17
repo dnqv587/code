@@ -117,7 +117,7 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;PROTOBUF_USE_DLLS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Study\program\项目\moba-master\moba_server\3rd\tolua;E:\Study\program\code\project\moba\3rd\lua-5.3.4\src;E:\Study\program\code\project\moba\3rd\redis\include;E:\Study\program\code\project\moba\3rd\protobuf\include;E:\Study\program\code\project\moba\3rd\jsoncpp\include;E:\Study\program\code\project\moba\3rd\mysql\include;E:\Study\program\code\project\moba\3rd\openssl\x64\include;E:\Study\program\code\project\moba\3rd\libuv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Study\program\code\project\gameFramework\3rd\tolua;E:\Study\program\code\project\gameFramework\3rd\lua-5.3.4\src;E:\Study\program\code\project\gameFramework\3rd\redis\include;E:\Study\program\code\project\gameFramework\3rd\protobuf\include;E:\Study\program\code\project\gameFramework\3rd\jsoncpp\include;E:\Study\program\code\project\gameFramework\3rd\mysql\include;E:\Study\program\code\project\moba\3rd\openssl\x64\include;E:\Study\program\code\project\moba\3rd\libuv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
