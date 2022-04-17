@@ -1442,8 +1442,8 @@ void Massage_Folder()
 
 }
 
-int main(int argc, char** argv)
-{
+//int main(int argc, char** argv)
+//{
 	//vector_half();
 	//scores();
 	//array_init_vector();
@@ -1500,8 +1500,9 @@ int main(int argc, char** argv)
 	//treenode1328();
 	//hasptr_swap1330();
 	//hasptr_sort1331();
-	Massage_Folder();//拷贝控制示例
+	//Massage_Folder();//拷贝控制示例
 
-	system("pause");
-	return 0;
-}
+	//system("pause");
+	//return 0;
+//}
+
