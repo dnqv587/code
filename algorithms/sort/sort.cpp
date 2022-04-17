@@ -166,7 +166,7 @@ void merge(int* s, int begin,int end)
 
 }
 
-int main()
+int main1()
 {
 	int s[] = {2,4,6,8,10,1,3,5,7,9,0 }, len = sizeof(s)/sizeof(s[0]);
 	//bubble(s,len);
@@ -179,3 +179,40 @@ int main()
 	return 0;
 }
 
+#define MAX_MEM_SIZE 100
+int GetMem(int iLen, void** ppMem)
+{
+	if (NULL == ppMem)
+	{
+		return -1;
+	}
+	if (iLen <= 0) {
+		return 0;
+	}
+	else if (iLen < MAX_MEM_SIZE)
+	{
+		*ppMem = malloc(iLen);
+		return iLen;
+	}
+	else {
+		*ppMem = malloc(MAX_MEM_SIZE);
+		return MAX_MEM_SIZE;
+	}
+}
+
+const unsigned char ucMask = 0x7F;
+bool test(unsigned char ucUserType)
+{
+	unsigned char Mask = ucUserType & (~ucMask);
+	if ((ucUserType & (~ucMask)) == (~ucMask))
+	{
+		return true;
+	}
+	else
+		return false;
+}
+
+int main()
+{
+	cout << test(0xAF) << endl;
+}
