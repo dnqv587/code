@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h" />
-    <ClInclude Include="base\MutexLockGuard.h" />
+    <ClInclude Include="base\mutex.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
   </ItemGroup>
