@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "designPattern/observer.hpp"
+#include "thread/SignalSlot.h"
 
 using namespace std;
 
@@ -27,8 +28,19 @@ void observerTest()
 
 }
 
+void func(int a, int b, int c)
+{
+	std::cout << a << " " << b << " " << c << std::endl;
+}
+
+void signalTest()
+{
+	int a = 1,b = 2, c = 3;
+	//Signal<func(a,b,c)> sig;
+}
+
 int main(int argc, char* argv[])
 {
-	observerTest();
+	//observerTest();
 	return 0;
 }

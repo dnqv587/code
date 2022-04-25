@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <algorithm>
-#include<memory>
+#include <memory>
+#include <iostream>
 #include "base/mutex.h"
 /*
 观察者模式
@@ -9,7 +10,7 @@
 
 class Observable;
 
-class Observer :std::enable_shared_from_this<Observer>
+class Observer : public std::enable_shared_from_this<Observer>
 {
 public:
 
@@ -45,7 +46,7 @@ public:
 	}
 	*/
 private:
-	std::vector<std::weak_ptr<Observer>> m_Oberservers;
+	std::vector<std::weak_ptr<Observer>> m_Observers;
 	mutable MutexLock m_mutex;
 };
 
@@ -57,17 +58,17 @@ Observer::~Observer()
 
 void Observer::observe(Observable* observalbe)
 {
-	observalbe->register_(shared_from_this());
+	observalbe->register_(std::weak_ptr<Observer> (shared_from_this()));
 	m_Obserberable = observalbe;
 }
 
 void Observable::notify()
 {
 	MutexLockGuard lock(m_mutex);//加锁
-	auto iter = m_Oberservers.begin();
-	while (iter != m_Oberservers.end())
+	auto iter = m_Observers.begin();
+	while (iter != m_Observers.end())
 	{
-		std::shared_ptr<Observer> obj(iter->lock());//尝试将weak_ptr提升为shared_ptr
+		std::shared_ptr<Observer> obj(iter->lock());//尝试将weak_ptr提升为shared_ptr---弱回调
 		if (obj)
 		{
 			obj->update();//此为线程安全的，因为obj存在于栈中
@@ -75,12 +76,13 @@ void Observable::notify()
 		}
 		else
 		{
-			iter = m_Oberservers.erase(iter);//对象已被销毁，从容器中删除
+			std::cout << "observer erase!" << std::endl;
+			iter = m_Observers.erase(iter);//对象已被销毁，从容器中删除
 		}
 	}
 }
 
 void Observable::register_(std::weak_ptr<Observer> oberserver)
 {
-	m_Oberservers.push_back(oberserver);
+	m_Observers.push_back(oberserver);
 }
