@@ -143,6 +143,7 @@
     <ClInclude Include="base\mutex.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
+    <ClInclude Include="thread\SignalSlot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
