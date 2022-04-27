@@ -1,11 +1,11 @@
 #pragma once
-#include "noncopyable.h"
+#include "../base/noncopyable.h"
 #include <pthread.h>
 /*
 ·â×°mutex
 */
 
-class MutexLock:public noncopyalbe
+class MutexLock:public noncopyable
 {
 public:
 	MutexLock() 

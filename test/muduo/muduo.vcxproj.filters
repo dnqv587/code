@@ -20,13 +20,19 @@
     <ClInclude Include="base\copyable.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="base\mutex.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="base\noncopyable.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="thread\SignalSlot.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\condition.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\CountDownLatch.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\mutex.h">
       <Filter>thread</Filter>
     </ClInclude>
   </ItemGroup>

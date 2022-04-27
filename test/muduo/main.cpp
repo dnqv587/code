@@ -28,15 +28,16 @@ void observerTest()
 
 }
 
-void func(int a, int b, int c)
+void* count(void* arg)
 {
-	std::cout << a << " " << b << " " << c << std::endl;
+	int* count = (int*)arg;
+
+	std::cout  << " num:" << std::endl;
 }
 
-void signalTest()
+void CountDownLatchTest()
 {
-	int a = 1,b = 2, c = 3;
-	//Signal<func(a,b,c)> sig;
+	
 }
 
 int main(int argc, char* argv[])

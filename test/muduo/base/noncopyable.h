@@ -3,14 +3,14 @@
 声明派生类无法使用拷贝构造和拷贝操作符
 */
 
-class noncopyalbe
+class noncopyable
 {
 protected:
-	noncopyalbe() = default;
-	~noncopyalbe() = default;
+	noncopyable() = default;
+	~noncopyable() = default;
 
 private:
-	noncopyalbe(const noncopyalbe&) = delete;
-	noncopyalbe& operator=(const noncopyalbe&) = delete;
+	noncopyable(const noncopyable&) = delete;
+	noncopyable& operator=(const noncopyable&) = delete;
 
 };

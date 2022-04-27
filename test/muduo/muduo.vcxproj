@@ -140,9 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h" />
-    <ClInclude Include="base\mutex.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
+    <ClInclude Include="thread\condition.h" />
+    <ClInclude Include="thread\CountDownLatch.h" />
+    <ClInclude Include="thread\mutex.h" />
     <ClInclude Include="thread\SignalSlot.h" />
   </ItemGroup>
   <ItemGroup>
