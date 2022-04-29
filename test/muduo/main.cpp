@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
+#include <Windows.h>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
+#include "thread/CountDownLatch.h"
 
 using namespace std;
 
@@ -28,20 +30,34 @@ void observerTest()
 
 }
 
-void* count(void* arg)
+
+CountDownLatch test(4);
+
+void* Count(void* arg)
 {
 	int* count = (int*)arg;
-
-	std::cout  << " num:" << std::endl;
+	Sleep(1000*(*count));
+	std::cout  << " num:" << *count<<std::endl;
+	test.countDown();
+	return NULL;
 }
 
 void CountDownLatchTest()
 {
+	int count = 4;
+	pthread_t thread[4];
+	for (int i = 1; i <= count; ++i)
+	{
+		pthread_create(&thread[i-1], NULL, Count, &i);
+	}
 	
+	test.wait();
+	std::cout << "CountDownLatchTest Run" << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
 	//observerTest();
+	CountDownLatchTest();
 	return 0;
 }
