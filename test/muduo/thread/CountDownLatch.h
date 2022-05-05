@@ -11,7 +11,7 @@
 class CountDownLatch:public noncopyable
 {
 public:
-	explicit CountDownLatch(int count):m_count(count), m_mutex(),m_cond(m_mutex){ }
+	explicit CountDownLatch(int count):m_count(count), m_mutex(),m_cond(m_mutex){ }//mutex应先于condition初始化
 	
 	//条件变量阻塞线程
 	void wait()

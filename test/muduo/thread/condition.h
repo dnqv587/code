@@ -25,6 +25,7 @@ public:
 		pthread_cond_wait(&m_cond, m_mutex.getMutexLockPtr());
 	}
 	
+	//在指定时间内条件变量阻塞当前线程
 	bool waitTime(int seconds)
 	{
 		struct timespec abstime;
@@ -38,11 +39,13 @@ public:
 		return ETIMEDOUT == pthread_cond_timedwait(&m_cond, m_mutex.getMutexLockPtr(), &abstime);
 	}
 
+	//通知一个阻塞在当前条件变量的线程
 	void notify()
 	{
 		pthread_cond_signal(&m_cond);
 	}
 
+	//通知全部阻塞在当前条件变量的线程
 	void notifyAll()
 	{
 		pthread_cond_broadcast(&m_cond);

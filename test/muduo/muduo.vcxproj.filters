@@ -35,6 +35,9 @@
     <ClInclude Include="thread\mutex.h">
       <Filter>thread</Filter>
     </ClInclude>
+    <ClInclude Include="designPattern\singleton.h">
+      <Filter>designPattern</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
