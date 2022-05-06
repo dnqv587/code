@@ -12,6 +12,9 @@
     <Filter Include="thread">
       <UniqueIdentifier>{7800be29-0ab2-4383-b28a-1d4b8679b699}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{bcaad675-b26b-4ce2-a9c5-5c1e5c9b4eb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="designPattern\observer.hpp">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="designPattern\singleton.h">
       <Filter>designPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="test\CopyOnWrite.h">
+      <Filter>test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

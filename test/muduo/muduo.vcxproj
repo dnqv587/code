@@ -143,6 +143,7 @@
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
     <ClInclude Include="designPattern\singleton.h" />
+    <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
     <ClInclude Include="thread\mutex.h" />

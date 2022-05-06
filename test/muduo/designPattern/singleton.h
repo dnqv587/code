@@ -15,10 +15,10 @@ public:
 	Singleton() = delete;
 	~Singleton() = delete;
 	
-	static T& instance()
+	static T* instance()
 	{
 		pthread_once(&m_once, init);//只执行一次实例化
-		return *g_instance;
+		return g_instance;
 	}
 
 private:

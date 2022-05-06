@@ -5,12 +5,24 @@
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
 #include "designPattern/singleton.h"
+#include "test/CopyOnWrite.h"
 
 using namespace std;
 
 class Foo : public Observer
 {
 public:
+	Foo()
+	{
+		std::cout << "Foo create" << std::endl;
+		str = new char[64];
+	}
+
+	~Foo()
+	{
+		std::cout << "Foo destroy" << std::endl;
+		delete[] str;
+	}
 
 	virtual void update() override
 	{
@@ -20,6 +32,8 @@ public:
 	{
 		cout << str << endl;
 	}
+private:
+	char* str;
 };
 
 void observerTest()
@@ -64,15 +78,44 @@ void CountDownLatchTest()
 
 void singletonTest()
 {
-	Foo ins = Singleton<Foo>::instance();
-	ins.print("hello world");
+	Foo* ins = Singleton<Foo>::instance();
+	ins->print("hello world");
+	std::cout << "func death" << std::endl;
 }
 
+void* copyTest(void* arg)
+{
+	Customer* cus = (Customer*)arg;
+	Sleep(3000);
+	while (1)
+	{
+		Sleep(1000);
+		std::cout << cus->quary("B") << std::endl;
+	}
+	
+}
+
+void copyOnWriteTest()
+{
+	Customer cus;
+	pthread_t thread[5];
+	for (int i = 0; i < 5; ++i)
+	{
+		pthread_create(&thread[i], NULL, copyTest, &cus);
+	}
+
+	cus.update("A", 1);
+	cus.update("B", 2);
+	cus.update("C", 3);
+	
+	
+}
 
 int main(int argc, char* argv[])
 {
 	//observerTest();
 	//CountDownLatchTest();
-	singletonTest();
+	//singletonTest();
+	copyOnWriteTest();
 	return 0;
 }
