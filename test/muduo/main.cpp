@@ -86,7 +86,7 @@ void singletonTest()
 void* copyTest(void* arg)
 {
 	Customer* cus = (Customer*)arg;
-	Sleep(3000);
+	Sleep(1000);
 	while (1)
 	{
 		Sleep(1000);
@@ -107,6 +107,15 @@ void copyOnWriteTest()
 	cus.update("A", 1);
 	cus.update("B", 2);
 	cus.update("C", 3);
+	int count = 0;
+	Sleep(500);
+	while (1)
+	{
+		cus.update("B", count);
+		++count;
+		Sleep(1000);
+		cus.destroy("B");
+	}
 	
 	
 }

@@ -20,6 +20,7 @@ public:
 		Map::const_iterator iter = newPtr->find(val);
 		if (iter != newPtr->end())
 		{
+			//Sleep(1000);
 			return iter->second;
 		}
 		else
