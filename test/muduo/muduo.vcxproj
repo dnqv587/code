@@ -148,6 +148,7 @@
     <ClInclude Include="thread\CountDownLatch.h" />
     <ClInclude Include="thread\mutex.h" />
     <ClInclude Include="thread\SignalSlot.h" />
+    <ClInclude Include="thread\thread.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

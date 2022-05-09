@@ -44,6 +44,9 @@
     <ClInclude Include="test\CopyOnWrite.h">
       <Filter>test</Filter>
     </ClInclude>
+    <ClInclude Include="thread\thread.hpp">
+      <Filter>thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
