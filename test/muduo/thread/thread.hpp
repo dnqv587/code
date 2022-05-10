@@ -8,12 +8,23 @@
 #include <assert.h>
 #ifdef _WIN32
 #include <windows.h>
+static pid_t gettid()
+{
+	return ::GetCurrentThreadId();//获取当前线程id
+}
 #else
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/prctl.h>
 #include <linux/unistd.h>
+
+#if !__GLIBC_PREREQ(2,30)
+static pid_t gettid()
+{
+	return static_cast<pid_t>(::syscall(SYS_gettid));
+}
+#endif
 #endif
 
 
@@ -27,11 +38,12 @@ public:
 		:m_func(func), 
 		m_name(name),
 		m_isStarted(false),
-#ifdef __linux__
 		m_tid(0),
-#endif
 		m_isJoined(false)
 	{
+		CurrentThread::t_name = "main";
+		CurrentThread::tid();
+		
 	}
 	~Thread() {}
 
@@ -47,12 +59,6 @@ public:
 	//线程名
 	std::string& name() { return m_name; }
 private:
-#ifdef _WIN32
-	unsigned long gettid()
-	{
-		return ::GetCurrentThreadId();//获取当前线程id
-	}
-#endif
 
 	class ThreadData
 	{
@@ -83,15 +89,35 @@ private:
 	static std::atomic<int> g_threadNum;//记录线程数量
 };
 
-class  CurrentThread:public noncopyable
+//CurrentThread类，存储当前线程的信息
+class  CurrentThread :public noncopyable
 {
+	friend class Thread;//提供访问name和tid的权限
 public:
-	static pthread_t tid();//线程ID
-	static std::string name();//线程名
-	static bool isMainThread();//是否为主线程
+	static pid_t tid()//线程ID
+	{
+		if (t_tid == 0)
+		{
+			t_tid = ::gettid();
+		}
+		return t_tid;
+	}
+	static std::string name()//线程名
+	{
+		return t_name;
+	}
+	static bool isMainThread()//是否为主线程
+	{
+		return t_tid == ::gettid();
+	}
 private:
+	thread_local static std::string t_name;//当前线程名
+	thread_local static pid_t t_tid;//当前线程ID
+};
 
-}
+thread_local std::string CurrentThread::t_name = "unnamedThread";
+thread_local pid_t CurrentThread::t_tid = 0;
+
 
 void Thread::ThreadData::run()
 {
