@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{33b03e4b-e09f-455b-a75d-07c5183625e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{55dbac27-762d-435b-b71d-68a4ae753de9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="designPattern">
+      <UniqueIdentifier>{edd6d15d-4745-40da-bf91-63b1f7582a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{b534113e-5278-468d-81fe-b1772f9f6c95}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base\copyable.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\noncopyable.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="designPattern\observer.hpp">
+      <Filter>designPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="designPattern\singleton.h">
+      <Filter>designPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="test\CopyOnWrite.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\condition.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\CountDownLatch.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\mutex.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\SignalSlot.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\thread.hpp">
+      <Filter>thread</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+</Project>
