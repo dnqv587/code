@@ -50,5 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="thread\thread.cpp">
+      <Filter>designPattern</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
