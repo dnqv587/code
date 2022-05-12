@@ -75,6 +75,10 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>/usr/include;$(IncludePath)</IncludePath>
+    <LibraryPath>/usr/local/lib64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h" />
     <ClInclude Include="base\noncopyable.h" />

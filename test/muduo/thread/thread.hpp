@@ -27,8 +27,6 @@ static pid_t gettid()
 #endif
 #endif
 
-
-
 class Thread:public noncopyable
 {
 public:
@@ -121,7 +119,7 @@ thread_local pid_t CurrentThread::t_tid = 0;
 
 void Thread::ThreadData::run()
 {
-	pid_t tid=
+	//pid_t tid=
 }
 
 std::atomic<int> Thread::g_threadNum = 0;

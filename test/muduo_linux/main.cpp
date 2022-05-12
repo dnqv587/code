@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 {
 	//observerTest();
 	//CountDownLatchTest();
-	singletonTest();
-	//copyOnWriteTest();
+	//singletonTest();
+	copyOnWriteTest();
 	return 0;
 }

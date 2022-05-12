@@ -44,7 +44,6 @@ public:
 	}
 };
 
-ThreadInitializer init;//使用全局变量初始化主线程
 
 class Thread:public noncopyable
 {
@@ -130,16 +129,13 @@ private:
 	thread_local static pid_t t_tid;//当前线程ID
 };
 
-thread_local std::string CurrentThread::t_name = "unnamedThread";
-thread_local pid_t CurrentThread::t_tid = 0;
-
 
 void Thread::ThreadData::run()
 {
 	pid_t tid=
 }
 
-std::atomic<int> Thread::g_threadNum = 0;
+
 
 void Thread::start()
 {
@@ -148,3 +144,10 @@ void Thread::start()
 
 
 }
+
+thread_local std::string CurrentThread::t_name = "unnamedThread";
+thread_local pid_t CurrentThread::t_tid = 0;
+
+ThreadInitializer init;//使用全局变量初始化主线程
+
+std::atomic<int> Thread::g_threadNum = 0;
