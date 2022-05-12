@@ -33,6 +33,7 @@ static 	void afterFork()//fork进程后将子进程的主线程重新初始化
 	CurrentThread::t_name = "main";
 	CurrentThread::tid();
 }
+
 class ThreadInitializer //初始化类，用来设置主线程名、线程id
 {
 public:
@@ -44,21 +45,75 @@ public:
 	}
 };
 
+//线程回调函数
+static void* thread(void* arg)
+{
+	ThreadData* data = static_cast<ThreadData*>(arg);
+	data->run();//运行函数
+	delete data;
+	return;
+}
+
+//线程函数,线程中运行的函数
+class ThreadData
+{
+	typedef std::function<void()> ThreadFunc;
+public:
+	ThreadData(const ThreadFunc& func, const std::string& name, const std::shared_ptr<pid_t>& tid)
+		:m_func(func),
+		m_name(name),
+		wkTid(tid)
+	{}
+
+	//在当前线程中运行函数
+	void run()
+	{
+		pid_t tid = CurrentThread::tid();
+		std::shared_ptr<pid_t> pTid = wkTid.lock();//判断线程是否被销毁
+		if (pTid)
+		{
+			*pTid = tid;
+			pTid.reset();//?
+		}
+
+		CurrentThread::t_name = m_name.empty() ? "Thread" : m_name;
+		::prctl(PR_SET_NAME, CurrentThread::t_name);//设置线程名
+
+		m_func();//运行回调函数
+		CurrentThread::t_name = "finished";//线程结束
+
+	}
+
+private:
+	ThreadFunc m_func;
+	std::string m_name;
+	std::weak_ptr<pid_t> wkTid;//使用weak_ptr是防止在使用前被其他线程析构了
+};
+
+
 
 class Thread:public noncopyable
 {
 public:
 	typedef std::function<void()> ThreadFunc;
 
-	explicit Thread(const ThreadFunc& func, const std::string& name = std::string()) 
-		:m_func(func), 
+	explicit Thread(const ThreadFunc& func, const std::string& name = std::string())
+		:m_func(func),
 		m_name(name),
 		m_isStarted(false),
 		m_tid(0),
-		m_isJoined(false)
+		m_isJoined(false),
+		m_pTid(new pid_t(0))
 	{
+		++g_threadNum;
 	}
-	~Thread() {}
+	~Thread() 
+	{
+		if (m_isStarted && !m_isJoined)
+		{
+			pthread_detach(m_tid);
+		}
+	}
 
 	//创建线程
 	void start();
@@ -71,29 +126,11 @@ public:
 
 	//线程名
 	std::string& name() { return m_name; }
-private:
-
-	class ThreadData
-	{
-	public:
-		ThreadData(const ThreadFunc& func, const std::string& name, const std::shared_ptr<pid_t>& tid)
-			:m_func(func),
-			m_name(name),
-			wkTid(tid)
-		{}
-		
-		//在当前线程中运行函数
-		void run();
-
-	private:
-		ThreadFunc m_func;
-		std::string m_name;
-		std::weak_ptr<pid_t> wkTid;
-	};
 
 private:
 
-	pid_t m_tid;
+	pthread_t m_tid;//线程id
+	std::shared_ptr<pid_t> m_pTid;//线程标识，判断线程是否被销毁
 	ThreadFunc m_func;
 	std::string m_name;
 	bool m_isStarted;//该线程是否在运行
@@ -105,6 +142,7 @@ private:
 //CurrentThread类，存储当前线程的信息
 class  CurrentThread :public noncopyable
 {
+	friend class ThreadData;
 	friend class ThreadInitializer;//提供访问name和tid的权限
 	friend void afterFork();//访问tid
 public:
@@ -129,20 +167,25 @@ private:
 	thread_local static pid_t t_tid;//当前线程ID
 };
 
-
-void Thread::ThreadData::run()
-{
-	pid_t tid=
-}
-
-
-
 void Thread::start()
 {
 	assert(!m_isStarted);
 	m_isStarted = true;
+	ThreadData* data = new ThreadData(m_func, m_name, m_pTid);
+	if (pthread_create(&m_tid, NULL, thread, data))
+	{
+		m_isStarted = false;
+		delete data;
+		abort();//退出程序
+	}
+}
 
-
+void Thread::join()
+{
+	assert(m_isStarted);
+	assert(!m_isJoined);
+	m_isJoined = true;
+	pthread_join(m_tid, NULL);
 }
 
 thread_local std::string CurrentThread::t_name = "unnamedThread";
@@ -150,4 +193,4 @@ thread_local pid_t CurrentThread::t_tid = 0;
 
 ThreadInitializer init;//使用全局变量初始化主线程
 
-std::atomic<int> Thread::g_threadNum = 0;
+std::atomic<int> Thread::g_threadNum;

@@ -77,7 +77,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>/usr/include;$(IncludePath)</IncludePath>
-    <LibraryPath>/usr/local/lib64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h" />

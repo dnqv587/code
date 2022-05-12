@@ -7,6 +7,7 @@
 #include "thread/CountDownLatch.h"
 #include "designPattern/singleton.h"
 #include "test/CopyOnWrite.h"
+#include "thread/thread.hpp"
 
 using namespace std;
 
@@ -99,10 +100,12 @@ void* copyTest(void* arg)
 void copyOnWriteTest()
 {
 	Customer cus;
-	pthread_t thread[5];
+	//pthread_t thread[5];
 	for (int i = 0; i < 5; ++i)
 	{
-		pthread_create(&thread[i], NULL, copyTest, &cus);
+		Thread thread(std::function<void> copyTest);
+		//pthread_create(&thread[i], NULL, copyTest, &cus);
+
 	}
 
 	cus.update("A", 1);
