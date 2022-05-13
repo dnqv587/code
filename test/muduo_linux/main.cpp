@@ -2,6 +2,7 @@
 #include <string>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <functional>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
@@ -103,11 +104,11 @@ void copyOnWriteTest()
 	//pthread_t thread[5];
 	for (int i = 0; i < 5; ++i)
 	{
-		Thread thread(std::function<void> copyTest);
+		
 		//pthread_create(&thread[i], NULL, copyTest, &cus);
 
 	}
-
+	Thread thread(std::function<void> copyTest);
 	cus.update("A", 1);
 	cus.update("B", 2);
 	cus.update("C", 3);

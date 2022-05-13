@@ -27,7 +27,38 @@ static pid_t gettid()
 #endif
 #endif
 
-static 	void afterFork()//fork进程后将子进程的主线程重新初始化
+
+//CurrentThread类，存储当前线程的信息
+class  CurrentThread :public noncopyable
+{
+	friend class ThreadData;
+	friend class ThreadInitializer;//提供访问name和tid的权限
+	friend void afterFork();//访问tid
+public:
+	static pid_t tid()//线程ID
+	{
+		if (t_tid == 0)
+		{
+			t_tid = ::gettid();
+		}
+		return t_tid;
+	}
+	static std::string name()//线程名
+	{
+		return t_name;
+	}
+	static bool isMainThread()//是否为主线程
+	{
+		return t_tid == ::gettid();
+	}
+private:
+	thread_local static std::string t_name;//当前线程名
+	thread_local static pid_t t_tid;//当前线程ID
+};
+
+
+
+void afterFork()//fork进程后将子进程的主线程重新初始化
 {
 	CurrentThread::t_tid = 0;
 	CurrentThread::t_name = "main";
@@ -45,14 +76,7 @@ public:
 	}
 };
 
-//线程回调函数
-static void* thread(void* arg)
-{
-	ThreadData* data = static_cast<ThreadData*>(arg);
-	data->run();//运行函数
-	delete data;
-	return;
-}
+
 
 //线程函数,线程中运行的函数
 class ThreadData
@@ -90,7 +114,14 @@ private:
 	std::weak_ptr<pid_t> wkTid;//使用weak_ptr是防止在使用前被其他线程析构了
 };
 
-
+//线程回调函数
+static void* thread(void* arg)
+{
+	ThreadData* data = static_cast<ThreadData*> (arg);
+	data->run();//运行函数
+	delete data;
+	return NULL;
+}
 
 class Thread:public noncopyable
 {
@@ -139,33 +170,6 @@ private:
 	static std::atomic<int> g_threadNum;//记录线程数量
 };
 
-//CurrentThread类，存储当前线程的信息
-class  CurrentThread :public noncopyable
-{
-	friend class ThreadData;
-	friend class ThreadInitializer;//提供访问name和tid的权限
-	friend void afterFork();//访问tid
-public:
-	static pid_t tid()//线程ID
-	{
-		if (t_tid == 0)
-		{
-			t_tid = ::gettid();
-		}
-		return t_tid;
-	}
-	static std::string name()//线程名
-	{
-		return t_name;
-	}
-	static bool isMainThread()//是否为主线程
-	{
-		return t_tid == ::gettid();
-	}
-private:
-	thread_local static std::string t_name;//当前线程名
-	thread_local static pid_t t_tid;//当前线程ID
-};
 
 void Thread::start()
 {
