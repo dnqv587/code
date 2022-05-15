@@ -8,7 +8,7 @@
 #include "thread/CountDownLatch.h"
 #include "designPattern/singleton.h"
 #include "test/CopyOnWrite.h"
-#include "thread/thread.hpp"
+#include "thread/thread.h"
 
 using namespace std;
 
@@ -86,29 +86,36 @@ void singletonTest()
 	std::cout << "func death" << std::endl;
 }
 
-void* copyTest(void* arg)
+Customer cus;
+void copyTest()
 {
-	Customer* cus = (Customer*)arg;
+	//Customer* cus = (Customer*)arg;
+	
 	sleep(1);
 	while (1)
 	{
 		sleep(1);
-		std::cout << cus->quary("B") << std::endl;
+		std::cout << cus.quary("B") << std::endl;
+
+		std::cout << CurrentThread::name() << std::endl;
+		std::cout << CurrentThread::tid() << std::endl;
+		std::cout << CurrentThread::isMainThread() << std::endl;
 	}
 	
 }
 
 void copyOnWriteTest()
 {
-	Customer cus;
+	
 	//pthread_t thread[5];
 	for (int i = 0; i < 5; ++i)
 	{
-		
 		//pthread_create(&thread[i], NULL, copyTest, &cus);
-
+		Thread thread1(std::bind(copyTest),to_string(i));
+		thread1.start();
+		
 	}
-	Thread thread(std::function<void> copyTest);
+
 	cus.update("A", 1);
 	cus.update("B", 2);
 	cus.update("C", 3);

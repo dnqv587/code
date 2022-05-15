@@ -42,11 +42,14 @@
     <ClInclude Include="thread\SignalSlot.h">
       <Filter>thread</Filter>
     </ClInclude>
-    <ClInclude Include="thread\thread.hpp">
+    <ClInclude Include="thread\thread.h">
       <Filter>thread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="thread\thread.cc">
+      <Filter>thread</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
