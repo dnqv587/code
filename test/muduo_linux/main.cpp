@@ -60,7 +60,7 @@ void* Count(void* arg)
 {
 	int count = *(int*)arg;
 	num++;
-	sleep(1000 * count+5000);
+	sleep(count+5);
 	test.countDown();
 	return NULL;
 }
