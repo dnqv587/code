@@ -13,6 +13,9 @@
     <Filter Include="test">
       <UniqueIdentifier>{b534113e-5278-468d-81fe-b1772f9f6c95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="logger">
+      <UniqueIdentifier>{875aefc8-fc7d-49e4-b512-c564e1e93be7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h">
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="base\BlockingQueue.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="logger\AsynLogging.h">
+      <Filter>logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

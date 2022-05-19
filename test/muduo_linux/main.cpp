@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <functional>
+#include <queue>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
@@ -136,7 +137,7 @@ void copyOnWriteTest()
 BlokingQueue<int> que;
 void addThread()
 {
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		sleep(1);
 		que.put(i);
@@ -155,12 +156,27 @@ void blokingQueueTest()
 	Thread thread1(addThread);
 	thread1.start();
 	Thread thread2(getThread);
-	thread2.start();
+	//thread2.start();
 	
+	sleep(1);
 	while (1)
 	{
-		std::cout << que.take() << std::endl;
+		//std::cout << que.take() << std::endl;
+		sleep(1);
+		std::cout << que.size() << std::endl;
+		if (que.size() == 10)
+			break;
 	}
+	
+	std::queue<int> q = que.drain();
+	std::cout << "clear:" << que.size() << std::endl;
+	while (!q.empty())
+	{
+		std::cout << q.front() << std::endl;
+		sleep(1);
+		q.pop();
+	}
+	getchar();
 
 }
 

@@ -86,6 +86,7 @@
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
     <ClInclude Include="designPattern\singleton.h" />
+    <ClInclude Include="logger\AsynLogging.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />

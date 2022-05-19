@@ -19,6 +19,7 @@ public:
 	{
 	}
 
+	//加入---通知阻塞在take上的线程
 	void put(const T& val)
 	{
 		MutexLockGuard lock(m_lock);
@@ -26,6 +27,7 @@ public:
 		m_waitNotEmpty.notify();
 	}
 
+	//拿取---队列为空则等待
 	T take()
 	{
 		MutexLockGuard lock(m_lock);
@@ -40,6 +42,7 @@ public:
 		return front;
 	}
 
+	//清空
 	std::queue<T> drain()
 	{
 		std::queue<T> que;
@@ -51,6 +54,7 @@ public:
 		return que;
 	}
 
+	//大小
 	size_t size()
 	{
 		MutexLockGuard lock(m_lock);
