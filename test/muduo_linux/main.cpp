@@ -9,6 +9,7 @@
 #include "designPattern/singleton.h"
 #include "test/CopyOnWrite.h"
 #include "thread/thread.h"
+#include "base/BlockingQueue.h"
 
 using namespace std;
 
@@ -132,11 +133,43 @@ void copyOnWriteTest()
 	
 }
 
+BlokingQueue<int> que;
+void addThread()
+{
+	for (int i = 0; i < 20; ++i)
+	{
+		sleep(1);
+		que.put(i);
+	}
+}
+void getThread()
+{
+	while (1)
+	{
+		std::cout << que.take() << std::endl;
+	}
+}
+
+void blokingQueueTest()
+{
+	Thread thread1(addThread);
+	thread1.start();
+	Thread thread2(getThread);
+	thread2.start();
+	
+	while (1)
+	{
+		std::cout << que.take() << std::endl;
+	}
+
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
 	//CountDownLatchTest();
 	//singletonTest();
-	copyOnWriteTest();
+	//copyOnWriteTest();
+	blokingQueueTest();
 	return 0;
 }

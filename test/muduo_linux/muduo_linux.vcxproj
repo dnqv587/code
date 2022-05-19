@@ -81,6 +81,7 @@
     </LibraryPath>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="base\BlockingQueue.h" />
     <ClInclude Include="base\copyable.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="designPattern\observer.hpp" />
