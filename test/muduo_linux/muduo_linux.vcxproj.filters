@@ -54,11 +54,17 @@
     <ClInclude Include="logger\AsynLogging.h">
       <Filter>logger</Filter>
     </ClInclude>
+    <ClInclude Include="logger\LogStream.h">
+      <Filter>logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="thread\thread.cc">
       <Filter>thread</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\LogStream.cc">
+      <Filter>logger</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
