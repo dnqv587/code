@@ -30,9 +30,9 @@ public:
 	const char* data() const { return m_data; }
 	char* current() const { return m_cur; }
 	//返回数据长度
-	int lenght() const { return static_cast<int>m_cur - m_data; }
+	int lenght() const { return static_cast<int> (m_cur - m_data); }
 	//返回可用大小
-	int avail() const { return static_cast<int> this->end() - m_cur; }
+	int avail() const { return static_cast<int> (this->end() - m_cur); }
 	//重置指针
 	void reset() { m_cur = m_data; }
 	//清空数据
@@ -63,12 +63,13 @@ public:
 		m_cur -= n;
 		return *this;
 	}
+	/*
 	Buffer& operator=(const Buffer& buf)
 	{
 		this->m_data = buf.m_data;
 		this->m_cur = buf.m_cur;
 		return *this;
-	}
+	}*/
 	Buffer& operator+=(const int n)
 	{
 		m_cur += n;
@@ -77,7 +78,7 @@ public:
 
 private:
 	//返回数据尾指针
-	const char* end() { return m_data + SIZE; }
+	const char* end() const { return m_data + SIZE; }
 
 private:
 	char m_data[SIZE];//数据
@@ -85,35 +86,39 @@ private:
 	char* m_cur;//指针
 };
 
-
+class format;
 class LogStream:public noncopyable
 {
-	typedef LogStream self;
 public:
-	typedef Buffer<SMALL_BUFFERSIZE> Buffer;
+	typedef Buffer<SMALL_BUFFERSIZE> BUFFER;
 
-	self& operator<<(bool v);
+	LogStream()
+	{
+	}
+	~LogStream() {}
 
-	self& operator<<(short);
-	self& operator<<(unsigned short);
-	self& operator<<(int);
-	self& operator<<(unsigned int);
-	self& operator<<(long);
-	self& operator<<(unsigned long);
-	self& operator<<(long long);
-	self& operator<<(unsigned long long);
+	LogStream& operator<<(bool );
 
-	self& operator<<(const void*);
+	LogStream& operator<<(short);
+	LogStream& operator<<(unsigned short);
+	LogStream& operator<<(int);
+	LogStream& operator<<(unsigned int);
+	LogStream& operator<<(long);
+	LogStream& operator<<(unsigned long);
+	LogStream& operator<<(long long);
+	LogStream& operator<<(unsigned long long);
 
-	self& operator<<(float v);
+	LogStream& operator<<(const void*);
 
-	self& operator<<(double);
+	LogStream& operator<<(float);
+	LogStream& operator<<(double);
 
-	self& operator<<(char v);
-	self& operator<<(const char* str);
-	self& operator<<(const unsigned char* str);
-	self& operator<<(const std::string& v);
-	self& operator<<(const Buffer& v);
+	LogStream& operator<<(char);
+	LogStream& operator<<(const char* );
+	LogStream& operator<<(const unsigned char* );
+	LogStream& operator<<(const std::string& );
+	LogStream& operator<<(const BUFFER& );
+	LogStream& operator<<(const format&);
 
 	//追加数据
 	void append(const char* buf, int len)
@@ -126,21 +131,47 @@ public:
 		m_buffer.reset();
 	}
 	//返回buffer
-	const Buffer& buffer()
+	const BUFFER& buffer()
 	{
 		return m_buffer;
 	}
-
 
 private:
 	//integer转string
 	template<typename T>
 	void formatInteger(T v);
-
-
+	//静态检查
 	void staticCheck();
 	
-	Buffer m_buffer;
+	BUFFER m_buffer;
+};
+
+class format :public noncopyable
+{
+public:
+	template <typename T>
+	format(const char* fmt, T val)
+	{
+		//判断模板是否为算数类型
+		static_assert(std::is_arithmetic<T>::value == true, "Must be arithmetic type");
+
+		m_len = snprintf(m_buf, sizeof(m_buf), fmt, val);
+		//assert(static_cast<size_t>(m_len) < sizeof(m_buf));
+	}
+
+	const char* data() const
+	{
+		return m_buf;
+	}
+
+	int len() const
+	{
+		return m_len;
+	}
+
+private:
+	char m_buf[48];
+	int m_len;
 
 };
 

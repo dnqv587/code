@@ -5,7 +5,6 @@
 #include <assert.h>
 #include <stdint.h>
 
-
 const char digits[] = "9876543210123456789";
 const char* zero = digits + 9;
 static_assert(sizeof(digits) == 20, "wrong number of digits");
@@ -63,7 +62,6 @@ void LogStream::formatInteger(T v)
 		size_t len = convert(m_buffer.current(), v);
 		m_buffer += len;
 	}
-	return *this;
 }
 
 
@@ -79,61 +77,61 @@ void LogStream::staticCheck()
 		"MAXNUMRICSIZE is large enough");
 }
 
-LogStream::self& LogStream::operator<<(bool v)
+LogStream& LogStream::operator<<(bool v)
 {
 	m_buffer.append(v ? "1" : "0", 1);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(short v)
+LogStream& LogStream::operator<<(short v)
 {
 	*this << static_cast<int>(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(unsigned short v)
+LogStream& LogStream::operator<<(unsigned short v)
 {
 	*this << static_cast<unsigned int>(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(int v)
+LogStream& LogStream::operator<<(int v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(unsigned int v)
+LogStream& LogStream::operator<<(unsigned int v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(long v)
+LogStream& LogStream::operator<<(long v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(unsigned long v)
+LogStream& LogStream::operator<<(unsigned long v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(long long v)
+LogStream& LogStream::operator<<(long long v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(unsigned long long v)
+LogStream& LogStream::operator<<(unsigned long long v)
 {
 	formatInteger(v);
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(const void* p)
+LogStream& LogStream::operator<<(const void* p)
 {
 	uintptr_t v = reinterpret_cast<uintptr_t>(p);
 	if (m_buffer.avail() >= MAXNUMRICSIZE)
@@ -147,7 +145,7 @@ LogStream::self& LogStream::operator<<(const void* p)
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(float v)
+LogStream& LogStream::operator<<(float v)
 {
 	if (m_buffer.avail() > MAXNUMRICSIZE)
 	{
@@ -157,7 +155,7 @@ LogStream::self& LogStream::operator<<(float v)
 	return *this;
 }
 
-LogStream::self& LogStream::operator<<(double v)
+LogStream& LogStream::operator<<(double v)
 {
 	if (m_buffer.avail() > MAXNUMRICSIZE)
 	{
@@ -167,30 +165,47 @@ LogStream::self& LogStream::operator<<(double v)
 	return *this;
 }
 
-inline LogStream::self& LogStream::operator<<(char v)
+LogStream& LogStream::operator<<(char v)
 {
 	m_buffer.append(&v, 1);
 	return *this;
 }
 
-inline LogStream::self& LogStream::operator<<(const char* str)
+LogStream& LogStream::operator<<(const char* str)
 {
 	m_buffer.append(str, strlen(str));
 	return *this;
 }
 
-inline LogStream::self& LogStream::operator<<(const unsigned char* str)
+LogStream& LogStream::operator<<(const unsigned char* str)
 {
 	return *this << reinterpret_cast<const char*>(str);
 }
 
-inline LogStream::self& LogStream::operator<<(const std::string& v)
+LogStream& LogStream::operator<<(const std::string& v)
 {
 	return *this << v.c_str();
 }
 
-LogStream::self& LogStream::operator<<(const Buffer& v)
+LogStream& LogStream::operator<<(const BUFFER& v)
 {
 	m_buffer.append(v.data(), v.lenght());
+	return *this;
 }
 
+
+LogStream& LogStream::operator<<(const format& fmt)
+{
+	m_buffer.append(fmt.data(), fmt.len());
+	return *this;
+}
+
+//template <typename T>
+//format::format(const char* fmt, T val)
+//{
+//	//判断模板是否为算数类型
+//	static_assert(std::is_arithmetic<T>::value == true, "Must be arithmetic type");
+//
+//	m_len = snprintf(m_buf, sizeof(m_buf), fmt, val);
+//	assert(static_cast<size_t>(m_len) < sizeof(m_buf));
+//}

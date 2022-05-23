@@ -4,6 +4,8 @@
 #include <sys/stat.h>
 #include <functional>
 #include <queue>
+#include <stdint.h>
+#include <limits>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
@@ -11,6 +13,8 @@
 #include "test/CopyOnWrite.h"
 #include "thread/thread.h"
 #include "base/BlockingQueue.h"
+#include "logger/LogStream.h"
+
 
 using namespace std;
 
@@ -180,12 +184,36 @@ void blokingQueueTest()
 
 }
 
+void loggerTest()
+{
+	const char* a = "Hello";
+	const char* b = " World!";
+	LogStream log;
+	const LogStream::BUFFER& buf = log.buffer();
+	log << "Hello";
+	log << " World!";
+	log << -123456789;
+	log.reset();
+	log << std::numeric_limits<long>::min();
+	log.reset();
+	log << 12345678.123456789;
+	log.reset();
+	int h = 0x123456;
+	log << (void*)h;
+	log.reset();
+	log << format("%4.2f", 1.2)<<format("% 4d", 43);
+	log.reset();
+	log << 1223456789 << 0.123456789;
+	std::cout << buf.toString() << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
 	//CountDownLatchTest();
 	//singletonTest();
 	//copyOnWriteTest();
-	blokingQueueTest();
+	//blokingQueueTest();
+	loggerTest();
 	return 0;
 }
