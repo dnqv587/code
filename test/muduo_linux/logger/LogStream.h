@@ -4,6 +4,8 @@
 #include <string>
 #include <string.h>
 
+//log数据流
+
 constexpr int SMALL_BUFFERSIZE = 4000;//budder的MIN大小
 constexpr int LARGE_BUFFERSIZE = 4000 * 1000;//buffer的MAX大小
 
@@ -86,6 +88,7 @@ private:
 	char* m_cur;//指针
 };
 
+
 class format;
 class LogStream:public noncopyable
 {
@@ -145,6 +148,7 @@ private:
 	
 	BUFFER m_buffer;
 };
+
 
 class format :public noncopyable
 {

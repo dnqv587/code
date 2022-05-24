@@ -203,7 +203,7 @@ void loggerTest()
 	log.reset();
 	log << format("%4.2f", 1.2)<<format("% 4d", 43);
 	log.reset();
-	log << 1223456789 << 0.123456789;
+	log << 12345678901237 << 0.123456789;
 	std::cout << buf.toString() << std::endl;
 }
 

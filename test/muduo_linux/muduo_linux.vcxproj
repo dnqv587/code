@@ -87,6 +87,8 @@
     <ClInclude Include="designPattern\observer.hpp" />
     <ClInclude Include="designPattern\singleton.h" />
     <ClInclude Include="logger\AsynLogging.h" />
+    <ClInclude Include="logger\File.h" />
+    <ClInclude Include="logger\LogFile.h" />
     <ClInclude Include="logger\LogStream.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
@@ -96,6 +98,8 @@
     <ClInclude Include="thread\thread.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="logger\File.cc" />
+    <ClCompile Include="logger\LogFile.cc" />
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="thread\thread.cc" />

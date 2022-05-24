@@ -57,6 +57,12 @@
     <ClInclude Include="logger\LogStream.h">
       <Filter>logger</Filter>
     </ClInclude>
+    <ClInclude Include="logger\LogFile.h">
+      <Filter>logger</Filter>
+    </ClInclude>
+    <ClInclude Include="logger\File.h">
+      <Filter>logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -64,6 +70,12 @@
       <Filter>thread</Filter>
     </ClCompile>
     <ClCompile Include="logger\LogStream.cc">
+      <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\LogFile.cc">
+      <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\File.cc">
       <Filter>logger</Filter>
     </ClCompile>
   </ItemGroup>
