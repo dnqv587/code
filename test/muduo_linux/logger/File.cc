@@ -1,5 +1,6 @@
 #include "File.h"
 #include <assert.h>
+#include <string.h>
 
 AppendFile::AppendFile(const char* fileName) :m_file(::fopen(fileName, "ae")), m_writtenBytes(0)
 {
@@ -18,17 +19,22 @@ void AppendFile::append(const char* logLine, size_t len)
 	size_t remain = len - written;
 	while (remain)
 	{
+		
 		size_t n = this->write(logLine, remain);
-
+		
 		if (n != remain)//没将剩余字符串写完
 		{
 			int err = ferror(m_file);
 			if (err)//发生了错误
 			{
-				fprintf(stderr,"AppendFile::append() failed %s\n",strerror())
+				fprintf(stderr, "AppendFile::append() failed %s\n", strerror(err));
+				break;
 			}
 		}
+		written += n;
+		remain = len - written;
 	}
+	m_writtenBytes += written;
 }
 
 void AppendFile::flush()
