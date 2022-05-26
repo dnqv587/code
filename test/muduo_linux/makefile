@@ -3,7 +3,7 @@ RM=rm -rf
 MKDIR=mkdir
 
 EXE=test
-DIR_BIN=exe
+DIR_BIN=bin
 DIR_OBJ=objs
 DIR_DEPS=deps
 DIR_SOURCE=. base designPattern logger test thread
@@ -28,22 +28,14 @@ $(DIRS):
 $(TARGET):$(DIR_BIN) $(OBJS)
 	$(CC) -o $@ $(filter %.o,$^) $(LIB)
 $(DIR_OBJ)/%.o:$(DIR_OBJ)
-	file=$(subst .o,,$(notdir $@))
-	source=$(foreach src,$(SRCS),$(if $(findstring $(file),$(notdir $(src))),$(src),OK))
-	$(CC) -o $@ -c $(source) $(LIB)
-$(DIR_DEPS)/%.dep:$(DIR_DEPS) $(SRCS) 
+	$(CC) -o $@ -c $(foreach n,$(foreach src,$(SRCS),$(if $(findstring  $(strip $(subst .o,,$(notdir $@))),$(strip $(basename $(notdir $(src))))),$(src))),$(if $(findstring  $(strip $(basename $(notdir $(n)))),$(strip $(subst .o,,$(notdir $@)))),$(n))) $(LIB)
+$(DIR_DEPS)/%.dep:$(DIR_DEPS) 
 	@echo "making $@ ..."
 	@set -e;\
 	$(RM) $@.tmp;\
-	$(CC) -E -MM $(foreach suf,$(SUFFIX),$(filter %$(suf),$^)) > $@.tmp;\
+	$(CC) -E -MM $(foreach n,$(foreach src,$(SRCS),$(if $(findstring  $(strip $(subst .dep,,$(notdir $@))),$(strip $(basename $(notdir $(src))))),$(src))),$(if $(findstring  $(strip $(basename $(notdir $(n)))),$(strip $(subst .dep,,$(notdir $@)))),$(n))) > $@.tmp;\
 	sed 's,\(.*\)\.o[ :]*,$(DIR_OBJ)/\1.o: ,g' < $@.tmp > $@ ; \
 	$(RM) $@.tmp
 
 clean:
 	@$(RM) $(DIRS)
-display:
-	#@echo $(SRCS)
-	#@echo $(OBJS)
-	#@echo $(DEPS)
-	#@echo $(TEST)
-	@echo  $(foreach n,$(DIR_SOURCE),$(if $(findstring t,$(n)),OK))
