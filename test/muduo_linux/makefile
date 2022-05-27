@@ -6,17 +6,17 @@ EXE=test
 DIR_BIN=bin
 DIR_OBJ=objs
 DIR_DEPS=deps
-DIR_SOURCE=. base designPattern logger test thread
+DIR_SOURCE=$(shell find -type d)
 
-LIB=-l pthread
+LIB_DIR=./
+LIB=pthread
 SUFFIX=.c .cc .cpp .cxx
 
 SRCS:=$(foreach suf,$(SUFFIX),$(foreach dir,$(DIR_SOURCE),$(wildcard $(dir)/*$(suf))))
 DIRS=$(DIR_BIN) $(DIR_OBJ) $(DIR_DEPS)
 TARGET:=$(addprefix $(DIR_BIN)/,$(EXE))
 OBJS:=$(filter %.o,$(foreach suf,$(SUFFIX),$(addprefix $(DIR_OBJ)/,$(notdir $(patsubst %$(suf),%.o,$(SRCS))))))
-DEPS:=$(filter %.dep,$(foreach suf,$(SUFFIX),$(addprefix $(DIR_DEPS)/,$(notdir $(patsubst %$(suf),%.dep,$(SRCS))))))
-TEST=$(filter main,$(SRCS))
+DEPS:=$(filter %.dep,$(foreach suf,$(SUFFIX),$(addprefix $(DIR_DEPS)/,$(notdir $(patsubst %$(suf),%.dep,$(SRCS)))))) 
 
 .PHONY:all clean
 all:$(TARGET)
@@ -26,9 +26,9 @@ sinclude $(DEPS)
 $(DIRS):
 	$(MKDIR) $@
 $(TARGET):$(DIR_BIN) $(OBJS)
-	$(CC) -o $@ $(filter %.o,$^) $(LIB)
+	$(CC) -o $@ $(filter %.o,$^) -L $(LIB_DIR) -l $(LIB)
 $(DIR_OBJ)/%.o:$(DIR_OBJ)
-	$(CC) -o $@ -c $(foreach n,$(foreach src,$(SRCS),$(if $(findstring  $(strip $(subst .o,,$(notdir $@))),$(strip $(basename $(notdir $(src))))),$(src))),$(if $(findstring  $(strip $(basename $(notdir $(n)))),$(strip $(subst .o,,$(notdir $@)))),$(n))) $(LIB)
+	$(CC) -o $@ -c $(foreach n,$(foreach src,$(SRCS),$(if $(findstring  $(strip $(subst .o,,$(notdir $@))),$(strip $(basename $(notdir $(src))))),$(src))),$(if $(findstring  $(strip $(basename $(notdir $(n)))),$(strip $(subst .o,,$(notdir $@)))),$(n))) -L $(LIB_DIR) -l $(LIB)
 $(DIR_DEPS)/%.dep:$(DIR_DEPS) 
 	@echo "making $@ ..."
 	@set -e;\
