@@ -3,7 +3,7 @@
 #include <string.h>
 
 AppendFile::AppendFile(const char* fileName) :m_file(::fopen(fileName, "ae")), m_writtenBytes(0)
-{
+{//e:设置文件O_CLOEXEC属性，防止防止被子进程继承
 	assert(m_file);
 	::setbuffer(m_file, m_buf, sizeof(m_buf));//自定义stream的缓冲区
 }

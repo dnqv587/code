@@ -3,6 +3,7 @@
 #include "../base/noncopyable.h"
 #include <string>
 #include <string.h>
+#include "../base/Type.h"
 
 //log数据流
 
@@ -38,7 +39,11 @@ public:
 	//重置指针
 	void reset() { m_cur = m_data; }
 	//清空数据
-	void bzero() { memset(m_data, 0x00, sizeof(m_data)); }
+	void bzero() 
+	{ 
+		//memset(m_data, 0x00, sizeof(m_data)); 
+		memZero(m_data, sizeof(m_data));
+	}
 	
 	std::string toString() const 
 	{

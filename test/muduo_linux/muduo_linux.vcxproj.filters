@@ -63,6 +63,12 @@
     <ClInclude Include="logger\File.h">
       <Filter>logger</Filter>
     </ClInclude>
+    <ClInclude Include="base\Type.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\ProcessInfo.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -77,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="logger\File.cc">
       <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="base\ProcessInfo.cc">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

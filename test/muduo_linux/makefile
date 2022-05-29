@@ -2,14 +2,15 @@ CC=g++
 RM=rm -rf
 MKDIR=mkdir
 
+LIB_DIR=./
+LIB=pthread
+
 EXE=test
 DIR_BIN=bin
 DIR_OBJ=objs
 DIR_DEPS=deps
 DIR_SOURCE=$(shell find -type d)
 
-LIB_DIR=./
-LIB=pthread
 SUFFIX=.c .cc .cpp .cxx
 
 SRCS:=$(foreach suf,$(SUFFIX),$(foreach dir,$(DIR_SOURCE),$(wildcard $(dir)/*$(suf))))

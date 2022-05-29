@@ -14,6 +14,8 @@
 #include "thread/thread.h"
 #include "base/BlockingQueue.h"
 #include "logger/LogStream.h"
+#include "logger/File.h"
+#include "logger/LogFile.h"
 
 
 using namespace std;
@@ -207,6 +209,29 @@ void loggerTest()
 	std::cout << buf.toString() << std::endl;
 }
 
+void FileTest()
+{
+	AppendFile file("log.log");
+	file.append("test1\n", sizeof("test1\n"));
+	file.append("test2\n", sizeof("test2\n"));
+	file.append("test3\n", sizeof("test3\n"));
+	file.append("end", sizeof("end"));
+	file.append("1\n", sizeof("1\n"));
+	//file.flush();
+	std::cout << file.writtenBytes() << std::endl;
+}
+
+void LogFileTest()
+{
+	LogFile log("main", 10, false, 2, 1);
+	for (int i = 0; i < 20; ++i)
+	{
+		log.append(std::to_string(i));
+		log.append("\n");
+		sleep(1);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -214,6 +239,8 @@ int main(int argc, char* argv[])
 	//singletonTest();
 	//copyOnWriteTest();
 	//blokingQueueTest();
-	loggerTest();
+	//loggerTest();
+	//FileTest();
+	LogFileTest();
 	return 0;
 }
