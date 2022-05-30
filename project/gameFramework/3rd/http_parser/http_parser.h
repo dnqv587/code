@@ -332,14 +332,14 @@ struct http_parser {
 
 
 struct http_parser_settings {
-  http_cb      on_message_begin;//ÏûÏ¢¿ªÊ¼
-  http_data_cb on_url;//½âÎöµ½url
-  http_data_cb on_status;//½âÎöµ½×´Ì¬---ÏìÓ¦ÇëÇó
-  http_data_cb on_header_field;//Í·²¿×Ö¶ÎÃû
-  http_data_cb on_header_value;//Öµ
-  http_cb      on_headers_complete;//Í·²¿½âÎö½áÊø
-  http_data_cb on_body;//½âÎöµ½ÕýÎÄ
-  http_cb      on_message_complete;//ÏûÏ¢½áÊø
+  http_cb      on_message_begin;//æ¶ˆæ¯å¼€å§‹
+  http_data_cb on_url;//è§£æžåˆ°url
+  http_data_cb on_status;//è§£æžåˆ°çŠ¶æ€---å“åº”è¯·æ±‚
+  http_data_cb on_header_field;//å¤´éƒ¨å­—æ®µå
+  http_data_cb on_header_value;//å€¼
+  http_cb      on_headers_complete;//å¤´éƒ¨è§£æžç»“æŸ
+  http_data_cb on_body;//è§£æžåˆ°æ­£æ–‡
+  http_cb      on_message_complete;//æ¶ˆæ¯ç»“æŸ
   /* When on_chunk_header is called, the current chunk length is stored
    * in parser->content_length.
    */
