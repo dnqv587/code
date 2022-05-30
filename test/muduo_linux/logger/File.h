@@ -28,6 +28,6 @@ private:
 	size_t write(const char* logLine, size_t len);//无锁写入---非线程安全
 
 	FILE* m_file;
-	char m_buf[MAX_BUFFER_SIZE];
+	char m_buf[MAX_BUFFER_SIZE];//用户态缓冲区 减少文件IO的次数
 	off_t m_writtenBytes;
 };

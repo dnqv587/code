@@ -98,6 +98,7 @@
     <ClInclude Include="thread\mutex.h" />
     <ClInclude Include="thread\SignalSlot.h" />
     <ClInclude Include="thread\thread.h" />
+    <ClInclude Include="time\TimeZone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\ProcessInfo.cc" />
@@ -106,6 +107,7 @@
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="thread\thread.cc" />
+    <ClCompile Include="time\TimeZone.cc" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>

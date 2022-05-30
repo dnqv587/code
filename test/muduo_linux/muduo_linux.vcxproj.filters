@@ -16,6 +16,9 @@
     <Filter Include="logger">
       <UniqueIdentifier>{875aefc8-fc7d-49e4-b512-c564e1e93be7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{a672de42-2685-4b0f-9825-1b1bc2def80c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="base\ProcessInfo.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="time\TimeZone.h">
+      <Filter>time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -86,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="base\ProcessInfo.cc">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="time\TimeZone.cc">
+      <Filter>time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
