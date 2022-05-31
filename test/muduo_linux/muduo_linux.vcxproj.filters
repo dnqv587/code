@@ -75,6 +75,12 @@
     <ClInclude Include="time\TimeZone.h">
       <Filter>time</Filter>
     </ClInclude>
+    <ClInclude Include="logger\logging.h">
+      <Filter>logger</Filter>
+    </ClInclude>
+    <ClInclude Include="time\Timestamp.h">
+      <Filter>time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -94,6 +100,12 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="time\TimeZone.cc">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\logging.cc">
+      <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="time\Timestamp.cc">
       <Filter>time</Filter>
     </ClCompile>
   </ItemGroup>

@@ -221,14 +221,38 @@ void FileTest()
 	std::cout << file.writtenBytes() << std::endl;
 }
 
+
+static int Fcount = 0;
+static LogFile log("main", 1024, true, 3, 64);
+MutexLock g_lock;
+void filethread()
+{
+	
+	while (1)
+	{
+		MutexLockGuard lock(g_lock);
+		if (Fcount >= 4096)
+			break;
+		log.append("filethread1:"+std::to_string(++Fcount)+'\n');
+		log.append("filethread2:" + std::to_string(++Fcount) + '\n');
+		//usleep(200);
+		
+	}
+}
+
 void LogFileTest()
 {
-	LogFile log("main", 10, false, 2, 1);
-	for (int i = 0; i < 20; ++i)
+	Thread thread(filethread);
+	thread.start();
+	
+	while(1)
 	{
-		log.append(std::to_string(i));
-		log.append("\n");
-		sleep(1);
+		MutexLockGuard lock(g_lock);
+		if (Fcount >= 4096)
+			break;
+		log.append("LogFileTest1:"+std::to_string(++Fcount) + '\n');
+		log.append("LogFileTest2:" + std::to_string(++Fcount) + '\n');
+		//usleep(200);
 	}
 }
 
