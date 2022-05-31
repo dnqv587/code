@@ -16,6 +16,7 @@
 #include "logger/LogStream.h"
 #include "logger/File.h"
 #include "logger/LogFile.h"
+#include "time/Timestamp.h"
 
 
 using namespace std;
@@ -256,6 +257,11 @@ void LogFileTest()
 	}
 }
 
+void TimestampTest()
+{
+	std::cout << Timestamp::now().formatString(true, true) << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -265,6 +271,7 @@ int main(int argc, char* argv[])
 	//blokingQueueTest();
 	//loggerTest();
 	//FileTest();
-	LogFileTest();
+	//LogFileTest();
+	TimestampTest();
 	return 0;
 }
