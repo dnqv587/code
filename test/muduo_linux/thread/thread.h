@@ -11,52 +11,52 @@
 class Thread:public noncopyable
 {
 public:
-	typedef std::function<void ()> ThreadFunc;
+	typedef std::function<void()> ThreadFunc;
 
 	Thread(const ThreadFunc& func, const std::string& n = std::string());
 
 	~Thread();
 
-	//´´½¨Ïß³Ì
+	//åˆ›å»ºçº¿ç¨‹
 	void start();
 
-	//»ØÊÕÏß³Ì
+	//å›æ”¶çº¿ç¨‹
 	void join();
 
-	//Ïß³ÌÊÇ·ñÔÚÔËĞĞ
+	//çº¿ç¨‹æ˜¯å¦åœ¨è¿è¡Œ
 	bool isStarted() { return m_isStarted; }
 
-	//Ïß³ÌÃû
+	//çº¿ç¨‹å
 	std::string& name() { return m_name; }
 
 private:
 
-	pthread_t m_tid;//Ïß³Ìid
-	std::shared_ptr<pid_t> m_pTid;//Ïß³Ì±êÊ¶£¬ÅĞ¶ÏÏß³ÌÊÇ·ñ±»Ïú»Ù
+	pthread_t m_tid;//çº¿ç¨‹id
+	std::shared_ptr<pid_t> m_pTid;//çº¿ç¨‹æ ‡è¯†ï¼Œåˆ¤æ–­çº¿ç¨‹æ˜¯å¦è¢«é”€æ¯
 	ThreadFunc m_func;
 	std::string m_name;
-	bool m_isStarted;//¸ÃÏß³ÌÊÇ·ñÔÚÔËĞĞ
-	bool m_isJoined;//¸ÃÏß³ÌÊÇ·ñÒÑ±»»ØÊÕ
+	bool m_isStarted;//è¯¥çº¿ç¨‹æ˜¯å¦åœ¨è¿è¡Œ
+	bool m_isJoined;//è¯¥çº¿ç¨‹æ˜¯å¦å·²è¢«å›æ”¶
 
-	static std::atomic<int> g_threadNum;//¼ÇÂ¼Ïß³ÌÊıÁ¿
+	static std::atomic<int> g_threadNum;//è®°å½•çº¿ç¨‹æ•°é‡
 };
 
 class ThreadData;
 class ThreadInitializer;
-//CurrentThreadÀà£¬´æ´¢µ±Ç°Ïß³ÌµÄĞÅÏ¢
+//CurrentThreadç±»ï¼Œå­˜å‚¨å½“å‰çº¿ç¨‹çš„ä¿¡æ¯
 class  CurrentThread :public noncopyable
 {
 	friend class ThreadData;
-	friend class ThreadInitializer;//Ìá¹©·ÃÎÊnameºÍtidµÄÈ¨ÏŞ
-	friend void afterFork();//·ÃÎÊtid
+	friend class ThreadInitializer;//æä¾›è®¿é—®nameå’Œtidçš„æƒé™
+	friend void afterFork();//è®¿é—®tid
 public:
-	static pid_t tid();//Ïß³ÌID
+	static pid_t tid();//çº¿ç¨‹ID
 
-	static std::string name();//Ïß³ÌÃû
+	static std::string name();//çº¿ç¨‹å
 
-	static bool isMainThread();//ÊÇ·ñÎªÖ÷Ïß³Ì
+	static bool isMainThread();//æ˜¯å¦ä¸ºä¸»çº¿ç¨‹
 private:
-	thread_local static std::string t_name;//µ±Ç°Ïß³ÌÃû
-	thread_local static pid_t t_tid;//µ±Ç°Ïß³ÌID
+	thread_local static std::string t_name;//å½“å‰çº¿ç¨‹å
+	thread_local static pid_t t_tid;//å½“å‰çº¿ç¨‹ID
 };
 

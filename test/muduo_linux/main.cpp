@@ -224,9 +224,9 @@ void FileTest()
 
 
 static int Fcount = 0;
-static LogFile log("main", 1024, true, 3, 64);
+
 MutexLock g_lock;
-void filethread()
+void filethread(LogFile* log)
 {
 	
 	while (1)
@@ -234,16 +234,17 @@ void filethread()
 		MutexLockGuard lock(g_lock);
 		if (Fcount >= 4096)
 			break;
-		log.append("filethread1:"+std::to_string(++Fcount)+'\n');
-		log.append("filethread2:" + std::to_string(++Fcount) + '\n');
-		//usleep(200);
+		log->append("filethread1:"+std::to_string(++Fcount)+'\n');
+		log->append("filethread2:" + std::to_string(++Fcount) + '\n');
+		usleep(200);
 		
 	}
 }
 
 void LogFileTest()
 {
-	Thread thread(filethread);
+	static LogFile log("main", 1024, true, 3, 64);
+	Thread thread(std::bind(filethread,&log));
 	thread.start();
 	
 	while(1)
@@ -253,7 +254,7 @@ void LogFileTest()
 			break;
 		log.append("LogFileTest1:"+std::to_string(++Fcount) + '\n');
 		log.append("LogFileTest2:" + std::to_string(++Fcount) + '\n');
-		//usleep(200);
+		usleep(200);
 	}
 }
 

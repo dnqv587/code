@@ -4,9 +4,29 @@
 #include <sys/time.h>
 #include <string>
 
+
+struct DateTime
+{
+	int Year;//å¹´
+	int mon;//æœˆ
+	int day;//æ—¥
+	int hours;//æ—¶
+	int min;//åˆ†
+	int sec;//ç§’
+	int msec;//å¾®ç§’
+	DateTime()
+		:Year(0), mon(0), day(0), hours(0), min(0), sec(0), msec(0)
+	{
+	}
+	DateTime(int Year, int mon, int day, int hours, int min, int sec, int msec)
+		:Year(0), mon(0), day(0), hours(0), min(0), sec(0), msec(0)
+	{
+	}
+
+};
 /*
-* Ê±¼äÀà
-* ×Ô1970-1-1ÒÔÀ´µÄÎ¢Ãë---UTC
+* æ—¶é—´ç±»
+* è‡ª1970-1-1ä»¥æ¥çš„å¾®ç§’---UTC
 */
 class Timestamp :public copyable
 {
@@ -20,24 +40,24 @@ public:
 	bool operator<(const Timestamp& that);
 
 	bool operator== (const Timestamp & that);
-	//·µ»Ø¾«È·Ê±¼äµÄTimestampÀà
+	//è¿”å›ç²¾ç¡®æ—¶é—´çš„Timestampç±»
 	static Timestamp now();
-	//½«time_t¸ñÊ½»¯ÎªTimestampÀà
+	//å°†time_tæ ¼å¼åŒ–ä¸ºTimestampç±»
 	static Timestamp fromUnixTime(time_t time, int microSecond);
 	static Timestamp fromUnixTime(time_t time);
-	//½»»»
+	//äº¤æ¢
 	void swap(Timestamp& that);
-	//×ª»»Îª×Ö·û´®
-	//¸ñÊ½£º<seconds>.<microseconds>
+	//è½¬æ¢ä¸ºå­—ç¬¦ä¸²
+	//æ ¼å¼ï¼š<seconds>.<microseconds>
 	std::string toString()const;
-	//¸ñÊ½»¯Ê±¼ä×Ö·û´®
-	// showMicroseconds:ÊÇ·ñÒÔÎ¢Ãë¼ÆËã£¬isLocalÊÇ·ñÊÇÊ¹ÓÃ±¾µØÊ±Çø£¬·ñÔòÎªÄ¬ÈÏÊ±Çø
+	//æ ¼å¼åŒ–æ—¶é—´å­—ç¬¦ä¸²
+	// showMicroseconds:æ˜¯å¦ä»¥å¾®ç§’è®¡ç®—ï¼ŒisLocalæ˜¯å¦æ˜¯ä½¿ç”¨æœ¬åœ°æ—¶åŒºï¼Œå¦åˆ™ä¸ºé»˜è®¤æ—¶åŒº
 	std::string formatString(bool showMicroseconds = true, bool isLocal = false) const;
-	//·µ»Ø×Ô1970-1-1ÒÔÀ´µÄÎ¢Ãë
+	//è¿”å›è‡ª1970-1-1ä»¥æ¥çš„å¾®ç§’
 	int64_t microSecondsSinceEpoch() const;
-	//·µ»Ø×Ô1970-1-1ÒÔÀ´ÃëÊı
+	//è¿”å›è‡ª1970-1-1ä»¥æ¥ç§’æ•°
 	time_t secondsSinceEpoch() const;
 private:
-	int64_t m_microSecondsSinceEpoch;//Î¢Ãë
+	int64_t m_microSecondsSinceEpoch;//å¾®ç§’
 };
 
