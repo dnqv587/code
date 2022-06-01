@@ -2,7 +2,7 @@
 #include <utility>
 
 
-constexpr int kMicroSecondsPerSecond = 1000 * 1000;//每秒中微秒单位
+
 
 inline Timestamp::Timestamp()
 	:m_microSecondsSinceEpoch(0)
@@ -54,6 +54,30 @@ inline Timestamp Timestamp::fromUnixTime(time_t time)
 inline void Timestamp::swap(Timestamp& that)
 {
 	std::swap(this->m_microSecondsSinceEpoch, that.m_microSecondsSinceEpoch);
+}
+
+DateTime Timestamp::toDateTime(bool isLocal /*= false*/) const
+{
+	DateTime time;
+	time.msec = m_microSecondsSinceEpoch % kMicroSecondsPerSecond;
+	int64_t sec = m_microSecondsSinceEpoch / kMicroSecondsPerSecond;
+	struct tm t;
+	if (isLocal)
+	{
+		::localtime_r(&sec, &t);
+	}
+	else
+	{
+		::gmtime_r(&sec, &t);
+	}
+	time.Year = t.tm_year;
+	time.mon = t.tm_mon;
+	time.day = t.tm_mday;
+	time.hour = t.tm_hour;
+	time.min = t.tm_min;
+	time.sec = t.tm_sec;
+	time.tm = t;
+	return time;
 }
 
 std::string Timestamp::toString() const

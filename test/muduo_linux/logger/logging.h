@@ -4,7 +4,7 @@
 #include "../time/Timestamp.h"
 #include <string.h>
 
-class Logger :public noncopyable
+class Logger :private noncopyable
 {
 public:
     //日志等级
@@ -67,7 +67,18 @@ public:
     //获取日志等级
     static LogLevel logLevel();
     //设置日志等级
-    static void setLogLevel(LogLevel level);
+    static void setLogLevel(Logger::LogLevel level);
+
+	typedef void (*OutputFunc)(const char* msg, int len);
+	typedef void (*FlushFunc)();
+    /*
+    * 使用output和flush回调主要是用来解耦合，通过设置回调函数来使日志可以同步或异步的方式输出到指定的方向
+    * 默认输出到stdout
+    */
+    //设置输出回调
+	static void setOutput(OutputFunc out);
+    //设置刷新回调
+	static void setFlush(FlushFunc flush);
 
 private:
     /*
@@ -90,7 +101,10 @@ private:
         SourceFile m_baseName;//日志所属文件名 ,由__file__与sourcefile_helper类得到
     };
 
-    static LogLevel g_logLevel;
+
+    static LogLevel g_logLevel;//日志等级
+    static OutputFunc g_output;//日志输出回调
+    static FlushFunc g_flush;//刷新缓冲区回调
     Impl m_impl;
 
 };

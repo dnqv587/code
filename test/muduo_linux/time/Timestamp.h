@@ -3,24 +3,36 @@
 #include "../base/Type.h"
 #include <sys/time.h>
 #include <string>
+#include <assert.h>
+#include <concepts>
 
+constexpr int kMicroSecondsPerSecond = 1000 * 1000;//每秒中微秒单位
 
 struct DateTime
 {
 	int Year;//年
 	int mon;//月
 	int day;//日
-	int hours;//时
+	int hour;//时
 	int min;//分
 	int sec;//秒
 	int msec;//微秒
+
+	struct tm tm;
+
 	DateTime()
-		:Year(0), mon(0), day(0), hours(0), min(0), sec(0), msec(0)
+		:Year(0), mon(0), day(0), hour(0), min(0), sec(0), msec(0), tm{0}
 	{
 	}
-	DateTime(int Year, int mon, int day, int hours, int min, int sec, int msec)
-		:Year(0), mon(0), day(0), hours(0), min(0), sec(0), msec(0)
+	DateTime(int Year, int mon, int day, int hour, int min, int sec, int msec, struct tm tm)
+		:Year(Year), mon(mon), day(day), hour(hour), min(min), sec(sec), msec(msec), tm(tm)
 	{
+		assert(mon > 0 && mon <= 12);
+		assert(day > 0 && day <= 31);
+		assert(hour >= 0 && hour < 24);
+		assert(min >= 0 && min < 60);
+		assert(sec >= 0 && sec < 60);
+		assert(msec >= 0 && msec < kMicroSecondsPerSecond);
 	}
 
 };
@@ -29,6 +41,8 @@ struct DateTime
 * 自1970-1-1以来的微秒---UTC
 */
 class Timestamp :public copyable
+				//public std::equality_comparable<Timestamp>,
+				//public std::less_than_comparable<Timestamp>
 {
 public:
 	Timestamp();
@@ -47,6 +61,8 @@ public:
 	static Timestamp fromUnixTime(time_t time);
 	//交换
 	void swap(Timestamp& that);
+	//转换为DateTime
+	DateTime toDateTime(bool isLocal = false) const;
 	//转换为字符串
 	//格式：<seconds>.<microseconds>
 	std::string toString()const;
