@@ -1,12 +1,13 @@
 #pragma once
 #include "LogStream.h"
 #include "../base/noncopyable.h"
+#include "../time/Timestamp.h"
 #include <string.h>
 
 class Logger :public noncopyable
 {
 public:
-    //ÈÕÖ¾µÈ¼¶
+    //æ—¥å¿—ç­‰çº§
 	enum LogLevel
 	{
         TRACE,
@@ -19,8 +20,8 @@ public:
 	};
 
     /*
-    * ÎÄ¼şÃû
-    * ÓÃÓÚ´¦ÀíÎÄ¼şÃûºÍÄ¿Â¼
+    * æ–‡ä»¶å
+    * ç”¨äºå¤„ç†æ–‡ä»¶åå’Œç›®å½•
     */
     class SourceFile
     {
@@ -48,8 +49,8 @@ public:
             }
         }
 
-        const char* m_data;//source fileµÄµØÖ·
-        int m_size;//source fileµÄ³¤¶È
+        const char* m_data;//source fileçš„åœ°å€
+        int m_size;//source fileçš„é•¿åº¦
     };
 
     Logger(SourceFile file, int line);
@@ -58,35 +59,35 @@ public:
     Logger(SourceFile file, int line, bool toAbort);
     ~Logger();
 
-    //Á÷Ê½»¯
+    //æµå¼åŒ–
     LogStream& stream()
     {
         return m_impl.m_stream;
     }
-    //»ñÈ¡ÈÕÖ¾µÈ¼¶
+    //è·å–æ—¥å¿—ç­‰çº§
     static LogLevel logLevel();
-    //ÉèÖÃÈÕÖ¾µÈ¼¶
+    //è®¾ç½®æ—¥å¿—ç­‰çº§
     static void setLogLevel(LogLevel level);
 
 private:
     /*
-    * ³ÉÔ±·â×°Àà
+    * æˆå‘˜å°è£…ç±»
     */
     class Impl
     {
     public:
         typedef Logger::LogLevel LogLevel;
-
+        //level:æ—¥å¿—ç­‰çº§ï¼Œold_errnoï¼šé”™è¯¯å·ï¼Œfileï¼šæ–‡ä»¶åï¼Œlineï¼šè¡Œå·
         Impl(LogLevel level, int old_errno, const SourceFile& file, int line);
 
         void formatTime();
         void finish();
 
-
-        LogStream m_stream;//Á÷Ê½Êı¾İ
-        LogLevel m_logLevel;//µ±Ç°ÈÕÖ¾¼¶±ğ
-        int m_line;//ÈÕÖ¾ĞĞÊı ÓÉ__line__µÃµ½
-        SourceFile m_baseName;//ÈÕÖ¾ËùÊôÎÄ¼şÃû ,ÓÉ__file__Óësourcefile_helperÀàµÃµ½
+        Timestamp m_time;//æ—¶é—´
+        LogStream m_stream;//æµå¼æ•°æ®
+        LogLevel m_logLevel;//å½“å‰æ—¥å¿—çº§åˆ«
+        int m_line;//æ—¥å¿—è¡Œæ•° ç”±__line__å¾—åˆ°
+        SourceFile m_baseName;//æ—¥å¿—æ‰€å±æ–‡ä»¶å ,ç”±__file__ä¸sourcefile_helperç±»å¾—åˆ°
     };
 
     static LogLevel g_logLevel;
