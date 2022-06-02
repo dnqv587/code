@@ -17,6 +17,7 @@
 #include "logger/File.h"
 #include "logger/LogFile.h"
 #include "time/Timestamp.h"
+#include "logger/logging.h"
 
 
 using namespace std;
@@ -263,6 +264,31 @@ void TimestampTest()
 	std::cout << Timestamp::now().formatString(true, true) << std::endl;
 }
 
+LogFile logFile("SyncLog", 1024, true, 3, 64);
+void outputFunc(const char* msg, int len)
+{
+	logFile.append(msg, len);
+}
+
+void flushFunc()
+{
+	logFile.flush();
+}
+
+void SyncLogTest()
+{
+	Logger::setOutput(outputFunc);
+	Logger::setFlush(flushFunc);
+	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+	for (int i = 0; i < 4096; ++i)
+	{
+		LOG_INFO << line << "---" << i;
+		usleep(1000);
+	}
+
+
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -273,6 +299,7 @@ int main(int argc, char* argv[])
 	//loggerTest();
 	//FileTest();
 	//LogFileTest();
-	TimestampTest();
+	//TimestampTest();
+	SyncLogTest();
 	return 0;
 }

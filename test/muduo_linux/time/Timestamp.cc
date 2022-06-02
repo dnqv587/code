@@ -4,19 +4,19 @@
 
 
 
-inline Timestamp::Timestamp()
+ Timestamp::Timestamp()
 	:m_microSecondsSinceEpoch(0)
 {
 
 }
 
-inline Timestamp::Timestamp(int64_t microSecondsSinceEpoch)
+ Timestamp::Timestamp(int64_t microSecondsSinceEpoch)
 	:m_microSecondsSinceEpoch(microSecondsSinceEpoch)
 {
 
 }
 
-inline bool Timestamp::operator>(const Timestamp& that)
+bool Timestamp::operator>(const Timestamp& that)
 {
 	return this->m_microSecondsSinceEpoch > that.m_microSecondsSinceEpoch;
 }
@@ -26,7 +26,7 @@ bool Timestamp::operator<(const Timestamp& that)
 	return this->m_microSecondsSinceEpoch < that.m_microSecondsSinceEpoch;
 }
 
-inline bool Timestamp::operator==(const Timestamp& that)
+bool Timestamp::operator==(const Timestamp& that)
 {
 	return this->m_microSecondsSinceEpoch == that.m_microSecondsSinceEpoch;
 }
@@ -41,20 +41,6 @@ Timestamp Timestamp::now()
 	return Timestamp();
 }
 
-inline Timestamp Timestamp::fromUnixTime(time_t time, int microSecond)
-{
-	return Timestamp(time * kMicroSecondsPerSecond + microSecond);
-}
-
-inline Timestamp Timestamp::fromUnixTime(time_t time)
-{
-	return fromUnixTime(time, 0);
-}
-
-inline void Timestamp::swap(Timestamp& that)
-{
-	std::swap(this->m_microSecondsSinceEpoch, that.m_microSecondsSinceEpoch);
-}
 
 DateTime Timestamp::toDateTime(bool isLocal /*= false*/) const
 {
@@ -121,13 +107,4 @@ std::string Timestamp::formatString(bool showMicroseconds /*= true*/, bool isLoc
 	return buf;
 }
 
-inline int64_t Timestamp::microSecondsSinceEpoch() const
-{
-	return m_microSecondsSinceEpoch;
-}
-
-inline time_t Timestamp::secondsSinceEpoch() const
-{
-	return m_microSecondsSinceEpoch / kMicroSecondsPerSecond;
-}
 

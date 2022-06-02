@@ -69,7 +69,7 @@ public:
     //设置日志等级
     static void setLogLevel(Logger::LogLevel level);
 
-	typedef void (*OutputFunc)(const char* msg, int len);
+    typedef void (*OutputFunc)(const char* msg, int len);
 	typedef void (*FlushFunc)();
     /*
     * 使用output和flush回调主要是用来解耦合，通过设置回调函数来使日志可以同步或异步的方式输出到指定的方向
@@ -102,9 +102,35 @@ private:
     };
 
 
-    static LogLevel g_logLevel;//日志等级
-    static OutputFunc g_output;//日志输出回调
-    static FlushFunc g_flush;//刷新缓冲区回调
+    //static LogLevel g_logLevel;//日志等级
+    //static OutputFunc g_output;//日志输出回调
+    //static FlushFunc g_flush;//刷新缓冲区回调
     Impl m_impl;
 
 };
+
+
+#define LOG_TRACE if (Logger::logLevel() <=Logger::TRACE) \
+  Logger(__FILE__, __LINE__, Logger::TRACE, __func__).stream()
+#define LOG_DEBUG if (Logger::logLevel() <= Logger::DEBUG) \
+  Logger(__FILE__, __LINE__, Logger::DEBUG, __func__).stream()
+#define LOG_INFO if (Logger::logLevel() <= Logger::INFO) \
+  Logger(__FILE__, __LINE__).stream()
+#define LOG_WARN Logger(__FILE__, __LINE__, Logger::WARN).stream()
+#define LOG_ERROR Logger(__FILE__, __LINE__, Logger::ERROR).stream()
+#define LOG_FATAL Logger(__FILE__, __LINE__, Logger::FATAL).stream()
+#define LOG_SYSERR Logger(__FILE__, __LINE__, false).stream()
+#define LOG_SYSFATAL Logger(__FILE__, __LINE__, true).stream()
+
+//检查是否为空
+#define CHECK_NOTNULL(val) checkNotNULL(__FILE__, __LINE__, "'" #val "' Must be non NULL", (val))
+
+template <typename T>
+T* checkNotNULL(Logger::SourceFile file, int line, const char* names, T* ptr)
+{
+    if (!ptr)
+    {
+        Logger(file, line, Logger::FATAL).stream() << names;
+    }
+    return ptr;
+}

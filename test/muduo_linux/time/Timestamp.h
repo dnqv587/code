@@ -57,10 +57,19 @@ public:
 	//返回精确时间的Timestamp类
 	static Timestamp now();
 	//将time_t格式化为Timestamp类
-	static Timestamp fromUnixTime(time_t time, int microSecond);
-	static Timestamp fromUnixTime(time_t time);
+	static Timestamp fromUnixTime(time_t time, int microSecond)
+	{
+		return Timestamp(time * kMicroSecondsPerSecond + microSecond);
+	}
+	static Timestamp fromUnixTime(time_t time)
+	{
+		return fromUnixTime(time, 0);
+	}
 	//交换
-	void swap(Timestamp& that);
+	void swap(Timestamp& that) 
+	{
+		std::swap(this->m_microSecondsSinceEpoch, that.m_microSecondsSinceEpoch);
+	}
 	//转换为DateTime
 	DateTime toDateTime(bool isLocal = false) const;
 	//转换为字符串
@@ -70,9 +79,15 @@ public:
 	// showMicroseconds:是否以微秒计算，isLocal是否是使用本地时区，否则为默认时区
 	std::string formatString(bool showMicroseconds = true, bool isLocal = false) const;
 	//返回自1970-1-1以来的微秒
-	int64_t microSecondsSinceEpoch() const;
+	int64_t microSecondsSinceEpoch() const
+	{
+		return m_microSecondsSinceEpoch;
+	}
 	//返回自1970-1-1以来秒数
-	time_t secondsSinceEpoch() const;
+	time_t secondsSinceEpoch() const
+	{
+		return m_microSecondsSinceEpoch / kMicroSecondsPerSecond;
+	}
 private:
 	int64_t m_microSecondsSinceEpoch;//微秒
 };

@@ -1,9 +1,9 @@
 #include "logging.h"
 #include "../thread/thread.h"
 
-__thread char t_errnobuf[512];//´íÎóĞÅÏ¢
-__thread char t_time[64];
-__thread time_t t_lastSecond;
+__thread char t_errnobuf[512];//é”™è¯¯ä¿¡æ¯
+__thread char t_time[64];//æ ¼å¼åŒ–æ—¥æœŸ
+__thread time_t t_lastSecond;//æœ€è¿‘ä¸€æ¬¡è·å–çš„ç§’æ•°
 
 Logger::LogLevel initLogLevel()
 {
@@ -15,12 +15,12 @@ Logger::LogLevel initLogLevel()
 		return Logger::INFO;
 }
 
-//Ä¬ÈÏÈÕÖ¾Êä³ö»Øµ÷---Êä³öµ½stdout
+//é»˜è®¤æ—¥å¿—è¾“å‡ºå›è°ƒ---è¾“å‡ºåˆ°stdout
 void defaultOutput(const char* msg, int len)
 {
 	::fwrite(msg, 1, len, stdout);
 }
-//Ä¬ÈÏÈÕÖ¾Ë¢ĞÂ»Øµ÷--Ë¢ĞÂstdout
+//é»˜è®¤æ—¥å¿—åˆ·æ–°å›è°ƒ--åˆ·æ–°stdout
 void defaultFlush()
 {
 	::fflush(stdout);
@@ -32,9 +32,9 @@ const char* errnoMsg(int Errno)
 	return t_errnobuf;
 }
 
-static Logger::LogLevel g_logLevel = initLogLevel();
-static Logger::OutputFunc g_output = defaultOutput;
-static Logger::FlushFunc g_flush = defaultFlush;
+ Logger::LogLevel g_logLevel = initLogLevel();
+ Logger::OutputFunc g_output = defaultOutput;
+ Logger::FlushFunc g_flush = defaultFlush;
 
 const char* LogLevelName[Logger::NUM_LOG_LEVELS] =
 {
@@ -60,7 +60,23 @@ Logger::Impl::Impl(LogLevel level, int old_errno, const SourceFile& file, int li
 
 void Logger::Impl::formatTime()
 {
-	
+	int64_t microSecondSinceEpoch = m_time.microSecondsSinceEpoch();//è‡ª1970-1-1æ¥çš„å¾®ç§’æ•°
+	time_t Second = microSecondSinceEpoch / kMicroSecondsPerSecond;//ç§’
+	DateTime dt = m_time.toDateTime(false);
+	//å¦‚æœç§’æ•°å˜åŒ–,åˆ™è¿›è¡Œæ ¼å¼åŒ–æ—¥æœŸ
+	if (t_lastSecond != Second)
+	{
+		t_lastSecond = Second;
+		
+		int len = snprintf(t_time, sizeof(t_time), " % 4d % 02d % 02d % 02d: % 02d : % 02d", dt.Year, dt.mon, dt.day, dt.hour, dt.min, dt.sec);
+		assert(len == 17);
+	}
+	//æ ¼å¼åŒ–å¾®ç§’
+	format fm(".%06d Z", dt.msec);
+	assert(fm.len() == 9);
+	//è¾“å‡ºåˆ°æµ
+	m_stream << std::string(t_time, 17) << fm;
+
 }
 
 void Logger::Impl::finish()
@@ -96,21 +112,31 @@ Logger::~Logger()
 {
 	m_impl.finish();
 	const LogStream::BUFFER& buf(m_impl.m_stream.buffer());
-	g_output(buf.data(), buf.lenght());//½«»º³åÇøÊı¾İÈ«²¿Ğ´Èë
-	if (m_impl.m_logLevel == LogLevel::FATAL)//***ÑÏÖØ³ö´í
+	g_output(buf.data(), buf.lenght());//å°†ç¼“å†²åŒºæ•°æ®å…¨éƒ¨å†™å…¥
+	if (m_impl.m_logLevel == LogLevel::FATAL)//***ä¸¥é‡å‡ºé”™
 	{
-		g_flush();//ÍË³öÇ°Ë¢ĞÂ»º³åÇø£¬±£Ö¤Êı¾İ²»¶ªÊ§
-		::abort();//ÍË³ö³ÌĞò
+		g_flush();//é€€å‡ºå‰åˆ·æ–°ç¼“å†²åŒºï¼Œä¿è¯æ•°æ®ä¸ä¸¢å¤±
+		::abort();//é€€å‡ºç¨‹åº
 	}
 }
 
-inline Logger::LogLevel Logger::logLevel()
+Logger::LogLevel Logger::logLevel()
 {
 	return g_logLevel;
 }
 
-inline void Logger::setLogLevel(LogLevel level)
+void Logger::setLogLevel(LogLevel level)
 {
 	g_logLevel = level;
+}
+
+void Logger::setOutput(OutputFunc out)
+{
+	g_output = out;
+}
+
+void Logger::setFlush(FlushFunc flush)
+{
+	g_flush = flush;
 }
 
