@@ -32,9 +32,9 @@ const char* errnoMsg(int Errno)
 	return t_errnobuf;
 }
 
- Logger::LogLevel g_logLevel = initLogLevel();
- Logger::OutputFunc g_output = defaultOutput;
- Logger::FlushFunc g_flush = defaultFlush;
+Logger::LogLevel Logger::g_logLevel = initLogLevel();
+Logger::OutputFunc Logger::g_output = defaultOutput;
+Logger::FlushFunc Logger::g_flush = defaultFlush;
 
 const char* LogLevelName[Logger::NUM_LOG_LEVELS] =
 {
@@ -68,7 +68,7 @@ void Logger::Impl::formatTime()
 	{
 		t_lastSecond = Second;
 		
-		int len = snprintf(t_time, sizeof(t_time), " % 4d % 02d % 02d % 02d: % 02d : % 02d", dt.Year, dt.mon, dt.day, dt.hour, dt.min, dt.sec);
+		int len = snprintf(t_time, sizeof(t_time), "%4d%02d%02d %02d:%02d:%02d", dt.Year, dt.mon, dt.day, dt.hour, dt.min, dt.sec);
 		assert(len == 17);
 	}
 	//格式化微秒

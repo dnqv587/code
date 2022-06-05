@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\ProcessInfo.cc" />
+    <ClCompile Include="logger\AsynLogging.cc" />
     <ClCompile Include="logger\File.cc" />
     <ClCompile Include="logger\LogFile.cc" />
     <ClCompile Include="logger\logging.cc" />

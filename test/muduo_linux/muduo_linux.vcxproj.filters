@@ -108,5 +108,8 @@
     <ClCompile Include="time\Timestamp.cc">
       <Filter>time</Filter>
     </ClCompile>
+    <ClCompile Include="logger\AsynLogging.cc">
+      <Filter>logger</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

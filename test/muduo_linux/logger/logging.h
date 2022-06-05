@@ -57,6 +57,7 @@ public:
     Logger(SourceFile file, int line, LogLevel level);
     Logger(SourceFile file, int line, LogLevel level, const char* func);
     Logger(SourceFile file, int line, bool toAbort);
+    //析构时才开始写日志文件，此前写入到缓冲区
     ~Logger();
 
     //流式化
@@ -102,9 +103,9 @@ private:
     };
 
 
-    //static LogLevel g_logLevel;//日志等级
-    //static OutputFunc g_output;//日志输出回调
-    //static FlushFunc g_flush;//刷新缓冲区回调
+    static LogLevel g_logLevel;//日志等级
+    static OutputFunc g_output;//日志输出回调
+    static FlushFunc g_flush;//刷新缓冲区回调
     Impl m_impl;
 
 };
