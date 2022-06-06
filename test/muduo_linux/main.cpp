@@ -264,7 +264,7 @@ void TimestampTest()
 	std::cout << Timestamp::now().formatString(true, true) << std::endl;
 }
 
-LogFile logFile("SyncLog", 1024, true, 3, 64);
+LogFile logFile("SyncLog", 65535, true, 3, 1024);
 void outputFunc(const char* msg, int len)
 {
 	logFile.append(msg, len);

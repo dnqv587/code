@@ -9,40 +9,40 @@ class LogFile :public noncopyable
 public:
 	
 	/*
-	* ÈÕÖ¾Êä³ö
-	* baseName:Ãû³Æ£¬rollSize£ºÎÄ¼şË¢ĞÂ×Ö½Ú¼ä¸ô£¬threadSafe£ºÊÇ·ñÎªÏß³Ì°²È«£¬flushInterval£º»º³åÇøË¢ĞÂ¼ä¸ô£¬checkEveryN£º»º³åÇø¼ì²é´óĞ¡
+	* æ—¥å¿—è¾“å‡º
+	* baseName:åç§°ï¼ŒrollSizeï¼šæ–‡ä»¶åˆ·æ–°å­—èŠ‚é—´éš”ï¼ŒthreadSafeï¼šæ˜¯å¦ä¸ºçº¿ç¨‹å®‰å…¨ï¼ŒflushIntervalï¼šç¼“å†²åŒºåˆ·æ–°é—´éš”ï¼ŒcheckEveryNï¼šç¼“å†²åŒºæ£€æŸ¥å¤§å°
 	*/
 	LogFile(const std::string& baseName, off_t rollSize, bool threadSafe, int flushInterval = 3, int checkEveryN = 1024);
 
 	~LogFile() = default;
-	//¼ÓËøÊä³öÈÕÖ¾
+	//åŠ é”è¾“å‡ºæ—¥å¿—
 	void append(const char* logLine, int len);
 	void append(const std::string& logLine)
 	{
 		this->append(logLine.c_str(), logLine.length());
 	}
-	//Ë¢ĞÂ»º³åÇø
+	//åˆ·æ–°ç¼“å†²åŒº
 	void flush();
-	//Ë¢ĞÂÈÕÖ¾ÎÄ¼ş
-	//ĞèÒªË¢ĞÂÎÄ¼şµã£º½øÈëÏÂÒ»Ìì¡¢´ïµ½×î´óĞ´ÈëÊı
+	//åˆ·æ–°æ—¥å¿—æ–‡ä»¶
+	//éœ€è¦åˆ·æ–°æ–‡ä»¶ç‚¹ï¼šè¿›å…¥ä¸‹ä¸€å¤©ã€è¾¾åˆ°æœ€å¤§å†™å…¥æ•°
 	bool rollFile();
 
 private:
-	//ÎŞËøÊä³öÈÕÖ¾
+	//æ— é”è¾“å‡ºæ—¥å¿—
 	void append_unlocked(const char* logLine, int len);
-	//¸ñÊ½»¯ÈÕÖ¾ÎÄ¼şÃû---Ìí¼ÓÊ±¼ä¡¢½ø³ÌID£¬Ïß³ÌIDºÍºó×º;²¢´«³öÎÄ¼şÊ±¼ä--now
+	//æ ¼å¼åŒ–æ—¥å¿—æ–‡ä»¶å---æ·»åŠ æ—¶é—´ã€è¿›ç¨‹IDï¼Œçº¿ç¨‹IDå’Œåç¼€;å¹¶ä¼ å‡ºæ–‡ä»¶æ—¶é—´--now
 	static std::string getLogFileName(const std::string baseName, time_t* now);
 
-	const std::string m_baseName;//ÈÕÖ¾Ãû³Æ
-	const off_t m_rollSize;//µ¥ÈÕÖ¾ÎÄ¼ş×î´óĞ´ÈëÈÕÖ¾ÌõÊı
-	const int m_flashInterval;//Ë¢ĞÂ¼ä¸ô--µ¥Î»Ãë
-	const int m_checkEveryN;//»º³åÇø×î´ó´æ´¢ÈÕÖ¾ÌõÊı--Ã¿´ÎË¢ĞÂÎÄ¼ş»ò»º³åÇøµÄÈÕÖ¾ÌõÊı
+	const std::string m_baseName;//æ—¥å¿—åç§°
+	const off_t m_rollSize;//å•æ—¥å¿—æ–‡ä»¶æœ€å¤§å†™å…¥æ—¥å¿—æ¡æ•°
+	const int m_flashInterval;//åˆ·æ–°é—´éš”--å•ä½ç§’
+	const int m_checkEveryN;//ç¼“å†²åŒºæœ€å¤§å­˜å‚¨æ—¥å¿—æ¡æ•°--æ¯æ¬¡åˆ·æ–°æ–‡ä»¶æˆ–ç¼“å†²åŒºçš„æ—¥å¿—æ¡æ•°
 
-	time_t m_startPeriod;//¼ÇÂ¼Ò»ÌìµÄ¿ªÊ¼Ê±¼ä--µ¥Î»Ãë
-	time_t m_lastRoll;//×îºóÒ»´ÎË¢ĞÂÎÄ¼şµÄÊ±¼ä--µ¥Î»Ãë
-	time_t m_lastFlush;//×îºóÒ»´ÎË¢ĞÂ»º³åÇøµÄÊ±¼ä--µ¥Î»Ãë
+	time_t m_startPeriod;//è®°å½•ä¸€å¤©çš„å¼€å§‹æ—¶é—´--å•ä½ç§’
+	time_t m_lastRoll;//æœ€åä¸€æ¬¡åˆ·æ–°æ–‡ä»¶çš„æ—¶é—´--å•ä½ç§’
+	time_t m_lastFlush;//æœ€åä¸€æ¬¡åˆ·æ–°ç¼“å†²åŒºçš„æ—¶é—´--å•ä½ç§’
 
-	size_t m_logCount;//ÒÑĞ´ÈëµÄÈÕÖ¾ÌõÊı--×î´ócheckEveryN
+	size_t m_logCount;//å·²å†™å…¥çš„æ—¥å¿—æ¡æ•°--æœ€å¤§checkEveryN
 	std::unique_ptr<MutexLock> m_mutex;
-	std::unique_ptr<AppendFile> m_file;	
+	std::unique_ptr<AppendFile> m_file;	//å†™æ—¥å¿—æ–‡ä»¶å¯¹è±¡ï¼Œåœ¨rollFileè¿›è¡Œæ„é€ 
 };
