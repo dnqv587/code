@@ -318,34 +318,6 @@ void AsynLogTest()
 }
 
 
-pthread_cond_t g_cond;
-pthread_mutex_t g_mutex;
-
-void consumeTest()
-{
-	sleep(2);
-	pthread_cond_wait(&g_cond, &g_mutex);
-	while (1)
-	{
-		sleep(1);
-		std::cout << "123" << std::endl;
-	}
-}
-
-void test1()
-{
-	::pthread_cond_init(&g_cond, NULL);
-	Thread thread(consumeTest);
-	thread.start();
-	sleep(1);
-	pthread_cond_signal(&g_cond);
-	while (1)
-	{
-
-	}
-	
-}
-
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -358,7 +330,6 @@ int main(int argc, char* argv[])
 	//LogFileTest();
 	//TimestampTest();
 	//SyncLogTest();
-	test1();
 	//AsynLogTest();
 	return 0;
 }
