@@ -1,9 +1,10 @@
 #pragma once
 #include "../thread/mutex.h"
+#include "File.h"
 #include <memory>
 #include <string>
 
-class AppendFile;
+
 class LogFile :public noncopyable
 {
 public:

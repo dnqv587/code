@@ -3,14 +3,14 @@
 #include "LogFile.h"
 #include "../time/Timestamp.h"
 
-AsynLogging::AsynLogging(std::string& baseName, off_t rollSize, int flushInterval /*= 3*/)
+AsynLogging::AsynLogging(const char* baseName, off_t rollSize, int flushInterval /*= 3*/)
 	:m_baseName(baseName),m_rollSize(rollSize),m_flushInterval(flushInterval), m_running(false),
-	m_thread(std::bind(threadFunc,this),"logging"), m_mutex(),m_cond(m_mutex), m_latch(1),
-	currentBuffer(new Buffer), nextBuffer(new Buffer),m_buffers()
+	m_thread(std::bind(&AsynLogging::threadFunc,this),"logging"), m_mutex(),m_cond(m_mutex), m_latch(1),
+	currentBuffer(new BUFFER), nextBuffer(new BUFFER),m_buffers()
 {
 	currentBuffer->bzero();
 	nextBuffer->bzero();
-	m_buffers.reserve(16);//Ô¤Áô¿Õ¼ä
+	m_buffers.reserve(16);//é¢„ç•™ç©ºé—´
 }
 
 AsynLogging::~AsynLogging()
@@ -24,23 +24,23 @@ AsynLogging::~AsynLogging()
 void AsynLogging::append(const char* logLine, int len)
 {
 	MutexLockGuard lock(m_mutex);
-	if (currentBuffer->avail() > len)//Ê£Óà»º³åÇø¿ÉÒÔÈİÄÉ
+	if (currentBuffer->avail() > len)//å‰©ä½™ç¼“å†²åŒºå¯ä»¥å®¹çº³
 	{
 		currentBuffer->append(logLine, len);
 	}
 	else
 	{
-		m_buffers.push_back(std::move(currentBuffer));//½«ÒÑÌîÂúµÄ»º³åÇøpushµ½m_buffersÖĞ
+		m_buffers.push_back(std::move(currentBuffer));//å°†å·²å¡«æ»¡çš„ç¼“å†²åŒºpushåˆ°m_buffersä¸­
 		if (nextBuffer)
 		{
-			currentBuffer = std::move(nextBuffer);//½«Ô¤±¸»º³åÇøÒÆ¶¯Îªµ±Ç°»º³åÇø
+			currentBuffer = std::move(nextBuffer);//å°†é¢„å¤‡ç¼“å†²åŒºç§»åŠ¨ä¸ºå½“å‰ç¼“å†²åŒº
 		}
 		else
 		{
-			currentBuffer.reset(new Buffer);//newÒ»¸öĞÂµÄ»º³åÇøÎªµ±Ç°»º³åÇø
+			currentBuffer.reset(new BUFFER);//newä¸€ä¸ªæ–°çš„ç¼“å†²åŒºä¸ºå½“å‰ç¼“å†²åŒº
 		}
 		currentBuffer->append(logLine, len);
-		m_cond.notify();//Í¨ÖªÒì²½ÈÕÖ¾Ïß³Ì
+		m_cond.notify();//é€šçŸ¥å¼‚æ­¥æ—¥å¿—çº¿ç¨‹
 	}
 }
 
@@ -49,12 +49,12 @@ void AsynLogging::threadFunc()
 	assert(m_running == true);
 	m_latch.countDown();
 	LogFile output(m_baseName, m_rollSize, false);
-	//Ô¤±¸»º³åÇø
-	BufferPtr newBuffer1(new Buffer);
-	BufferPtr newBuffer2(new Buffer);
+	//é¢„å¤‡ç¼“å†²åŒº
+	BufferPtr newBuffer1(new BUFFER);
+	BufferPtr newBuffer2(new BUFFER);
 	newBuffer1->bzero();
 	newBuffer2->bzero();
-	BufferVector buffersToWrite;//´ıĞ´Èë»º³åÇøÈİÆ÷
+	BufferVector buffersToWrite;//å¾…å†™å…¥ç¼“å†²åŒºå®¹å™¨
 	buffersToWrite.reserve(16);
 	
 	while (m_running)
@@ -62,12 +62,12 @@ void AsynLogging::threadFunc()
 		assert(newBuffer1 && newBuffer1->lenght() == 0);
 		assert(newBuffer2 && newBuffer2->lenght() == 0);
 		assert(buffersToWrite.empty());
-		//ÁÙ½çÇø
+		//ä¸´ç•ŒåŒº
 		{
 			MutexLockGuard lock(m_mutex);
-			if (m_buffers.empty())//ÊÇ·ñÓĞÒÑÂú´ıĞ´Èë»º³å
+			if (m_buffers.empty())//æ˜¯å¦æœ‰å·²æ»¡å¾…å†™å…¥ç¼“å†²
 			{
-				m_cond.waitTime(m_flushInterval);//ÎŞÂÛÊÇ·ñÓĞÒÑÂú´ıĞ´Èë»º³å£¬¶¼ÔÚµÈ´ım_flushIntervalÊ±¼äºó¶¼½«»º³åÇøË¢ÈëÎÄ¼ş
+				m_cond.waitTime(m_flushInterval);//æ— è®ºæ˜¯å¦æœ‰å·²æ»¡å¾…å†™å…¥ç¼“å†²ï¼Œéƒ½åœ¨ç­‰å¾…m_flushIntervalæ—¶é—´åéƒ½å°†ç¼“å†²åŒºåˆ·å…¥æ–‡ä»¶
 			}
 			m_buffers.push_back(std::move(currentBuffer));
 			currentBuffer = std::move(newBuffer1);
@@ -79,7 +79,7 @@ void AsynLogging::threadFunc()
 		}
 		assert(!buffersToWrite.empty());
 
-		if (buffersToWrite.size() > 25)//ÈÕÖ¾¶Ñ»ı£¬¼´Éú²úÕßÉú²úËÙ¶È´óÓÚÏû·ÑÕßÏû·ÑËÙ¶È£¬½«¶ªÆúÈÕÖ¾
+		if (buffersToWrite.size() > 25)//æ—¥å¿—å †ç§¯ï¼Œå³ç”Ÿäº§è€…ç”Ÿäº§é€Ÿåº¦å¤§äºæ¶ˆè´¹è€…æ¶ˆè´¹é€Ÿåº¦ï¼Œå°†ä¸¢å¼ƒæ—¥å¿—
 		{
 			char buf[256];
 			snprintf(buf, sizeof buf, "Dropped log messages at %s, %zd larger buffers\n",
@@ -89,7 +89,7 @@ void AsynLogging::threadFunc()
 			::fwrite(buf, 1, sizeof(buf), stderr);
 			output.append(buf, static_cast<int>(strlen(buf)));
 		}
-		//Ğ´ÈëÈÕÖ¾ÎÄ¼ş
+		//å†™å…¥æ—¥å¿—æ–‡ä»¶
 		for (const auto& buffer : buffersToWrite)
 		{
 			output.append(buffer->data(), buffer->lenght());
@@ -100,7 +100,7 @@ void AsynLogging::threadFunc()
 			// drop non-bzero-ed buffers, avoid trashing
 			buffersToWrite.resize(2);
 		}
-		//½«ÒÑĞ´ÈëµÄ»º³åÇø¹é»¹
+		//å°†å·²å†™å…¥çš„ç¼“å†²åŒºå½’è¿˜
 		if (!newBuffer1)
 		{
 			assert(!buffersToWrite.empty());

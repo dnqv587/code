@@ -6,6 +6,7 @@
 #include <queue>
 #include <stdint.h>
 #include <limits>
+#include <pthread.h>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
@@ -18,6 +19,7 @@
 #include "logger/LogFile.h"
 #include "time/Timestamp.h"
 #include "logger/logging.h"
+#include "logger/AsynLogging.h"
 
 
 using namespace std;
@@ -264,7 +266,7 @@ void TimestampTest()
 	std::cout << Timestamp::now().formatString(true, true) << std::endl;
 }
 
-LogFile logFile("SyncLog", 65535, true, 3, 1024);
+LogFile logFile("SyncLog", 655350000, true, 3, 1024);
 void outputFunc(const char* msg, int len)
 {
 	logFile.append(msg, len);
@@ -280,13 +282,68 @@ void SyncLogTest()
 	Logger::setOutput(outputFunc);
 	Logger::setFlush(flushFunc);
 	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-	for (int i = 0; i < 4096; ++i)
+	for (int i = 0; i < 4096000; ++i)
 	{
 		LOG_INFO << line << "---" << i;
-		usleep(1000);
+		//usleep(1000);
 	}
 
 
+}
+
+AsynLogging ASYNlog("AsynLog", 655350000);
+void ASYNoutputFunc(const char* msg, int len)
+{
+	ASYNlog.append(msg, len);
+}
+
+void ASYNflushFunc()
+{
+	//ASYNlog.flush();
+}
+
+void AsynLogTest()
+{
+	
+	Logger::setOutput(ASYNoutputFunc);
+	Logger::setFlush(ASYNflushFunc);
+	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+	ASYNlog.start();
+	for (int i = 0; i < 4096000; ++i)
+	{
+		LOG_INFO << line << "---" << i;
+		//usleep(1000);
+	}
+	ASYNlog.stop();
+}
+
+
+pthread_cond_t g_cond;
+pthread_mutex_t g_mutex;
+
+void consumeTest()
+{
+	sleep(2);
+	pthread_cond_wait(&g_cond, &g_mutex);
+	while (1)
+	{
+		sleep(1);
+		std::cout << "123" << std::endl;
+	}
+}
+
+void test1()
+{
+	::pthread_cond_init(&g_cond, NULL);
+	Thread thread(consumeTest);
+	thread.start();
+	sleep(1);
+	pthread_cond_signal(&g_cond);
+	while (1)
+	{
+
+	}
+	
 }
 
 int main(int argc, char* argv[])
@@ -300,6 +357,8 @@ int main(int argc, char* argv[])
 	//FileTest();
 	//LogFileTest();
 	//TimestampTest();
-	SyncLogTest();
+	//SyncLogTest();
+	test1();
+	//AsynLogTest();
 	return 0;
 }
