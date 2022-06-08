@@ -4,26 +4,26 @@
 #include "../base/noncopyable.h"
 
 /*
-µ¹¼ÆÊ±Àà
-ÓÃÍ¾£º
-Ö÷Ïß³Ì·¢Æğ¶à¸ö×ÓÏß³Ì£¬1£ºÖ÷Ïß³ÌµÈ´ı×ÓÏß³Ì¶¼Íê³É²¿·ÖÈÎÎñºóÖ÷Ïß³Ì²Å¼ÌĞøÖ´ĞĞ£»2£º×ÓÏß³Ì¶¼µÈ´ıÖ÷Ïß³Ì£¬Ö÷Ïß³ÌÍê³É²¿·ÖÈÎÎñºó£¬×ÓÏß³ÌÖ´ĞĞ
+å€’è®¡æ—¶é—¨é—©ç±»
+ç”¨é€”ï¼š
+ä¸»çº¿ç¨‹å‘èµ·å¤šä¸ªå­çº¿ç¨‹ï¼Œ1ï¼šä¸»çº¿ç¨‹ç­‰å¾…å­çº¿ç¨‹éƒ½å®Œæˆéƒ¨åˆ†ä»»åŠ¡åä¸»çº¿ç¨‹æ‰ç»§ç»­æ‰§è¡Œï¼›2ï¼šå­çº¿ç¨‹éƒ½ç­‰å¾…ä¸»çº¿ç¨‹ï¼Œä¸»çº¿ç¨‹å®Œæˆéƒ¨åˆ†ä»»åŠ¡åï¼Œå­çº¿ç¨‹æ‰§è¡Œ
 */
 class CountDownLatch:public noncopyable
 {
 public:
-	explicit CountDownLatch(int count):m_count(count), m_mutex(),m_cond(m_mutex){ }//mutexÓ¦ÏÈÓÚcondition³õÊ¼»¯
+	explicit CountDownLatch(int count):m_count(count), m_mutex(),m_cond(m_mutex){ }//mutexåº”å…ˆäºconditionåˆå§‹åŒ–
 	
-	//Ìõ¼ş±äÁ¿×èÈûÏß³Ì
+	//æ¡ä»¶å˜é‡é˜»å¡çº¿ç¨‹
 	void wait()
 	{
 		MutexLockGuard lock(m_mutex);
-		while (m_count > 0)//·ÀÖ¹Ğé¼Ù»½ĞÑ
+		while (m_count > 0)//é˜²æ­¢è™šå‡å”¤é†’
 		{
 			m_cond.wait();
 		}
 	}
 
-	//µİ¼õÈÎÎñ¼ÆÊı£¬ÈôÈÎÎñ¼ÆÊıÎª0Ôò»½ĞÑ±»Ìõ¼ş±äÁ¿×èÈûµÄÏß³Ì
+	//é€’å‡ä»»åŠ¡è®¡æ•°ï¼Œè‹¥ä»»åŠ¡è®¡æ•°ä¸º0åˆ™å”¤é†’è¢«æ¡ä»¶å˜é‡é˜»å¡çš„çº¿ç¨‹
 	void countDown()
 	{
 		MutexLockGuard lock(m_mutex);
@@ -34,7 +34,7 @@ public:
 		}
 	}
 
-	//·µ»Ø¼ÆÊı
+	//è¿”å›è®¡æ•°
 	int getCount() const 
 	{
 		MutexLockGuard lock(m_mutex);
@@ -42,7 +42,7 @@ public:
 	}
 
 private:
-	int m_count;//ÈÎÎñ¼ÆÊı
+	int m_count;//ä»»åŠ¡è®¡æ•°
 	Condition m_cond;
 	mutable MutexLock m_mutex;
 };

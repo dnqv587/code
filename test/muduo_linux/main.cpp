@@ -317,6 +317,45 @@ void AsynLogTest()
 	ASYNlog.stop();
 }
 
+void threadfunc1(pthread_mutex_t *mutex)
+{
+	pthread_mutex_lock(mutex);
+	while (1)
+	{
+		sleep(1);
+		std::cout << "threadfunc1" << std::endl;
+	}
+	pthread_mutex_unlock(mutex);
+}
+void threadfunc2(pthread_mutex_t* mutex)
+{
+	pthread_mutex_lock(mutex);
+	while (1)
+	{
+		sleep(1);
+		std::cout << "threadfunc2" << std::endl;
+	}
+	pthread_mutex_unlock(mutex);
+}
+
+void test1()
+{
+	pthread_mutex_t mutex1;
+	pthread_mutex_t mutex2;
+	pthread_mutex_init(&mutex1,NULL);
+	pthread_mutex_init(&mutex2, NULL);
+	Thread thread1(std::bind(threadfunc1, &mutex1));
+	Thread thread2(std::bind(threadfunc2, &mutex2));
+	//pthread_mutex_lock(&mutex1);
+	pthread_mutex_lock(&mutex2);
+	thread1.start();
+	thread2.start();
+	while (1)
+	{
+
+	}
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -331,5 +370,6 @@ int main(int argc, char* argv[])
 	//TimestampTest();
 	//SyncLogTest();
 	//AsynLogTest();
+	test1();
 	return 0;
 }
