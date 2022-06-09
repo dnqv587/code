@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{202f7187-b408-4081-b3e0-b0eae555c5e2}</ProjectGuid>
+    <Keyword>Linux</Keyword>
+    <RootNamespace>cppToLua</RootNamespace>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <ApplicationType>Linux</ApplicationType>
+    <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+    <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+    <LinuxProjectType>{2238F9CD-F817-4ECC-BD14-2524D2669B35}</LinuxProjectType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <RemoteRootDir>~/projects/share/run</RemoteRootDir>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\3rd\lua5.4.4\lapi.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lauxlib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lbaselib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lcode.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lcorolib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lctype.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ldblib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ldebug.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ldo.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ldump.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lfunc.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lgc.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\linit.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\liolib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\llex.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lmathlib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lmem.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\loadlib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lobject.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lopcodes.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\loslib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lparser.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lstate.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lstring.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lstrlib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ltable.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ltablib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\ltm.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lundump.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lutf8lib.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lvm.c" />
+    <ClCompile Include="..\3rd\lua5.4.4\lzio.c" />
+    <ClCompile Include="..\src\app\main.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\3rd\lua5.4.4\lapi.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lauxlib.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lcode.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lctype.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\ldebug.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\ldo.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lfunc.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lgc.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\ljumptab.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\llex.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\llimits.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lmem.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lobject.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lopcodes.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lopnames.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lparser.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lprefix.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lstate.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lstring.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\ltable.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\ltm.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lua.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lua.hpp" />
+    <ClInclude Include="..\3rd\lua5.4.4\luaconf.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lualib.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lundump.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lvm.h" />
+    <ClInclude Include="..\3rd\lua5.4.4\lzio.h" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)../3rd/lua5.4.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
