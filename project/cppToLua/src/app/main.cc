@@ -1,29 +1,76 @@
 #include <lua.hpp>
+#include <string.h>
 
-const char* lua_buf = R"(
-functon hellworld()
-	printf('hello world')
+#define LUA_LIB
+
+const char lua_buf[] = R"( 
+function hellworld() 
+	print("hello world") 
+end 
+function my_pow(x,y)
+	return x^y
 end
-helloworld()
+--hellworld() 
+
 )";
+
 
 int main(int argc, char* argv[])
 {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
-
-	//¼ÓÔØ½Å±¾
-	/* ½«×Ö·û´®¼ÓÔØµ½luaĞéÄâ»úµ±ÖĞ
-	*²ÎÊı£ºĞéÄâ»ú£¬lua´úÂë×Ö·û´®£¬³¤¶È£¬ÃüÃû
-	* ·µ»Ø£º0--³É¹¦£¬·Ç0--´íÎó
-	*/
-	int ret=luaL_loadbuffer(L, lua_buf, sizeof(lua_buf), "helloworld");//ÏàËÆ.luaL_loadstring
-	if (ret != 0)
 	{
-		//È¡
-		const char* msg = lua_tolstring(L, -1,NULL);
-		printf("load script failed %s\n", msg);
+		//åŠ è½½è„šæœ¬
+
+		/* å°†å­—ç¬¦ä¸²åŠ è½½åˆ°luaè™šæ‹Ÿæœºå½“ä¸­
+		*å‚æ•°ï¼šè™šæ‹Ÿæœºï¼Œluaä»£ç å­—ç¬¦ä¸²ï¼Œé•¿åº¦ï¼Œå‘½å
+		* è¿”å›ï¼š0--æˆåŠŸï¼Œé0--é”™è¯¯
+		*/
+		int ret = luaL_loadbuffer(L, lua_buf, strlen(lua_buf), "helloworld");//ç›¸ä¼¼.luaL_loadstring
+		if (ret != 0)
+		{
+			//å‡ºé”™
+			if (lua_isstring(L, -1))
+			{
+				//å–æ ˆé¡¶å…ƒç´ 
+				const char* msg = lua_tolstring(L, -1, NULL);
+				printf("load script failed %s\n", msg);
+				lua_pop(L, 1);
+
+			}
+			return -1;
+		}
+		//çŠ¶æ€æœºï¼Œå‚æ•°æ•°é‡ï¼Œè¿”å›å€¼æ•°é‡ï¼Œé”™è¯¯è¿”å›
+		if (lua_pcall(L, 0, 0, 0))//æ‰§è¡Œè„šæœ¬
+		{
+			//å‡ºé”™
+			const char* msg = lua_tolstring(L, -1, NULL);
+			printf("call function failed %s\n", msg);
+			lua_pop(L, 1);
+		}
+		ret=lua_getglobal(L, "my_pow");
+		printf("type:%d\n", ret);
+		if (!lua_isfunction(L, -1))
+		{
+			printf("not fuction");
+		}
+		lua_pushnumber(L, 2);
+		lua_pushnumber(L, 8);
+		if (lua_pcall(L, 2, 1, 0))//æ‰§è¡Œè„šæœ¬
+		{
+			//å‡ºé”™
+			const char* msg = lua_tolstring(L, -1, NULL);
+			printf("call function failed %s\n", msg);
+			lua_pop(L, 1);
+		}
+		if (lua_isnumber(L, -1))
+		{
+			lua_Number val = lua_tonumber(L, -1);
+			printf("my_pow ret=%f", val);
+		}
+		
 	}
+
 
 	
 	lua_close(L);

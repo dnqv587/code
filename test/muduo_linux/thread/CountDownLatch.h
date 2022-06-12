@@ -8,7 +8,7 @@
 用途：
 主线程发起多个子线程，1：主线程等待子线程都完成部分任务后主线程才继续执行；2：子线程都等待主线程，主线程完成部分任务后，子线程执行
 */
-class CountDownLatch:public noncopyable
+class CountDownLatch:private noncopyable
 {
 public:
 	explicit CountDownLatch(int count):m_count(count), m_mutex(),m_cond(m_mutex){ }//mutex应先于condition初始化

@@ -7,7 +7,7 @@
 #include <memory>
 
 
-class Customer:public noncopyable
+class Customer:private noncopyable
 {
 public:
 	Customer() :m_map(new Map) 

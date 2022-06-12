@@ -13,7 +13,7 @@ constexpr int LARGE_BUFFERSIZE = 4000 * 1000;//buffer的MAX大小
 constexpr int MAXNUMRICSIZE = 48;//整型转字符串型的最大长度
 
 template<int SIZE>//buffer的大小
-class Buffer:public noncopyable
+class Buffer:private noncopyable
 {
 public:
 	Buffer():m_cur(m_data){}
@@ -95,7 +95,7 @@ private:
 
 
 class format;
-class LogStream:public noncopyable
+class LogStream:private noncopyable
 {
 public:
 	typedef Buffer<SMALL_BUFFERSIZE> BUFFER;
@@ -155,7 +155,7 @@ private:
 };
 
 
-class format :public noncopyable
+class format :private noncopyable
 {
 public:
 	template <typename T>

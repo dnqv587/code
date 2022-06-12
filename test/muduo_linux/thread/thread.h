@@ -8,7 +8,7 @@
 
 
 
-class Thread:public noncopyable
+class Thread:private noncopyable
 {
 public:
 	typedef std::function<void()> ThreadFunc;
@@ -44,7 +44,7 @@ private:
 class ThreadData;
 class ThreadInitializer;
 //CurrentThread类，存储当前线程的信息
-class  CurrentThread :public noncopyable
+class  CurrentThread :private noncopyable
 {
 	friend class ThreadData;
 	friend class ThreadInitializer;//提供访问name和tid的权限

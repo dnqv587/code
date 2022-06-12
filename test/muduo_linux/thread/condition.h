@@ -6,9 +6,9 @@
 #include "../base/noncopyable.h"
 
 /*
-Ìõ¼ş±äÁ¿¶ÔÓÚRAII¼¼·¨·â×°
+æ¡ä»¶å˜é‡å¯¹äºRAIIæŠ€æ³•å°è£…
 */
-class Condition:public noncopyable
+class Condition:private noncopyable
 {
 public:
 	explicit Condition(MutexLock& mutex) :m_mutex(mutex) 
@@ -25,7 +25,7 @@ public:
 		pthread_cond_wait(&m_cond, m_mutex.getMutexLockPtr());
 	}
 	
-	//ÔÚÖ¸¶¨Ê±¼äÄÚÌõ¼ş±äÁ¿×èÈûµ±Ç°Ïß³Ì
+	//åœ¨æŒ‡å®šæ—¶é—´å†…æ¡ä»¶å˜é‡é˜»å¡å½“å‰çº¿ç¨‹
 	bool waitTime(int seconds)
 	{
 		struct timespec abstime;
@@ -39,13 +39,13 @@ public:
 		return ETIMEDOUT == pthread_cond_timedwait(&m_cond, m_mutex.getMutexLockPtr(), &abstime);
 	}
 
-	//Í¨ÖªÒ»¸ö×èÈûÔÚµ±Ç°Ìõ¼ş±äÁ¿µÄÏß³Ì
+	//é€šçŸ¥ä¸€ä¸ªé˜»å¡åœ¨å½“å‰æ¡ä»¶å˜é‡çš„çº¿ç¨‹
 	void notify()
 	{
 		pthread_cond_signal(&m_cond);
 	}
 
-	//Í¨ÖªÈ«²¿×èÈûÔÚµ±Ç°Ìõ¼ş±äÁ¿µÄÏß³Ì
+	//é€šçŸ¥å…¨éƒ¨é˜»å¡åœ¨å½“å‰æ¡ä»¶å˜é‡çš„çº¿ç¨‹
 	void notifyAll()
 	{
 		pthread_cond_broadcast(&m_cond);

@@ -5,7 +5,7 @@
 #include <string>
 
 
-class LogFile :public noncopyable
+class LogFile :private noncopyable
 {
 public:
 	

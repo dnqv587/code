@@ -7,7 +7,7 @@
 constexpr int MAX_BUFFER_SIZE = 64 * 1024;//64K
 
 
-class AppendFile:public noncopyable
+class AppendFile:private noncopyable
 {
 public:
 	AppendFile(const char* fileName);
@@ -18,16 +18,16 @@ public:
 
 	void flush();
 
-	//ÒÑĞ´Èësize
+	//å·²å†™å…¥size
 	off_t writtenBytes()
 	{
 		return m_writtenBytes;
 	}
 
 private:
-	size_t write(const char* logLine, size_t len);//ÎŞËøĞ´Èë---·ÇÏß³Ì°²È«
+	size_t write(const char* logLine, size_t len);//æ— é”å†™å…¥---éçº¿ç¨‹å®‰å…¨
 
 	FILE* m_file;
-	char m_buf[MAX_BUFFER_SIZE];//ÓÃ»§Ì¬»º³åÇø ¼õÉÙÎÄ¼şIOµÄ´ÎÊı
+	char m_buf[MAX_BUFFER_SIZE];//ç”¨æˆ·æ€ç¼“å†²åŒº å‡å°‘æ–‡ä»¶IOçš„æ¬¡æ•°
 	off_t m_writtenBytes;
 };

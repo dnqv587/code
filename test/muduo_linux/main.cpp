@@ -319,71 +319,6 @@ void AsynLogTest()
 }
 
 
-pthread_mutex_t mutex1;
-pthread_mutex_t mutex2;
-pthread_cond_t cond;
-void* threadfunc1(void* arg)
-{
-	pthread_mutex_lock(&mutex1);
-	
-	pthread_cond_wait(&cond, &mutex1);
-	std::cout << "threadfunc1:" << ::syscall(SYS_gettid) << std::endl;
-	pthread_mutex_unlock(&mutex1);
-	while (1)
-	{
-		
-		std::cout << "threadfunc1" << std::endl;
-		sleep(1);
-	}
-	
-	return NULL;
-}
-void* threadfunc2(void* arg)
-{
-	pthread_mutex_lock(&mutex1);
-	
-	pthread_cond_wait(&cond, &mutex1);
-	std::cout << "threadfunc2:" << ::syscall(SYS_gettid) << std::endl;
-	pthread_mutex_unlock(&mutex1);
-	while (1)
-	{
-		
-		std::cout << "threadfunc2" << std::endl;
-		sleep(1);
-	}
-	
-	return NULL;
-}
-
-void test1()
-{
-	
-	pthread_mutex_init(&mutex1,NULL);
-	pthread_mutex_init(&mutex2, NULL);
-	pthread_cond_init(&cond, NULL);
-	//Thread thread1(std::bind(threadfunc1, &mutex1,&cond));
-	//Thread thread2(std::bind(threadfunc2, &mutex1,&cond));
-	//pthread_mutex_lock(&mutex1);
-	//pthread_mutex_lock(&mutex2);
-	
-	//thread2.start();
-	//thread1.start();
-	pthread_t thread1;
-	pthread_t thread2;
-	pthread_create(&thread1, NULL, threadfunc1, NULL);
-	pthread_create(&thread2, NULL, threadfunc2, NULL);
-	sleep(3);
-	//pthread_cond_signal(&cond);
-	//pthread_cond_signal(&cond);
-	pthread_cond_broadcast(&cond);
-
-	while (1)
-	{
-
-	}
-}
-
-
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -397,6 +332,6 @@ int main(int argc, char* argv[])
 	//TimestampTest();
 	//SyncLogTest();
 	//AsynLogTest();
-	test1();
+
 	return 0;
 }

@@ -7,9 +7,9 @@
 #include <queue>
 #include <assert.h>
 
-//×èÈû¶ÓÁĞ
+//é˜»å¡é˜Ÿåˆ—
 template<class T>
-class BlokingQueue :public noncopyable
+class BlokingQueue :private noncopyable
 {
 public:
 	BlokingQueue() :m_lock(), m_queue(), m_waitNotEmpty(m_lock)
@@ -19,7 +19,7 @@ public:
 	{
 	}
 
-	//¼ÓÈë---Í¨Öª×èÈûÔÚtakeÉÏµÄÏß³Ì
+	//åŠ å…¥---é€šçŸ¥é˜»å¡åœ¨takeä¸Šçš„çº¿ç¨‹
 	void put(const T& val)
 	{
 		MutexLockGuard lock(m_lock);
@@ -27,7 +27,7 @@ public:
 		m_waitNotEmpty.notify();
 	}
 
-	//ÄÃÈ¡---¶ÓÁĞÎª¿ÕÔòµÈ´ı
+	//æ‹¿å–---é˜Ÿåˆ—ä¸ºç©ºåˆ™ç­‰å¾…
 	T take()
 	{
 		MutexLockGuard lock(m_lock);
@@ -42,7 +42,7 @@ public:
 		return front;
 	}
 
-	//Çå¿Õ
+	//æ¸…ç©º
 	std::queue<T> drain()
 	{
 		std::queue<T> que;
@@ -54,7 +54,7 @@ public:
 		return que;
 	}
 
-	//´óĞ¡
+	//å¤§å°
 	size_t size()
 	{
 		MutexLockGuard lock(m_lock);
@@ -70,7 +70,7 @@ public:
 
 private:
 	mutable MutexLock m_lock;
-	Condition m_waitNotEmpty GUARDED_BY(m_lock);//µÈ´ı¶ÓÁĞ·Ç¿Õ
-	std::queue<T> m_queue GUARDED_BY(m_lock);//ÉùÃ÷Êı¾İ³ÉÔ±ÊÜ¸ø¶¨¹¦ÄÜ±£»¤¡£¶ÔÊı¾İµÄ¶ÁÈ¡²Ù×÷ĞèÒª¹²Ïí·ÃÎÊ£¬¶øĞ´Èë²Ù×÷ĞèÒª¶ÀÕ¼·ÃÎÊ
+	Condition m_waitNotEmpty GUARDED_BY(m_lock);//ç­‰å¾…é˜Ÿåˆ—éç©º
+	std::queue<T> m_queue GUARDED_BY(m_lock);//å£°æ˜æ•°æ®æˆå‘˜å—ç»™å®šåŠŸèƒ½ä¿æŠ¤ã€‚å¯¹æ•°æ®çš„è¯»å–æ“ä½œéœ€è¦å…±äº«è®¿é—®ï¼Œè€Œå†™å…¥æ“ä½œéœ€è¦ç‹¬å è®¿é—®
 };
 

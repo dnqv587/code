@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../base/noncopyable.h"
 #include <pthread.h>
 #include <assert.h>
@@ -127,7 +127,7 @@ extern "C" {
 //(void)errnum  做用仅仅就是以显眼的方式让编译器不要给出参数未被使用的警告
 #endif // CHECK_PTHREAD_RETURN_VALUE
 
-class MutexLock :public noncopyable
+class MutexLock :private noncopyable
 {
 public:
 	MutexLock() 
@@ -158,7 +158,7 @@ private:
 /*
 RAII技法
 */
-class MutexLockGuard:public noncopyable
+class MutexLockGuard:private noncopyable
 {
 public:
 	MutexLockGuard(MutexLock& mutex):m_MutexLock(mutex)

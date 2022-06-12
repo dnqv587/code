@@ -5,10 +5,10 @@
 
 
 /*
-µ¥ÀıÄ£Ê½
+å•ä¾‹æ¨¡å¼
 */
 template<class T>
-class Singleton :public noncopyable
+class Singleton :private noncopyable
 {
 public:
 	
@@ -17,7 +17,7 @@ public:
 	
 	static T* instance()
 	{
-		pthread_once(&m_once, init);//Ö»Ö´ĞĞÒ»´ÎÊµÀı»¯
+		pthread_once(&m_once, init);//åªæ‰§è¡Œä¸€æ¬¡å®ä¾‹åŒ–
 		return g_instance;
 	}
 
@@ -25,7 +25,7 @@ private:
 	static void init()
 	{
 		g_instance = new T;
-		::atexit(destroy);//×¢²áÍË³öº¯Êı
+		::atexit(destroy);//æ³¨å†Œé€€å‡ºå‡½æ•°
 	}
 	static void destroy()
 	{

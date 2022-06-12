@@ -10,7 +10,7 @@
 #include <vector>
 
 
-class AsynLogging :public noncopyable
+class AsynLogging :private noncopyable
 {
 public:
 	AsynLogging(const char* baseName, off_t rollSize, int flushInterval = 3);
