@@ -1,52 +1,52 @@
 local str1 = "hello world!\n"
--- ×Ö·ûÌæ»»
+-- å­—ç¬¦æ›¿æ¢
 local str2 = string.gsub(str1, "hello", "nihao")
 print(str2)
 
 io.write(str2)
--- ÔËĞĞÊ±×ª»»
+-- è¿è¡Œæ—¶è½¬æ¢
 print("10" + 2)
-print("10" .. 2) --  ..×Ö·û´®Ïà¼Ó
-print(tonumber("10") + 2) -- tonumber  ÏÔÊ½µÄ½«×Ö·û×ª»»ÎªÊıÖµ
+print("10" .. 2) --  ..å­—ç¬¦ä¸²ç›¸åŠ 
+print(tonumber("10") + 2) -- tonumber  æ˜¾å¼çš„å°†å­—ç¬¦è½¬æ¢ä¸ºæ•°å€¼
 print("10" .. tostring(2)) -- tostring
--- ¶ÁÈ¡Ò»ĞĞ
+-- è¯»å–ä¸€è¡Œ
 local line = io.read()
 print(type(line))
--- # »ñÈ¡×Ö·û´®³¤¶È
+-- # è·å–å­—ç¬¦ä¸²é•¿åº¦
 print(#"12345")
 
--- ±í
-print("---±í---")
-local table1 = {} -- ´´½¨Ò»¸ötable
+-- è¡¨
+print("---è¡¨---")
+local table1 = {} -- åˆ›å»ºä¸€ä¸ªtable
 local k = "x"
 table1[k] = 10
 table1[20] = k
 print(table1["x"] .. table1[20])
 
-local table2 = table1 -- table1ºÍtable2ÒıÓÃÁËÍ¬Ò»¸ötable
+local table2 = table1 -- table1å’Œtable2å¼•ç”¨äº†åŒä¸€ä¸ªtable
 print(table2["x"] .. table2[20])
-table1 = nil -- table1²»ÔÚÒıÓÃtable
-table2 = nil -- table2²»ÔÚÒıÓÃtable
--- table±»»ØÊÕ
+table1 = nil -- table1ä¸åœ¨å¼•ç”¨table
+table2 = nil -- table2ä¸åœ¨å¼•ç”¨table
+-- tableè¢«å›æ”¶
 A = {}
 A["x"] = 10086
 print(A["x"])
-print(A.x) -- Ïàµ±ÓÚA["x"]
+print(A.x) -- ç›¸å½“äºA["x"]
 function Func(n)
-    io.write("º¯Êıµ÷ÓÃ:" .. n * n .. '\n')
+    io.write("å‡½æ•°è°ƒç”¨:" .. n * n .. '\n')
 end
 A.func = Func
 A.func(10)
 
--- ¶ÁÈ¡10ĞĞÄÚÈİ²¢´æ´¢µ½±íÖĞ
+-- è¯»å–10è¡Œå†…å®¹å¹¶å­˜å‚¨åˆ°è¡¨ä¸­
 Str = {}
 for i = 1, 10 do
     Str[i] = io.read()
 end
-for i = 1, #Str do -- #Str »ñÈ¡Str±íµÄ³¤¶È
+for i = 1, #Str do -- #Str è·å–Strè¡¨çš„é•¿åº¦
     print(Str[i] .. ";")
 end
 
-print(Str[#Str]) -- ´òÓ¡ÁĞ±íStr×îºóÒ»¸öÖµ
-Str[#Str] = nil -- É¾³ı±íÎ²ÔªËØ
-Str[#Str + 1] = 0 -- ½«0²åÈëµ½±íÎ²
+print(Str[#Str]) -- æ‰“å°åˆ—è¡¨Stræœ€åä¸€ä¸ªå€¼
+Str[#Str] = nil -- åˆ é™¤è¡¨å°¾å…ƒç´ 
+Str[#Str + 1] = 0 -- å°†0æ’å…¥åˆ°è¡¨å°¾
