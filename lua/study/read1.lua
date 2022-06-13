@@ -7,7 +7,7 @@ function Fact(n)
     end
 end
 
-local a=io.read("n")
+local a = io.read("n")
 print(Fact(a))
 print(type(a))
 

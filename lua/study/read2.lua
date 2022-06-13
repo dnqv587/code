@@ -33,7 +33,7 @@ A["x"] = 10086
 print(A["x"])
 print(A.x) -- 相当于A["x"]
 function Func(n)
-    io.write("函数调用:" .. n * n .. '\n')
+    io.write("函数调用" .. n * n .. '\n')
 end
 A.func = Func
 A.func(10)
@@ -50,3 +50,11 @@ end
 print(Str[#Str]) -- 打印列表Str最后一个值
 Str[#Str] = nil -- 删除表尾元素
 Str[#Str + 1] = 0 -- 将0插入到表尾
+
+Table = {}
+Table[100] = 100 -- 前面未初始化的元素为nil
+Table[1] = 1
+print(#Table) -- nil作为界定数组结尾的标志
+
+print("maxn" .. table.maxn(Table))
+
