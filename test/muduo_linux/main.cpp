@@ -21,6 +21,7 @@
 #include "time/Timestamp.h"
 #include "logger/logging.h"
 #include "logger/AsynLogging.h"
+#include "thread/ThreadPool.h"
 
 
 using namespace std;
@@ -145,7 +146,7 @@ void copyOnWriteTest()
 	
 }
 
-BlokingQueue<int> que;
+BlockingQueue<int> que;
 void addThread()
 {
 	for (int i = 0; i < 10; ++i)
@@ -153,12 +154,13 @@ void addThread()
 		sleep(1);
 		que.put(i);
 	}
+	
 }
 void getThread()
 {
 	while (1)
 	{
-		std::cout << que.take() << std::endl;
+		std::cout <<::syscall(SYS_gettid)<<":"<< que.take() << std::endl;
 	}
 }
 
@@ -167,23 +169,26 @@ void blokingQueueTest()
 	Thread thread1(addThread);
 	thread1.start();
 	Thread thread2(getThread);
-	//thread2.start();
+	thread2.start();
 	
 	sleep(1);
+	int n = 0;
 	while (1)
 	{
-		//std::cout << que.take() << std::endl;
-		sleep(1);
-		std::cout << que.size() << std::endl;
-		if (que.size() == 10)
+		std::cout << ::syscall(SYS_gettid)<<"Z:" << que.take() << std::endl;
+		if (n == 9)
+		{
+			std::cout << "break" <<n<< std::endl;
 			break;
+		}
+		++n;
 	}
 	
 	std::queue<int> q = que.drain();
 	std::cout << "clear:" << que.size() << std::endl;
 	while (!q.empty())
 	{
-		std::cout << q.front() << std::endl;
+		std::cout <<"front:"<< q.front() << std::endl;
 		sleep(1);
 		q.pop();
 	}
@@ -319,6 +324,26 @@ void AsynLogTest()
 }
 
 
+void addThread1(int n)
+{
+	std::cout <<::syscall(SYS_gettid)<< "n:" << n << std::endl;
+	sleep(1);
+}
+
+void ThreadPoolTest()
+{
+	ThreadPool threads("threads");
+	threads.start();
+	threads.run(std::bind(&addThread1,1));
+	threads.run(std::bind(&addThread1,2));
+	threads.run(std::bind(&addThread1,3));
+	threads.run(std::bind(&addThread1,4));
+	threads.stop();
+	
+	getchar();
+}
+
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -332,6 +357,7 @@ int main(int argc, char* argv[])
 	//TimestampTest();
 	//SyncLogTest();
 	//AsynLogTest();
+	ThreadPoolTest();
 
 	return 0;
 }

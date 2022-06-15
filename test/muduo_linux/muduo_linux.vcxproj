@@ -82,6 +82,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="base\BlockingQueue.h" />
+    <ClInclude Include="base\BoundBlockingQueue.h" />
     <ClInclude Include="base\copyable.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="base\ProcessInfo.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="thread\mutex.h" />
     <ClInclude Include="thread\SignalSlot.h" />
     <ClInclude Include="thread\thread.h" />
+    <ClInclude Include="thread\ThreadPool.h" />
     <ClInclude Include="time\Timestamp.h" />
     <ClInclude Include="time\TimeZone.h" />
   </ItemGroup>
@@ -111,6 +113,7 @@
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="thread\thread.cc" />
+    <ClCompile Include="thread\ThreadPool.cc" />
     <ClCompile Include="time\Timestamp.cc" />
     <ClCompile Include="time\TimeZone.cc" />
   </ItemGroup>

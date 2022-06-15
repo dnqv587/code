@@ -81,6 +81,12 @@
     <ClInclude Include="time\Timestamp.h">
       <Filter>time</Filter>
     </ClInclude>
+    <ClInclude Include="base\BoundBlockingQueue.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\ThreadPool.h">
+      <Filter>thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -110,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="logger\AsynLogging.cc">
       <Filter>logger</Filter>
+    </ClCompile>
+    <ClCompile Include="thread\ThreadPool.cc">
+      <Filter>thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
