@@ -8,7 +8,7 @@ for line in io.lines() do
         value = line -- value 每行的内容
     }
     int = int + 1
-    if int == 10 then
+    if int == 1 then
         break
     end
 end
@@ -19,16 +19,28 @@ while l do
     l = l.next
 end
 
-function func()
-    return 123, "abc", "hello"
+test = {
+    [1] = "1",
+    [5] = "5",
+    [0] = "0",
+    [2] = "2"
+
+}
+
+local t = test
+--[[
+while t do
+    print(t.value)
+    test = t.next
+end
+]]
+for i = 0, 5 do
+    print(t[i])
 end
 
-ret = func().unpack
-local r = ret
-count = 1
-while r do
-    print(r[count])
-    count = count + 1
-    r = r.next
-end
+local l2 = {
+    x = 1,
+    y = 2
+}
+print(l2.x, l2.y) -- 等价于l2["x"],l2["y"]
 
