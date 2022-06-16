@@ -32,7 +32,7 @@ public:
 	void put(T&& val)
 	{
 		MutexLockGuard lock(m_lock);
-		m_queue.push(std::move(val));
+		m_queue.push(val);
 		m_waitNotEmpty.notify();
 	}
 

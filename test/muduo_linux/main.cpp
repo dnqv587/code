@@ -333,7 +333,7 @@ void addThread1(int n)
 void ThreadPoolTest()
 {
 	ThreadPool threads("threads");
-	threads.start();
+	threads.start(1);
 	threads.run(std::bind(&addThread1,1));
 	threads.run(std::bind(&addThread1,2));
 	threads.run(std::bind(&addThread1,3));

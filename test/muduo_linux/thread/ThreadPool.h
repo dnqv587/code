@@ -4,7 +4,6 @@
 #include <vector>
 #include <atomic>
 
-
 class ThreadPool :private noncopyable
 {
 public:

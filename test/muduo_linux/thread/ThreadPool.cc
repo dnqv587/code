@@ -19,6 +19,7 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::start(unsigned int numThreads /*= CORE_NUM*/)
 {
+	m_isRunning = true;
 	//获取cpu个数
 	if (numThreads == CORE_NUM)
 	{
@@ -29,7 +30,7 @@ void ThreadPool::start(unsigned int numThreads /*= CORE_NUM*/)
 		m_threads.emplace_back(new Thread(std::bind(&ThreadPool::thread, this), m_name + std::to_string(i)));
 		m_threads[i]->start();
 	}
-
+	
 }
 
 
