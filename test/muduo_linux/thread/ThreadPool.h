@@ -24,7 +24,7 @@ public:
 private:
 	void thread();
 
-	BlockingQueue<Task> m_TaskQueue;//任务队列
+	BlockingQueue<ThreadPool::Task> m_TaskQueue;//任务队列
 	std::vector<std::unique_ptr<Thread>> m_threads;//线程容器
 	std::atomic<bool> m_isRunning;//是否运行
 	std::string m_name;//线程池名

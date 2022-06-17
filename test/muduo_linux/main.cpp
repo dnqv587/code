@@ -323,24 +323,26 @@ void AsynLogTest()
 	ASYNlog.stop();
 }
 
-
+MutexLock mutex;
 void addThread1(int n)
 {
-	std::cout <<::syscall(SYS_gettid)<< "n:" << n << std::endl;
+	MutexLockGuard lock(mutex);
+	std::cout <<::syscall(SYS_gettid)<< " n:" << n << std::endl;
 	sleep(1);
 }
 
 void ThreadPoolTest()
 {
 	ThreadPool threads("threads");
-	threads.start(1);
+	threads.start();
 	threads.run(std::bind(&addThread1,1));
 	threads.run(std::bind(&addThread1,2));
 	threads.run(std::bind(&addThread1,3));
 	threads.run(std::bind(&addThread1,4));
-	threads.stop();
 	
-	getchar();
+	
+	//getchar();
+	threads.stop();
 }
 
 

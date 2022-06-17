@@ -19,7 +19,9 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::start(unsigned int numThreads /*= CORE_NUM*/)
 {
+	assert(m_threads.empty());
 	m_isRunning = true;
+	m_threads.reserve(numThreads);
 	//获取cpu个数
 	if (numThreads == CORE_NUM)
 	{
@@ -27,7 +29,7 @@ void ThreadPool::start(unsigned int numThreads /*= CORE_NUM*/)
 	}
 	for (int i = 0; i < numThreads; ++i)
 	{
-		m_threads.emplace_back(new Thread(std::bind(&ThreadPool::thread, this), m_name + std::to_string(i)));
+		m_threads.emplace_back(new Thread(std::bind(&ThreadPool::thread,this), m_name + std::to_string(i)));
 		m_threads[i]->start();
 	}
 	
@@ -42,6 +44,7 @@ void ThreadPool::stop()
 	for (const auto& t : m_threads)
 	{
 		t->join();
+		printf("回收成功\n");
 	}
 }
 
@@ -65,7 +68,8 @@ void ThreadPool::thread()
 {
 	while (m_isRunning)
 	{
-		Task task(m_TaskQueue.take());
+		ThreadPool::Task task(m_TaskQueue.take());
+
 		if (task)
 		{
 			task();

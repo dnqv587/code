@@ -12,7 +12,7 @@ template<class T>
 class BlockingQueue :private noncopyable
 {
 public:
-	BlockingQueue() :m_lock(), m_queue(), m_waitNotEmpty(m_lock), m_isRunning(true)
+	BlockingQueue() :m_lock(), m_queue(), m_waitNotEmpty(m_lock)
 	{
 	}
 	~BlockingQueue()
@@ -32,7 +32,7 @@ public:
 	void put(T&& val)
 	{
 		MutexLockGuard lock(m_lock);
-		m_queue.push(val);
+		m_queue.push(std::move(val));
 		m_waitNotEmpty.notify();
 	}
 
@@ -44,12 +44,11 @@ public:
 		{
 			m_waitNotEmpty.wait();
 		}
-		if (m_isRunning)
-		{
-			assert(!m_queue.empty());
-		}			
 
-		T&& front(std::move(m_queue.front()));
+		//assert(!m_queue.empty());
+					
+		//T&& front(std::move(m_queue.front()));
+		T front(m_queue.front());
 		m_queue.pop();
 		return front;
 	}
@@ -82,14 +81,12 @@ public:
 	//结束队列，并解除阻塞
 	void over()
 	{
-		MutexLockGuard lock(m_lock);
-		m_isRunning = false;
+		this->drain();
 		m_waitNotEmpty.notifyAll();
 	}
 
 
 private:
-	bool m_isRunning;
 	mutable MutexLock m_lock;
 	Condition m_waitNotEmpty GUARDED_BY(m_lock);//等待队列非空
 	std::queue<T> m_queue GUARDED_BY(m_lock);//声明数据成员受给定功能保护。对数据的读取操作需要共享访问，而写入操作需要独占访问
