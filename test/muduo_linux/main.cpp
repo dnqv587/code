@@ -160,7 +160,7 @@ void getThread()
 {
 	while (1)
 	{
-		std::cout <<::syscall(SYS_gettid)<<":"<< que.take() << std::endl;
+		std::cout <<::syscall(SYS_gettid)<<":"<< que.take(ConstructorType::MOVE) << std::endl;
 	}
 }
 
@@ -175,7 +175,7 @@ void blokingQueueTest()
 	int n = 0;
 	while (1)
 	{
-		std::cout << ::syscall(SYS_gettid)<<"Z:" << que.take() << std::endl;
+		std::cout << ::syscall(SYS_gettid)<<"Z:" << que.take(ConstructorType::MOVE) << std::endl;
 		if (n == 9)
 		{
 			std::cout << "break" <<n<< std::endl;
@@ -326,20 +326,21 @@ void AsynLogTest()
 MutexLock mutex;
 void addThread1(int n)
 {
-	MutexLockGuard lock(mutex);
-	std::cout <<::syscall(SYS_gettid)<< " n:" << n << std::endl;
+	{
+		MutexLockGuard lock(mutex);
+		std::cout << ::syscall(SYS_gettid) << " n:" << n << std::endl;
+	}
 	sleep(1);
 }
 
 void ThreadPoolTest()
 {
 	ThreadPool threads("threads");
-	threads.start();
+	threads.start(8);
 	threads.run(std::bind(&addThread1,1));
 	threads.run(std::bind(&addThread1,2));
 	threads.run(std::bind(&addThread1,3));
 	threads.run(std::bind(&addThread1,4));
-	
 	
 	//getchar();
 	threads.stop();
@@ -359,7 +360,8 @@ int main(int argc, char* argv[])
 	//TimestampTest();
 	//SyncLogTest();
 	//AsynLogTest();
-	ThreadPoolTest();
+	//ThreadPoolTest();
+
 
 	return 0;
 }

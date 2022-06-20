@@ -44,7 +44,6 @@ void ThreadPool::stop()
 	for (const auto& t : m_threads)
 	{
 		t->join();
-		printf("回收成功\n");
 	}
 }
 
@@ -68,7 +67,7 @@ void ThreadPool::thread()
 {
 	while (m_isRunning)
 	{
-		ThreadPool::Task task(m_TaskQueue.take());
+		ThreadPool::Task task(m_TaskQueue.take(COPY));
 
 		if (task)
 		{
