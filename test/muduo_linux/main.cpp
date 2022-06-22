@@ -362,6 +362,5 @@ int main(int argc, char* argv[])
 	//AsynLogTest();
 	//ThreadPoolTest();
 
-
 	return 0;
 }
