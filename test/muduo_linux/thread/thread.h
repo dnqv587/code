@@ -21,7 +21,7 @@ public:
 	void start();
 
 	//回收线程
-	void join();
+	int join();
 
 	//线程是否在运行
 	bool isStarted() { return m_isStarted; }

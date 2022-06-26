@@ -76,7 +76,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>/usr/src/kernels/3.10.0-1160.62.1.el7.x86_64/include/;/usr/include;$(IncludePath)</IncludePath>
+    <IncludePath>/usr/include;$(IncludePath)</IncludePath>
     <LibraryPath>
     </LibraryPath>
   </PropertyGroup>
@@ -88,12 +88,14 @@
     <ClInclude Include="base\ProcessInfo.h" />
     <ClInclude Include="base\Type.h" />
     <ClInclude Include="designPattern\observer.hpp" />
+    <ClInclude Include="designPattern\prototype.h" />
     <ClInclude Include="designPattern\singleton.h" />
     <ClInclude Include="logger\AsynLogging.h" />
     <ClInclude Include="logger\File.h" />
     <ClInclude Include="logger\LogFile.h" />
     <ClInclude Include="logger\logging.h" />
     <ClInclude Include="logger\LogStream.h" />
+    <ClInclude Include="net\Bufferh.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
@@ -112,6 +114,7 @@
     <ClCompile Include="logger\logging.cc" />
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="net\Buffercc.cpp" />
     <ClCompile Include="thread\thread.cc" />
     <ClCompile Include="thread\ThreadPool.cc" />
     <ClCompile Include="time\Timestamp.cc" />

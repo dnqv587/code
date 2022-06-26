@@ -5,7 +5,7 @@
 #include <windows.h>
 static pid_t gettid()
 {
-	return ::GetCurrentThreadId();//»ñÈ¡µ±Ç°Ïß³Ìid
+	return ::GetCurrentThreadId();//è·å–å½“å‰çº¿ç¨‹id
 }
 #else
 #include <unistd.h>
@@ -27,27 +27,27 @@ std::atomic<int> Thread::g_threadNum;
 thread_local std::string CurrentThread::t_name = "unnamedThread";
 thread_local pid_t CurrentThread::t_tid = 0;
 
-void afterFork() //fork½ø³Ìºó½«×Ó½ø³ÌµÄÖ÷Ïß³ÌÖØĞÂ³õÊ¼»¯
+void afterFork() //forkè¿›ç¨‹åå°†å­è¿›ç¨‹çš„ä¸»çº¿ç¨‹é‡æ–°åˆå§‹åŒ–
 {
 	CurrentThread::t_tid = 0;
 	CurrentThread::t_name = "main";
 	CurrentThread::tid();
 }
 
-class ThreadInitializer //³õÊ¼»¯Àà£¬ÓÃÀ´ÉèÖÃÖ÷Ïß³ÌÃû¡¢Ïß³Ìid
+class ThreadInitializer //åˆå§‹åŒ–ç±»ï¼Œç”¨æ¥è®¾ç½®ä¸»çº¿ç¨‹åã€çº¿ç¨‹id
 {
 public:
 	ThreadInitializer()
 	{
 		CurrentThread::t_name = "main";
 		CurrentThread::tid();
-		pthread_atfork(NULL, NULL, afterFork);//×¢²áfork»Øµ÷º¯Êı
+		pthread_atfork(NULL, NULL, afterFork);//æ³¨å†Œforkå›è°ƒå‡½æ•°
 	}
 };
 
-ThreadInitializer init;//Ê¹ÓÃÈ«¾Ö±äÁ¿³õÊ¼»¯Ö÷Ïß³Ì
+ThreadInitializer init;//ä½¿ç”¨å…¨å±€å˜é‡åˆå§‹åŒ–ä¸»çº¿ç¨‹
 
-pid_t CurrentThread::tid() //Ïß³ÌID
+pid_t CurrentThread::tid() //çº¿ç¨‹ID
 {
 	if (t_tid == 0)
 	{
@@ -56,18 +56,18 @@ pid_t CurrentThread::tid() //Ïß³ÌID
 	return t_tid;
 }
 
-std::string CurrentThread::name() //Ïß³ÌÃû
+std::string CurrentThread::name() //çº¿ç¨‹å
 {
 	return t_name;
 }
 
-bool CurrentThread::isMainThread() //ÊÇ·ñÎªÖ÷Ïß³Ì
+bool CurrentThread::isMainThread() //æ˜¯å¦ä¸ºä¸»çº¿ç¨‹
 {
 	return t_tid == ::gettid();
 }
 
 
-//Ïß³Ìº¯Êı,Ïß³ÌÖĞÔËĞĞµÄº¯Êı
+//çº¿ç¨‹å‡½æ•°,çº¿ç¨‹ä¸­è¿è¡Œçš„å‡½æ•°
 class ThreadData
 {
 	typedef std::function<void()> ThreadFunc;
@@ -78,11 +78,11 @@ public:
 		wkTid(tid)
 	{}
 
-	//ÔÚµ±Ç°Ïß³ÌÖĞÔËĞĞº¯Êı
+	//åœ¨å½“å‰çº¿ç¨‹ä¸­è¿è¡Œå‡½æ•°
 	void run()
 	{
 		pid_t tid = CurrentThread::tid();
-		std::shared_ptr<pid_t> pTid = wkTid.lock();//ÅĞ¶ÏÏß³ÌÊÇ·ñ±»Ïú»Ù
+		std::shared_ptr<pid_t> pTid = wkTid.lock();//åˆ¤æ–­çº¿ç¨‹æ˜¯å¦è¢«é”€æ¯
 		if (pTid)
 		{
 			*pTid = tid;
@@ -90,24 +90,24 @@ public:
 		}
 
 		CurrentThread::t_name = m_name.empty() ? "Thread" : m_name;
-		::prctl(PR_SET_NAME, CurrentThread::t_name);//ÉèÖÃÏß³ÌÃû
+		::prctl(PR_SET_NAME, CurrentThread::t_name);//è®¾ç½®çº¿ç¨‹å
 
-		m_func();//ÔËĞĞ»Øµ÷º¯Êı
-		CurrentThread::t_name = "finished";//Ïß³Ì½áÊø
+		m_func();//è¿è¡Œå›è°ƒå‡½æ•°
+		CurrentThread::t_name = "finished";//çº¿ç¨‹ç»“æŸ
 
 	}
 
 private:
 	ThreadFunc m_func;
 	std::string m_name;
-	std::weak_ptr<pid_t> wkTid;//Ê¹ÓÃweak_ptrÊÇ·ÀÖ¹ÔÚÊ¹ÓÃÇ°±»ÆäËûÏß³ÌÎö¹¹ÁË
+	std::weak_ptr<pid_t> wkTid;//ä½¿ç”¨weak_ptræ˜¯é˜²æ­¢åœ¨ä½¿ç”¨å‰è¢«å…¶ä»–çº¿ç¨‹ææ„äº†
 };
 
-//Ïß³Ì»Øµ÷º¯Êı
+//çº¿ç¨‹å›è°ƒå‡½æ•°
 static void* thread(void* arg)
 {
 	ThreadData* data = static_cast<ThreadData*> (arg);
-	data->run();//ÔËĞĞº¯Êı
+	data->run();//è¿è¡Œå‡½æ•°
 	delete data;
 	return NULL;
 }
@@ -141,14 +141,14 @@ void Thread::start()
 	{
 		m_isStarted = false;
 		delete data;
-		abort();//ÍË³ö³ÌĞò
+		abort();//é€€å‡ºç¨‹åº
 	}
 }
 
-void Thread::join()
+int Thread::join()
 {
 	assert(m_isStarted);
 	assert(!m_isJoined);
 	m_isJoined = true;
-	pthread_join(m_tid, NULL);
+	return pthread_join(m_tid, NULL);
 }

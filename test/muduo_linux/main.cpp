@@ -22,6 +22,7 @@
 #include "logger/logging.h"
 #include "logger/AsynLogging.h"
 #include "thread/ThreadPool.h"
+#include "designPattern/prototype.h"
 
 
 using namespace std;
@@ -346,6 +347,20 @@ void ThreadPoolTest()
 	threads.stop();
 }
 
+void prototypeTest()
+{
+	Cat cat("coco");
+	Dog dog("dodo");
+	
+	Animal* cloneCat = cat.Clone();
+	Animal* cloneDog = dog.Clone();
+	cloneCat->print();
+	cloneDog->print();
+	((Cat*)cloneCat)->test();
+	((Dog*)cloneDog)->test();
+
+	getchar();
+}
 
 int main(int argc, char* argv[])
 {
@@ -361,6 +376,7 @@ int main(int argc, char* argv[])
 	//SyncLogTest();
 	//AsynLogTest();
 	//ThreadPoolTest();
+	prototypeTest();
 
 	return 0;
 }

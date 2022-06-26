@@ -19,6 +19,9 @@
     <Filter Include="time">
       <UniqueIdentifier>{a672de42-2685-4b0f-9825-1b1bc2def80c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{21db3664-4ae3-4cd3-8e25-3a33f9416a14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h">
@@ -87,6 +90,12 @@
     <ClInclude Include="thread\ThreadPool.h">
       <Filter>thread</Filter>
     </ClInclude>
+    <ClInclude Include="net\Bufferh.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="designPattern\prototype.h">
+      <Filter>designPattern</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -119,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="thread\ThreadPool.cc">
       <Filter>thread</Filter>
+    </ClCompile>
+    <ClCompile Include="net\Buffercc.cpp">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
