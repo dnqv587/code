@@ -1,5 +1,9 @@
 #include <lua.hpp>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #define LUA_LIB
 
@@ -38,7 +42,7 @@ void  stringTest()
 				lua_pop(L, 1);
 
 			}
-			return -1;
+			return ;
 		}
 		//状态机，参数数量，返回值数量，错误返回
 		if (lua_pcall(L, 0, 0, 0))//执行脚本
@@ -76,6 +80,7 @@ void  stringTest()
 
 }
 
+
 static int add2(lua_State* L)
 {
 	printf("add2\n");
@@ -100,7 +105,30 @@ static int sub2(lua_State* L)
 	return 1;
 }
 
+static int luaresume(lua_State* L)
+{
+	int res;
+	return lua_resume(L, NULL, 0, &res);
+}
+
 const char* testfunc = "print(\"luabg\") luayield() print(add2(1.0,2.0)) print(sub2(20.1,19)) luayield() print(\"end\")";
+
+const char buf[] = R"( 
+function hellworld() 
+	print("1")
+	luayield()
+	print("2")  
+end 
+function my_pow(x,y)
+	print("3")
+	luayield()
+	return x^y
+end
+hellworld() 
+res=my_pow(1,2)
+
+print(res)
+)";
 
 void test()
 {
@@ -109,27 +137,32 @@ void test()
 	lua_State* newL = lua_newthread(L);
 
 	lua_register(newL, "luayield", luayield);
+	lua_register(newL, "luaresume", luaresume);
 	lua_register(newL, "add2", add2);
 	lua_register(newL, "sub2", sub2);
-	if (luaL_loadstring(newL, testfunc))
+	if (luaL_loadstring(newL, buf))
 	{
 		printf("Failed to invoke.\n");
 	}
 	sleep(1);
-	printf("resume bf\n");
-	lua_resume(newL, NULL, 0, NULL);
-	sleep(1);
-	printf("resume end\n");
-	lua_resume(newL, NULL, 0, NULL);
-	sleep(1);
-	lua_resume(newL, NULL, 0, NULL);
+	//printf("resume bf\n");
+	luaresume(newL);
+	luaresume(newL);
+	luaresume(newL);
+	//sleep(1);
+	//printf("resume end\n");
+	//luaresume(newL);
+	//sleep(1);
+	//luaresume(newL);
 	lua_close(L);
-	return 0;
+	return ;
 }
 
 int main(int argc, char* argv[])
 {
 	test();
+
+	getchar();
 	return 0;
 }
 
