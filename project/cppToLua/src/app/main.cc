@@ -15,7 +15,7 @@ end
 )";
 
 
-int main(int argc, char* argv[])
+void  stringTest()
 {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
@@ -72,8 +72,64 @@ int main(int argc, char* argv[])
 	}
 
 
-	
 	lua_close(L);
+
+}
+
+static int add2(lua_State* L)
+{
+	printf("add2\n");
+	double op1 = luaL_checknumber(L, 1);
+	double op2 = luaL_checknumber(L, 2);
+	lua_pushnumber(L, op1 + op2);
+	return 1;
+}
+
+static int luayield(lua_State* L)
+{
+	printf("luayield\n");
+	return lua_yield(L, 0);
+}
+
+static int sub2(lua_State* L)
+{
+	printf("sub2\n");
+	double op1 = luaL_checknumber(L, 1);
+	double op2 = luaL_checknumber(L, 2);
+	lua_pushnumber(L, op1 - op2);
+	return 1;
+}
+
+const char* testfunc = "print(\"luabg\") luayield() print(add2(1.0,2.0)) print(sub2(20.1,19)) luayield() print(\"end\")";
+
+void test()
+{
+	lua_State* L = luaL_newstate();
+	luaL_openlibs(L);
+	lua_State* newL = lua_newthread(L);
+
+	lua_register(newL, "luayield", luayield);
+	lua_register(newL, "add2", add2);
+	lua_register(newL, "sub2", sub2);
+	if (luaL_loadstring(newL, testfunc))
+	{
+		printf("Failed to invoke.\n");
+	}
+	sleep(1);
+	printf("resume bf\n");
+	lua_resume(newL, NULL, 0, NULL);
+	sleep(1);
+	printf("resume end\n");
+	lua_resume(newL, NULL, 0, NULL);
+	sleep(1);
+	lua_resume(newL, NULL, 0, NULL);
+	lua_close(L);
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+	test();
 	return 0;
 }
 
