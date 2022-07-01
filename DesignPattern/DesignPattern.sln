@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "observer", "observer\observer.vcxproj", "{3EB94D89-E772-4257-B960-AAB3DD4D1BDF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "state", "state\state.vcxproj", "{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{3EB94D89-E772-4257-B960-AAB3DD4D1BDF}.Release|x64.Build.0 = Release|x64
 		{3EB94D89-E772-4257-B960-AAB3DD4D1BDF}.Release|x86.ActiveCfg = Release|Win32
 		{3EB94D89-E772-4257-B960-AAB3DD4D1BDF}.Release|x86.Build.0 = Release|Win32
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Debug|x64.ActiveCfg = Debug|x64
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Debug|x64.Build.0 = Debug|x64
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Debug|x86.ActiveCfg = Debug|Win32
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Debug|x86.Build.0 = Debug|Win32
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Release|x64.ActiveCfg = Release|x64
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Release|x64.Build.0 = Release|x64
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Release|x86.ActiveCfg = Release|Win32
+		{ADC3776F-B1C0-43C1-8FD7-DE3CA17CA77F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
