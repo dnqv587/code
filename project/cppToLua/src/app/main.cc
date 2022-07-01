@@ -107,6 +107,7 @@ static int sub2(lua_State* L)
 
 static int luaresume(lua_State* L)
 {
+	printf("luaresume\n");
 	int res;
 	return lua_resume(L, NULL, 0, &res);
 }
@@ -125,9 +126,13 @@ function my_pow(x,y)
 	return x^y
 end
 hellworld() 
-res=my_pow(1,2)
+luaresume()
+--co=coroutine.create(my_pow);
+--co.resume(co)
 
-print(res)
+--res=my_pow(1,2)
+
+--print(res)
 )";
 
 void test()
@@ -147,8 +152,11 @@ void test()
 	sleep(1);
 	//printf("resume bf\n");
 	luaresume(newL);
-	luaresume(newL);
-	luaresume(newL);
+	printf("main\n");
+	//luayield(newL);
+	//luaresume(newL);
+	//luaresume(newL);
+	//luaresume(newL);
 	//sleep(1);
 	//printf("resume end\n");
 	//luaresume(newL);
