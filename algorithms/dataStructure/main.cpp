@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +14,7 @@
 #include "matrixGraph.hpp"
 #include "ListGraph.hpp"
 #include "BinaryTree.hpp"
+#include "CircularBuffer.hpp"
 
 using namespace std;
 
@@ -283,6 +284,29 @@ void BinaryTreeTest()
 	test.searchBST(111, comp);
 }
 
+class foo
+{
+public:
+	foo()
+	{
+		printf("foo!\n");
+	}
+	~foo()
+	{
+		printf("~foo!\n");
+	}
+};
+
+void CircularBufferTest()
+{
+	CircularBuffer<foo> buf(10);
+	for (int i = 0; i < 11; ++i)
+	{
+		foo f;
+		buf.push(f);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	
@@ -294,7 +318,8 @@ int main(int argc, char* argv[])
 	//linkQueueTest();
 	//matrixGraphTest();
 	//ListGraphTest();
-	BinaryTreeTest();
+	//BinaryTreeTest();
+	CircularBufferTest();
 
 	system("pause");
 }

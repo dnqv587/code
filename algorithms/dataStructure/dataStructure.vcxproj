@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="array.hpp" />
     <ClInclude Include="BinaryTree.hpp" />
+    <ClInclude Include="CircularBuffer.hpp" />
     <ClInclude Include="linkQueue.hpp" />
     <ClInclude Include="linkStack.hpp" />
     <ClInclude Include="ListGraph.hpp" />
