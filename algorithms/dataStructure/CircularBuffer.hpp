@@ -7,29 +7,31 @@ public:
 	CircularBuffer(int num)
 		:_num(num)
 	{
-		_front = new T[_num];
+		_head = (std::shared_ptr<T*>)malloc(sizeof(std::shared_ptr<T*>) * _num);
+		_front = _head;
 	}
 	~CircularBuffer()
 	{
-		delete[]_front;
+		free(_front);
 	}
 
-	void push(const T& val)
+	void push(std::shared_ptr<T*>&& val)
 	{
-		if (_num)
+		if (_head + _num == _front)
 		{
-			*(_front + _num) = val;
-			--_num;
+			*_front = std::move(val);
+			++_front;
 		}
 		else
 		{
-			*_front = val;
-			++_front;
+			*_front = std::move(val);
+			_front = _head;
 		}
 	}
 
 
 private:
-	T* _front;
+	std::shared_ptr<T*> _head;
+	std::shared_ptr<T*> _front;
 	int _num;
 };

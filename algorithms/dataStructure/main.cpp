@@ -287,23 +287,22 @@ void BinaryTreeTest()
 class foo
 {
 public:
-	foo()
-	{
-		printf("foo!\n");
-	}
+
 	~foo()
 	{
 		printf("~foo!\n");
 	}
 };
 
+
 void CircularBufferTest()
 {
 	CircularBuffer<foo> buf(10);
+	
 	for (int i = 0; i < 11; ++i)
 	{
-		foo f;
-		buf.push(f);
+		foo* f = new foo;
+		buf.push(std::make_shared<foo*>(f));
 	}
 }
 
