@@ -22,6 +22,9 @@
     <Filter Include="net">
       <UniqueIdentifier>{21db3664-4ae3-4cd3-8e25-3a33f9416a14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{095706c4-d5cd-4b1d-8003-dcd5d877401c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\copyable.h">
@@ -96,6 +99,9 @@
     <ClInclude Include="designPattern\prototype.h">
       <Filter>designPattern</Filter>
     </ClInclude>
+    <ClInclude Include="event\EventLoop.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="net\Buffercc.cpp">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="event\EventLoop.cc">
+      <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

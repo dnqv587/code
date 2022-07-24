@@ -23,6 +23,7 @@
 #include "logger/AsynLogging.h"
 #include "thread/ThreadPool.h"
 #include "designPattern/prototype.h"
+#include "event/EventLoop.h"
 
 
 using namespace std;
@@ -362,6 +363,21 @@ void prototypeTest()
 	getchar();
 }
 
+void Eventtest(EventLoop* c)
+{
+	std::cout << c->isInLoopThread() << std::endl;
+}
+
+void EventLoopTest()
+{
+	EventLoop event;
+	EventLoop* c = event.getEventLoopOfCurrentThread();
+	Thread t1(std::bind(Eventtest, &event));
+	t1.start();
+	t1.join();
+	
+}
+
 int main(int argc, char* argv[])
 {
 	//observerTest();
@@ -376,7 +392,9 @@ int main(int argc, char* argv[])
 	//SyncLogTest();
 	//AsynLogTest();
 	//ThreadPoolTest();
-	prototypeTest();
+	//prototypeTest();
+	EventLoopTest();
 
+	getchar();
 	return 0;
 }
