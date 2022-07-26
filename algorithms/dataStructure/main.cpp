@@ -301,8 +301,8 @@ void CircularBufferTest()
 	
 	for (int i = 0; i < 11; ++i)
 	{
-		foo* f = new foo;
-		buf.push(std::make_shared<foo*>(f));
+		foo f;
+		buf.push(f);
 	}
 }
 
