@@ -370,16 +370,20 @@ void Eventtest(EventLoop* c)
 
 void EventLoopTest()
 {
+	LOG_INFO << "info";
 	EventLoop event;
 	EventLoop* c = event.getEventLoopOfCurrentThread();
+	c->loop();
 	Thread t1(std::bind(Eventtest, &event));
 	t1.start();
 	t1.join();
 	
 }
 
+
 int main(int argc, char* argv[])
 {
+
 	//observerTest();
 	//CountDownLatchTest();
 	//singletonTest();

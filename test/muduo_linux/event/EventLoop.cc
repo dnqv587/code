@@ -1,6 +1,7 @@
 #pragma once
 #include "EventLoop.h"
 #include "../logger/logging.h"
+#include <sys/poll.h>
 
 __thread EventLoop* t_loopInThisThread = nullptr;
 
@@ -22,6 +23,18 @@ EventLoop::EventLoop()
 EventLoop::~EventLoop()
 {
 	t_loopInThisThread = nullptr;
+}
+
+void EventLoop::loop()
+{
+	assert(!m_looping);
+	assertInLoopThread();
+	m_looping = true;
+
+	::poll(NULL, 0, 5 * 1000);
+
+	LOG_TRACE << "EventLoop " << this << " stop looping";
+	m_looping = false;
 }
 
 EventLoop* EventLoop::getEventLoopOfCurrentThread()
