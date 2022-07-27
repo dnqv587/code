@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <string>
+#include <utility>
 
 //virtual析构测试
 class Vbase
@@ -70,4 +71,52 @@ public:
 	{
 		printf("Sale\n");
 	}
+};
+
+//11.避免自我复制
+class SelfCopy
+{
+public:
+	SelfCopy() = default;
+
+	SelfCopy(int* p)
+	{
+		this->p = p;
+	}
+	//SelfCopy& operator=(SelfCopy& that)
+	//{
+	//	if (this == &that)//避免自我复制
+	//	{
+	//		return;
+	//	}
+	//	delete this->p;
+	//	this->p = new int(*that.p);//深拷贝
+	//	return *this;
+
+	//}
+
+	SelfCopy(const SelfCopy& that)
+	{
+		if(this->p)
+			delete this->p;
+		this->p = new int(*that.p);
+	}
+
+	void swap(SelfCopy& that)
+	{
+		int* temp = that.p;
+		that.p = this->p;
+		this->p = temp;
+	}
+
+	//使用copy and swap 避免自我复制
+	SelfCopy& operator=(SelfCopy& that)
+	{
+		SelfCopy temp(that);
+		this->swap(temp);
+
+		return *this;
+	}
+
+	int* p;
 };

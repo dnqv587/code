@@ -16,10 +16,23 @@ void test2()
 	p->log();
 }
 
+void test3()
+{
+	SelfCopy t1(new int(9));
+
+	SelfCopy t2;
+	t2 = t1;
+
+	std::cout << t1.p << ";" << t2.p << std::endl;
+	t2 = t2;
+	std::cout << t1.p << ";" << t2.p << std::endl;
+	
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
-	test2();
-
+	//test2();
+	test3();
 	return 0;
 }
