@@ -102,6 +102,9 @@
     <ClInclude Include="event\EventLoop.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="event\Channel.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -139,6 +142,9 @@
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="event\EventLoop.cc">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="event\Channel.cc">
       <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>

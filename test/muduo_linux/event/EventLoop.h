@@ -4,6 +4,7 @@
 
 //采用one thread per loop 每个线程只能有一个EventLoop实体
 
+class Channel;
 class EventLoop :public noncopyable
 {
 public:
@@ -11,6 +12,8 @@ public:
 	~EventLoop();
 
 	void loop();
+
+	void updateChannel(Channel* channel);
 
 	//断言当前线程是否为IO线程，否则abort
 	void assertInLoopThread()
@@ -34,6 +37,9 @@ private:
 	void abortNotInLoopThread();
 
 	std::atomic<bool> m_looping;//是否在loop
+	std::atomic<bool> m_quit;//事件循环终止标识符
+	bool m_eventHandling;
+
 	const pid_t t_threadId;
 };
 
