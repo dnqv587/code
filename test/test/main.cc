@@ -88,6 +88,38 @@ void test6()
 	std::cout << date.year() << date.month() << date.day() << std::endl;
 }
 
+void test7()
+{
+	Foo t1(2);
+	//Foo t2 = t1.instansce();//值传递
+	Foo& t2 = t1.instansce();//引用传递
+	t2.setVal(3);
+	std::cout << t1.getVal() << t2.getVal() << std::endl;
+}
+
+void test8()
+{
+	Algo::Math m(3);
+	m.print();
+	m = m + m;
+	m.print();
+	m = m + 2;
+	m.print();
+	int m2 = m + 4;
+	std::cout << m2 << std::endl;
+}
+
+void test9()
+{
+	Foo f(10);
+	Widget1 w(2, &f);
+	Widget1 w2 = w;
+	Foo* f2 = w2.getFoo();
+	f2->setVal(8);
+	
+	std::cout << w.getFoo()->getVal() << w2.getFoo()->getVal() << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -95,7 +127,11 @@ int main(int argc, char* argv[])
 	//test3();
 	//test4();
 	//test5();
-	test6();
+	//test6();
+	//test7();
+	//test8();
+	test9();
+	
 	return 0;
 }
 

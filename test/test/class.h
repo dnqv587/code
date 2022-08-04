@@ -319,3 +319,164 @@ private:
 	Month _M;
 	Day _D;
 };
+
+//pass by const referrence or pass by value
+class Foo
+{
+public:
+	Foo() = default;
+	Foo(int val)
+		:_a(val)
+	{
+
+	}
+	~Foo() = default;
+
+	Foo& instansce()
+	{
+		return *this;
+	}
+
+	void setVal(int val)
+	{
+		_a = val;
+	}
+
+	int getVal()
+	{
+		return _a;
+	}
+private:
+	int _a;
+};
+
+//operator测试
+namespace Algo
+{
+	class Math
+	{
+	public:
+		Math() = delete;
+		Math(int val)
+			:_val(val)
+		{
+
+		}
+		
+		Math& operator+(const Math& that)
+		{
+			this->_val += that._val;
+			return *this;
+		}
+
+		Math& operator-(const Math& that)
+		{
+			this->_val -= that._val;
+			return *this;
+		}
+
+		Math& operator*(const Math& that)
+		{
+			this->_val *= that._val;
+			return *this;
+		}
+		Math& operator/(const Math& that)
+		{
+			this->_val /= that._val;
+			return *this;
+		}
+
+		Math& operator+(int val)
+		{
+			this->_val += val;
+			return *this;
+		}
+
+		Math& operator-(int val)
+		{
+			this->_val -= val;
+			return *this;
+		}
+
+		Math& operator*(int val)
+		{
+			this->_val *= val;
+			return *this;
+		}
+		Math& operator/(int val)
+		{
+			this->_val /= val;
+			return *this;
+		}
+
+		operator int()
+		{
+			return this->_val;
+		}
+
+		void print()
+		{
+			printf("Algo::Math:_val:%d\n", this->_val);
+		}
+
+	private:
+		int _val;
+	};
+
+	Math& add( Math& lhs, const Math& rhs)
+	{
+		return lhs + rhs;
+	}
+}
+
+//不抛出异常的swap
+class Widget1
+{
+public:
+	Widget1(int v, Foo* f)
+		:_val(v),
+		_foo(std::make_shared<Foo> (f))
+	{
+
+	}
+	~Widget1()
+	{
+		
+	}
+
+	Widget1(const Widget1& that)
+	{
+		this->_val = that._val;
+		this->_foo = std::shared_ptr<Foo>(new Foo);
+		*this->_foo = *that._foo;
+	}
+	Widget1& operator=(const Widget1& that)
+	{
+		if (&that == this)
+		{
+			return *this;
+		}
+		this->_val = that._val;
+		this->_foo = std::shared_ptr<Foo>(new Foo);
+		*this->_foo = *that._foo;
+	}
+	Foo* getFoo()
+	{
+		return _foo.get();
+	}
+	int getVal()
+	{
+		return _val;
+	}
+
+private:
+	int _val;
+	std::shared_ptr<Foo> _foo;
+};
+
+class MySwap
+{
+public:
+
+private:
+};
