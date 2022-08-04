@@ -29,7 +29,7 @@ public:
 	{
 		return CurrentThread::tid() == this->t_threadId;
 	}
-
+	//获取当前线程的EventLoop对象
 	EventLoop* getEventLoopOfCurrentThread();
 
 
@@ -37,8 +37,8 @@ private:
 	void abortNotInLoopThread();
 
 	std::atomic<bool> m_looping;//是否在loop
-	std::atomic<bool> m_quit;//事件循环终止标识符
-	bool m_eventHandling;
+	std::atomic<bool> m_quit;//是否退出loop
+	bool m_eventHandling;//是否正在处理event事件
 
 	const pid_t t_threadId;
 };

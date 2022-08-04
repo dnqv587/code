@@ -84,7 +84,7 @@ private:
 	const int m_fd;//文件描述符
 	EventLoop* m_loop;//所属事件循环
 	int m_events;//所监听的事件
-	int m_revents;
+	int m_revents;//所发生的事件
 	int m_index;
 
 	//监听事件

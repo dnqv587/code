@@ -105,6 +105,9 @@
     <ClInclude Include="event\Channel.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="net\Poller.h">
+      <Filter>net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="event\Channel.cc">
       <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="net\Poller.cc">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

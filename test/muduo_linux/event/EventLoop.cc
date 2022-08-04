@@ -3,6 +3,7 @@
 #include "../logger/logging.h"
 #include <sys/poll.h>
 
+//每个线程只能有一个EventLoop对象
 __thread EventLoop* t_loopInThisThread = nullptr;
 
 EventLoop::EventLoop()

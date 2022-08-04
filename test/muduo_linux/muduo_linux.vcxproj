@@ -98,6 +98,7 @@
     <ClInclude Include="logger\logging.h" />
     <ClInclude Include="logger\LogStream.h" />
     <ClInclude Include="net\Bufferh.h" />
+    <ClInclude Include="net\Poller.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net\Buffercc.cpp" />
+    <ClCompile Include="net\Poller.cc" />
     <ClCompile Include="thread\thread.cc" />
     <ClCompile Include="thread\ThreadPool.cc" />
     <ClCompile Include="time\Timestamp.cc" />
