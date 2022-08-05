@@ -111,13 +111,25 @@ void test8()
 
 void test9()
 {
-	Foo f(10);
-	Widget1 w(2, &f);
+	Widget1 w(2, new Foo(10));
 	Widget1 w2 = w;
 	Foo* f2 = w2.getFoo();
 	f2->setVal(8);
 	
 	std::cout << w.getFoo()->getVal() << w2.getFoo()->getVal() << std::endl;
+}
+
+void test10()
+{
+	Widget1 w1(2, new Foo(6));
+	Widget1 w2(3, new Foo(7));
+	std::cout << "    w1:" << w1.getFoo() << std::endl;
+	std::cout << "    w2:" << w2.getFoo() << std::endl;
+	//默认版本的swap会调用拷贝构造或拷贝操作符进行拷贝交换
+	//重载后的swap会调用特例化后的swap
+	std::swap(w1, w2);
+	std::cout << "swapw1:" << w1.getFoo() << std::endl;
+	std::cout << "swapw2:" << w2.getFoo() << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -130,7 +142,8 @@ int main(int argc, char* argv[])
 	//test6();
 	//test7();
 	//test8();
-	test9();
+	//test9();
+	test10();
 	
 	return 0;
 }

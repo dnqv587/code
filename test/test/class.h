@@ -9,7 +9,7 @@
 
 #include <fstream>
 
-//virtual析构测试
+//----------virtual析构测试
 class Vbase
 {
 public:
@@ -45,7 +45,7 @@ public:
 };
 
 
-//9、绝不在构造和析构过程中调用virtual函数
+//9、----------绝不在构造和析构过程中调用virtual函数
 
 class Trace
 {
@@ -79,7 +79,7 @@ public:
 	}
 };
 
-//11.避免自我复制
+//11.--------避免自我复制
 class SelfCopy
 {
 public:
@@ -127,7 +127,7 @@ public:
 	int* p;
 };
 
-//异常处理
+//----------异常处理
 class MyException :public std::exception
 {
 public:
@@ -139,7 +139,7 @@ public:
 
 };
 
-//隐式类型转换
+//--------隐式类型转换
 class Person
 {
 public:
@@ -188,7 +188,7 @@ private:
 };
 
 
-//18-19 接口设计
+//18-19 --------接口设计
 struct Year
 {
 	Year() = default;
@@ -350,7 +350,7 @@ private:
 	int _a;
 };
 
-//operator测试
+//----------operator测试
 namespace Algo
 {
 	class Math
@@ -429,25 +429,26 @@ namespace Algo
 	}
 }
 
-//不抛出异常的swap
+//----------------不抛出异常的swap
+//swap的前提是，对象支持拷贝构造或拷贝操作符
 class Widget1
 {
 public:
 	Widget1(int v, Foo* f)
 		:_val(v),
-		_foo(std::make_shared<Foo> (f))
+		_foo(f)
 	{
 
 	}
 	~Widget1()
 	{
-		
+		delete _foo;
 	}
 
 	Widget1(const Widget1& that)
 	{
 		this->_val = that._val;
-		this->_foo = std::shared_ptr<Foo>(new Foo);
+		this->_foo = new Foo;
 		*this->_foo = *that._foo;
 	}
 	Widget1& operator=(const Widget1& that)
@@ -457,26 +458,44 @@ public:
 			return *this;
 		}
 		this->_val = that._val;
-		this->_foo = std::shared_ptr<Foo>(new Foo);
+		this->_foo = new Foo;
 		*this->_foo = *that._foo;
 	}
 	Foo* getFoo()
 	{
-		return _foo.get();
+		return _foo;
 	}
 	int getVal()
 	{
 		return _val;
 	}
+	//内部swap
+	void swap(Widget1& that)
+	{
+		std::swap(this->_foo, that._foo);//调用std::swap
+		std::swap(this->_val, that._val);
+	}
 
 private:
 	int _val;
-	std::shared_ptr<Foo> _foo;
+	Foo* _foo;
 };
 
-class MySwap
+//重载特例化std::swap
+/*
+* 1、C++只允许对class template偏特化，在function templates身上偏特化行不通
+* 2、不可以添加新的classes或functions到std里面
+* 错误：template<typename T>//std::swap一个重载版本
+		1、void swap<Widget<T> >(Widget<T>& a,Widget<T>& b)
+		2、void swap(Widget<T>& a,Widget<T>& b)
+*/
+namespace std
 {
-public:
+	template<>
+	void swap<Widget1>(Widget1& lhs, Widget1& rhs) noexcept
+	{
+		lhs.swap(rhs);//调用内部函数
+	}
+}
 
-private:
-};
+//无法特例化模板类
