@@ -26,7 +26,7 @@ public:
 	Timestamp poll(int timeoutMs, ChannelList* activeChannels);
 
 	/*
-	* 队列增加所监听Channel
+	* 维护和更新m_pollfds数组,将fd对应的m_pollfds更新或增加Channel中的事件
 	*/
 	void updateChannel(Channel* channel);
 
@@ -44,6 +44,6 @@ private:
 
 	EventLoop* m_ownerLoop;//所属于的loop
 	PollFdList m_pollfds;//fd容器
-	ChannelMap m_channels;
+	ChannelMap m_channels;//Channel容器
 
 };

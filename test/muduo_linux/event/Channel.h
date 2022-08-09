@@ -16,7 +16,7 @@ public:
 
 	Channel(EventLoop* loop, const int fd);
 
-	//核心，有EventLoop::loop()调用，根据m_revents的值分别调用不同用户的回调
+	//核心，有EventLoop::loop()调用，根据m_revents的事件分别处理不同的事件
 	void handleEvent();
 	//设置读事件回调
 	void setReadCallback(const EventCallback& cb)
@@ -73,6 +73,16 @@ public:
 		return m_events;
 	}
 
+	int index()
+	{
+		return m_index;
+	}
+
+	void set_index(int idx)
+	{
+		m_index = idx;
+	}
+
 	bool isNoneEvent() const
 	{
 		return m_events == kNoneEvent;
@@ -85,7 +95,7 @@ private:
 	EventLoop* m_loop;//所属事件循环
 	int m_events;//所监听的事件
 	int m_revents;//所发生的事件
-	int m_index;
+	int m_index;//Poller中m_pollfds的下标
 
 	//监听事件
 	static const int kNoneEvent;//空事件
