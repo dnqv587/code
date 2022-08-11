@@ -17,7 +17,7 @@ Poller::~Poller()
 
 Timestamp Poller::poll(int timeoutMs, ChannelList* activeChannels)
 {
-	int numEvents = ::poll(m_pollfds.data(), m_pollfds.size(), timeoutMs);
+	int numEvents = ::poll(m_pollfds.data(), m_pollfds.size(), timeoutMs);//进行监听
 
 	if (numEvents > 0)
 	{

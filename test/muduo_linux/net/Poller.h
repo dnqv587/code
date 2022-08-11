@@ -27,6 +27,7 @@ public:
 
 	/*
 	* 维护和更新m_pollfds数组,将fd对应的m_pollfds更新或增加Channel中的事件
+	* 将fd挂在到内核监控范围中
 	*/
 	void updateChannel(Channel* channel);
 

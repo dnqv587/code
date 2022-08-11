@@ -8,6 +8,9 @@
 #include <limits>
 #include <pthread.h>
 #include <sys/syscall.h>
+#include <sys/timerfd.h>
+#include <signal.h>
+#include <time.h>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
 #include "thread/CountDownLatch.h"
@@ -24,6 +27,7 @@
 #include "thread/ThreadPool.h"
 #include "designPattern/prototype.h"
 #include "event/EventLoop.h"
+#include "event/Channel.h"
 
 
 using namespace std;
@@ -380,6 +384,30 @@ void EventLoopTest()
 	
 }
 
+void* timeout(EventLoop* loop)
+{
+	printf("Timeout!\n");
+	loop->quit();
+}
+
+void allEventLoopTest()
+{
+	EventLoop loop;
+	int fd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+	Channel channel(&loop, fd);
+	channel.setReadCallback(std::bind(&timeout, &loop));
+	channel.enableReading();
+
+	struct itimerspec howlong;
+	bzero(&howlong, sizeof howlong);
+	howlong.it_value.tv_sec = 5;
+	::timerfd_settime(fd, 0, &howlong, NULL);
+
+	loop.loop();
+
+	::close(fd);
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -397,7 +425,8 @@ int main(int argc, char* argv[])
 	//AsynLogTest();
 	//ThreadPoolTest();
 	//prototypeTest();
-	EventLoopTest();
+	//EventLoopTest();
+	allEventLoopTest();
 
 	getchar();
 	return 0;

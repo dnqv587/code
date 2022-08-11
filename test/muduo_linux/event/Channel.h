@@ -88,6 +88,11 @@ public:
 		return m_events == kNoneEvent;
 	}
 
+	EventLoop* ownerLoop()
+	{
+		return m_loop;
+	}
+
 private:
 	void update();
 
