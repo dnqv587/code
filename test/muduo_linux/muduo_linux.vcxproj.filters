@@ -108,6 +108,15 @@
     <ClInclude Include="net\Poller.h">
       <Filter>net</Filter>
     </ClInclude>
+    <ClInclude Include="time\TimerQueue.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="time\TimerID.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="time\Timer.h">
+      <Filter>time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -152,6 +161,12 @@
     </ClCompile>
     <ClCompile Include="net\Poller.cc">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="time\TimerQueue.cc">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="time\Timer.cc">
+      <Filter>time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@
 #include "designPattern/prototype.h"
 #include "event/EventLoop.h"
 #include "event/Channel.h"
+#include "time/Timer.h"
 
 
 using namespace std;
@@ -384,10 +385,13 @@ void EventLoopTest()
 	
 }
 
-void* timeout(EventLoop* loop)
+void* timeout(EventLoop* loop,int fd)
 {
 	printf("Timeout!\n");
-	loop->quit();
+	char buf[64];
+	::bzero(buf, sizeof buf);
+	::read(fd, buf, sizeof buf);
+	//loop->quit();
 }
 
 void allEventLoopTest()
@@ -395,12 +399,13 @@ void allEventLoopTest()
 	EventLoop loop;
 	int fd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
 	Channel channel(&loop, fd);
-	channel.setReadCallback(std::bind(&timeout, &loop));
+	channel.setReadCallback(std::bind(&timeout, &loop,fd));
 	channel.enableReading();
 
 	struct itimerspec howlong;
 	bzero(&howlong, sizeof howlong);
 	howlong.it_value.tv_sec = 5;
+	howlong.it_interval.tv_sec = 3;
 	::timerfd_settime(fd, 0, &howlong, NULL);
 
 	loop.loop();
@@ -408,6 +413,17 @@ void allEventLoopTest()
 	::close(fd);
 }
 
+void timeCb()
+{
+	printf("time cb\n");
+}
+void TimerTest()
+{
+	Timer t(timeCb, Timestamp::now(), 5);
+	
+	t.restart(Timestamp::now());
+	t.run();
+}
 
 int main(int argc, char* argv[])
 {
@@ -426,7 +442,8 @@ int main(int argc, char* argv[])
 	//ThreadPoolTest();
 	//prototypeTest();
 	//EventLoopTest();
-	allEventLoopTest();
+	///allEventLoopTest();
+	TimerTest();
 
 	getchar();
 	return 0;

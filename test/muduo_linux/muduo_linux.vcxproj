@@ -106,6 +106,9 @@
     <ClInclude Include="thread\SignalSlot.h" />
     <ClInclude Include="thread\thread.h" />
     <ClInclude Include="thread\ThreadPool.h" />
+    <ClInclude Include="time\Timer.h" />
+    <ClInclude Include="time\TimerID.h" />
+    <ClInclude Include="time\TimerQueue.h" />
     <ClInclude Include="time\Timestamp.h" />
     <ClInclude Include="time\TimeZone.h" />
   </ItemGroup>
@@ -123,6 +126,8 @@
     <ClCompile Include="net\Poller.cc" />
     <ClCompile Include="thread\thread.cc" />
     <ClCompile Include="thread\ThreadPool.cc" />
+    <ClCompile Include="time\Timer.cc" />
+    <ClCompile Include="time\TimerQueue.cc" />
     <ClCompile Include="time\Timestamp.cc" />
     <ClCompile Include="time\TimeZone.cc" />
   </ItemGroup>

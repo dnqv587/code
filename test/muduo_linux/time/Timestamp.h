@@ -54,6 +54,9 @@ public:
 	bool operator<(const Timestamp& that);
 
 	bool operator== (const Timestamp & that);
+
+	Timestamp operator+(const double seconds);
+
 	//返回精确时间的Timestamp类
 	static Timestamp now();
 	//将time_t格式化为Timestamp类
@@ -87,6 +90,11 @@ public:
 	time_t secondsSinceEpoch() const
 	{
 		return m_microSecondsSinceEpoch / kMicroSecondsPerSecond;
+	}
+	//增加时间(秒)
+	Timestamp addTime(const double seconds)
+	{
+		return Timestamp(m_microSecondsSinceEpoch + seconds * kMicroSecondsPerSecond);
 	}
 private:
 	int64_t m_microSecondsSinceEpoch;//微秒

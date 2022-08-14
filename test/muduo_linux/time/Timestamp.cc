@@ -31,6 +31,11 @@ bool Timestamp::operator==(const Timestamp& that)
 	return this->m_microSecondsSinceEpoch == that.m_microSecondsSinceEpoch;
 }
 
+Timestamp Timestamp::operator+(const double seconds)
+{
+	return this->addTime(seconds);
+}
+
 Timestamp Timestamp::now()
 {
 	struct timeval tv;
