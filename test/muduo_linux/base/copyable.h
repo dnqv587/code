@@ -1,6 +1,6 @@
 #pragma once
 /*
-ÆäÅÉÉúÀà¼Ì³Ð´Ë»ùÀà£¬½«ÉùÃ÷ÅÉÉúÀà¿É¿½±´
+å…¶æ´¾ç”Ÿç±»ç»§æ‰¿æ­¤åŸºç±»ï¼Œå°†å£°æ˜Žæ´¾ç”Ÿç±»å¯æ‹·è´
 */
 class copyable
 {
