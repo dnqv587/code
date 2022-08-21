@@ -1,5 +1,6 @@
 #pragma once
 #include "../thread/thread.h"
+#include "../base/Callbacks.h"
 #include <atomic>
 #include <vector>
 #include <memory>
@@ -8,8 +9,11 @@
 
 class Channel;
 class Poller;
+class TimerID;
+class TimerQueue;
 class EventLoop :public noncopyable
 {
+	
 public:
 	EventLoop();
 	~EventLoop();
@@ -40,11 +44,17 @@ public:
 	//获取当前线程的EventLoop对象
 	EventLoop* getEventLoopOfCurrentThread();
 
+	//定时运行函数
+	TimerID runAt(const Timestamp time, const TimerCallback& cb);
+	TimerID runAfter(double delay, const TimerCallback& cb);
+	TimerID runEvery(double interval, const TimerCallback& cb);
+
 
 private:
 	void abortNotInLoopThread();
 
 	using ChannelList = std::vector<Channel*>;
+	
 
 	std::atomic<bool> m_looping;//是否在loop
 	std::atomic<bool> m_quit;//是否退出loop
@@ -52,5 +62,6 @@ private:
 	std::unique_ptr<Poller> m_poller;//poller对象
 	ChannelList m_activeChannels;//活跃channel集合
 	const pid_t t_threadId;//线程ID
+	std::unique_ptr<TimerQueue> m_timerQueue;//定时器队列
 };
 

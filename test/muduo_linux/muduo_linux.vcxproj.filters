@@ -117,6 +117,9 @@
     <ClInclude Include="time\Timer.h">
       <Filter>time</Filter>
     </ClInclude>
+    <ClInclude Include="base\Callbacks.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

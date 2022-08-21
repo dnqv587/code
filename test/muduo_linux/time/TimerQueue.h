@@ -1,7 +1,7 @@
 #pragma once
 #include "../base/noncopyable.h"
 #include "../event/EventLoop.h"
-
+#include "../base/Callbacks.h"
 #include "../event/Channel.h"
 #include <set>
 
@@ -14,7 +14,7 @@ public:
 	TimerQueue(EventLoop* loop);
 
 	//添加一个计时器
-	void addTimer(const Timer::TimerCallback& cb, Timestamp when, double interval);
+	TimerID addTimer(const TimerCallback& cb, Timestamp when, double interval);
 
 	void cancel(TimerID timerID);
 
@@ -22,7 +22,7 @@ private:
 	using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
 	using TimerList = std::set<Entry>;
 	void handleRead();
-	//移除已到期时间的Timer
+	//移除已到期时间的Timer，并返回过期Timer容器
 	std::vector<Entry> getExpired(Timestamp now);
 	void reset(const std::vector<Entry>& expired, Timestamp now);
 	bool insert(Timer* timer);

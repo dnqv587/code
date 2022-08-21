@@ -3,6 +3,8 @@
 #include "../logger/logging.h"
 #include "../net/Poller.h"
 #include "Channel.h"
+#include "../time/TimerID.h"
+#include "../time/TimerQueue.h"
 #include <sys/poll.h>
 
 constexpr int KPollTimeMs = 60 * 1000;
@@ -13,6 +15,7 @@ __thread EventLoop* t_loopInThisThread = nullptr;
 EventLoop::EventLoop()
 	:m_looping(false),
 	t_threadId(CurrentThread::tid()),
+	m_timerQueue(new TimerQueue(this)),
 	m_poller(new Poller(this))
 {
 	if (t_loopInThisThread)
@@ -61,6 +64,11 @@ void EventLoop::updateChannel(Channel* channel)
 EventLoop* EventLoop::getEventLoopOfCurrentThread()
 {
 	return t_loopInThisThread;
+}
+
+TimerID EventLoop::runAt(const Timestamp time, const TimerCallback& cb)
+{
+	return m_timerQueue->addTimer(cb, time, 0.0);
 }
 
 void EventLoop::abortNotInLoopThread()

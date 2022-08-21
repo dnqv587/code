@@ -1,7 +1,36 @@
 #include "TimerQueue.h"
 #include "Timer.h"
 #include "TimerID.h"
+#include "../logger/logging.h"
 #include <utility>
+#include <sys/timerfd.h>
+
+
+namespace detail
+{
+	//创建timerfd
+	int createTimerfd()
+	{
+		int timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
+		if (timerfd < 0)
+		{
+			LOG_SYSFATAL << "Failed int timer_create!";
+		}
+		return timerfd;
+	}
+
+
+}
+
+
+
+TimerQueue::TimerQueue(EventLoop* loop)
+	:m_loop(loop),
+	m_timerfd(detail::createTimerfd()),
+	m_timerfdChannel(m_loop, m_timerfd)
+{
+
+}
 
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 {
