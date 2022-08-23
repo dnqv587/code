@@ -71,6 +71,16 @@ TimerID EventLoop::runAt(const Timestamp time, const TimerCallback& cb)
 	return m_timerQueue->addTimer(cb, time, 0.0);
 }
 
+TimerID EventLoop::runAfter(double delay, const TimerCallback& cb)
+{
+	return m_timerQueue->addTimer(cb, Timestamp::now() + delay, 0.0);
+}
+
+TimerID EventLoop::runEvery(double interval, const TimerCallback& cb)
+{
+	return m_timerQueue->addTimer(cb, Timestamp::now() + interval, interval);
+}
+
 void EventLoop::abortNotInLoopThread()
 {
 	abort();

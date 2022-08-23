@@ -32,6 +32,14 @@ TimerQueue::TimerQueue(EventLoop* loop)
 
 }
 
+TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double interval)
+{
+	Timer* timer = new Timer(cb, when, interval);
+	//m_loop->runInLoop();
+	return TimerID(timer, timer->sequence());
+
+}
+
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 {
 	std::vector<Entry> expired;
