@@ -18,7 +18,7 @@ public:
 		printf("constructor Vbase!\n");
 	}
 	/*
-	* 1、使用virtual析构函数，在使用几类指针指向派生类对象时，如果不声明为virtual，则delete不会调用派生类的析构函数
+	* 1、使用virtual析构函数，在使用基类指针指向派生类对象时，如果不声明为virtual，则delete不会调用派生类的析构函数
 	* 2、若将基类声明为纯虚析构函数virtual ~Vbase()=0 ，当delete时会从派生类到基类进行调用析构函数，此时基类并没有进行实现，从而产生连接错误
 	*/
 	virtual ~Vbase()
@@ -469,8 +469,8 @@ public:
 	{
 		return _val;
 	}
-	//内部swap
-	void swap(Widget1& that)
+	//内部swap,不能抛出异常
+	void swap(Widget1& that) noexcept
 	{
 		std::swap(this->_foo, that._foo);//调用std::swap
 		std::swap(this->_val, that._val);
@@ -492,10 +492,39 @@ private:
 namespace std
 {
 	template<>
-	void swap<Widget1>(Widget1& lhs, Widget1& rhs) noexcept
+	void swap<Widget1>(Widget1& lhs, Widget1& rhs) noexcept //这是std::swap针对T是Widget1的特换版本
 	{
 		lhs.swap(rhs);//调用内部函数
 	}
 }
 
-//无法特例化模板类
+//派生类中调用基类函数
+class Base1
+{
+public:
+	virtual void print()
+	{
+		std::cout << "this is Base1' print\n";
+	}
+};
+
+class Impl1:public Base1
+{
+public:
+	void print() override
+	{
+		//static_cast<Base1>(*this).print();//调用基类中的print
+		Base1::print();//调用基类中的print
+
+		std::cout << "this is Impl1\n";
+	}
+};
+
+class Impl2 :public Base1
+{
+public:
+	void print() override
+	{
+		std::cout << "this is Impl2\n";
+	}
+};

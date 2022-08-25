@@ -132,6 +132,32 @@ void test10()
 	std::cout << "swapw2:" << w2.getFoo() << std::endl;
 }
 
+void test11()
+{
+	Base1* A1 = new Impl1;
+	//A1->Base1::print();//调用基类中的print
+	A1->print();
+}
+
+void test12()
+{
+	std::vector <std::shared_ptr<Base1>> v;
+	v.push_back(std::make_shared<Impl1>());
+	v.push_back(std::make_shared<Impl2>());
+	for (auto iter = v.begin(); iter != v.end(); ++iter)
+	{
+		if (Impl1* i = dynamic_cast<Impl1*>(iter->get()))  //dynamic_cast为安全的down_cast，在运行时进行down_cast会安全检查，若非安全转换则返回NULL
+		{
+			i->print();
+		}
+		else if (Impl2* i = dynamic_cast<Impl2*>(iter->get()))
+		{
+			i->print();
+		}
+		
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -143,7 +169,9 @@ int main(int argc, char* argv[])
 	//test7();
 	//test8();
 	//test9();
-	test10();
+	//test10();
+	//test11();
+	//test12();
 	
 	return 0;
 }
