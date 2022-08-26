@@ -1,10 +1,12 @@
 #pragma once
 #include "../base/SqlTools.h"
+#include "../base/Exception.h"
 #include <string>
 #include <iostream>
 #include <vector>
 #include <stdint.h>
 
+class continueGene;
 class generateSql:protected SqlTools
 {
 public:
@@ -13,8 +15,6 @@ public:
     ~generateSql();
 
     continueGene* geneInsertSql(std::string label,std::vector<std::string>& field,std::vector<std::string>& value);
-
-    void repeat()
 
     void output();
 
@@ -30,7 +30,7 @@ public:
         {
 
         }
-        continueGene& repeat(std::string& field,int32_t start,int32_t end)
+        void repeat(std::string& field,int32_t start,int32_t end)
         {
             for (std::vector<std::string>::iterator iter = _field.begin(); iter != _field.end();++iter)
             {
@@ -40,13 +40,25 @@ public:
                 }
                 ++_pos;
             }
-            for(int32_t i=)
-            _generateSql.geneInsertSql()
+            for (int32_t i = start; i <= end;++i)
+            {
+                _value[_pos] = std::to_string(i);
+                try
+                {
+                    _generateSql->geneInsertSql(_label, _field, _value);
+                }
+                catch(std::exception& e)
+                {
+                    throw e;
+                }
+                
+            }
+                
         }
 
         operator std::string()
         {
-            
+            return _generateSql->_outStr.back();
         }
     private:
         std::string &_label;
@@ -54,6 +66,7 @@ public:
         std::vector<std::string> &_value;
         int _pos;
         generateSql* _generateSql;
+        std::string _sql;
     };
 
 private:

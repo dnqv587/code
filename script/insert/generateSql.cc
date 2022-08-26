@@ -14,13 +14,15 @@ generateSql::~generateSql()
 
 }
 
-std::string generateSql::geneInsertSql(std::string label,std::vector<std::string>& fields,std::vector<std::string>& values)
+continueGene* generateSql::geneInsertSql(std::string label,std::vector<std::string>& fields,std::vector<std::string>& values)
 {
-    std::string ret;
+    std::string sql;
     
     if(field.size()!=value.size())
     {
-        std::error << "字段和值数量不匹配\n";
+        std::cerr << "字段和值数量不匹配\n";
+        throw field_value_different();
+        return "字段和值数量不匹配\n";
     }
     
     std::string field;
@@ -36,11 +38,11 @@ std::string generateSql::geneInsertSql(std::string label,std::vector<std::string
         value.push_back(',');
     }
 
-    ret.resize(_insert.size + label.size + field.size + value.size);
-    sprintf(ret.c_str(), _insert.c_str(), label.c_str(), field.c_str(), value.c_str());
+    sql.resize(_insert.size + label.size + field.size + value.size);
+    sprintf(sql.c_str(), _insert.c_str(), label.c_str(), field.c_str(), value.c_str());
 
-    _outStr.push_back(ret);
-    return ret;
+    _outStr.emplace_back(sql);
+    return continueGene(label,fields,values,this);
 }
 
 void generateSql::output()
