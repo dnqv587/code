@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <vector>
+#include <windows.h>
 
 void test1()
 {
@@ -132,6 +133,51 @@ void test10()
 	std::cout << "swapw2:" << w2.getFoo() << std::endl;
 }
 
+void test11()
+{
+	Base1* A1 = new Impl1;
+	//A1->Base1::print();//调用基类中的print
+	A1->print();
+}
+
+void test12()
+{
+	std::vector <std::shared_ptr<Base1>> v;
+	v.push_back(std::make_shared<Impl1>());
+	v.push_back(std::make_shared<Impl2>());
+	for (auto iter = v.begin(); iter != v.end(); ++iter)
+	{
+		if (Impl1* i = dynamic_cast<Impl1*>(iter->get()))  //dynamic_cast为安全的down_cast，在运行时进行down_cast会安全检查，若非安全转换则返回NULL
+		{
+			i->print();
+		}
+		else if (Impl2* i = dynamic_cast<Impl2*>(iter->get()))
+		{
+			i->print();
+		}
+		
+	}
+}
+
+void sql()
+{
+	std::ofstream out("out.txt",std::ofstream::app|| std::ofstream::out);
+	std::string str = "insert into optriskunit(fund_account,branch_no,order_no,optvip_flag) values(%d,33,0,0);insert into optfundaccount(branch_no, client_id, client_name, fund_account, main_flag, organ_flag, client_group, room_code, asset_prop, fare_kind_str, en_entrust_way, fund_account_secu) values(33, %d, 'dai', %d, 1, 1, 1, 1, 'B', '9999999999999999999999999999999999999999999999999999999999999', '#+-0123456789OPTUadglz', %d);";
+	std::string _o;
+	_o.resize(str.size() + 100);
+	std::string ret;
+	for (int i = 90001000; i <= 90003000; ++i)
+	{
+		_o.clear();
+		snprintf(const_cast<char*>(_o.c_str()), str.size() + 100, str.c_str(), i, i, i, i);
+		//ret.append(_o);
+		out << _o.c_str() << std::endl;
+		Sleep(100);
+	}
+	//out << ret.c_str() << std::endl;
+
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -143,7 +189,10 @@ int main(int argc, char* argv[])
 	//test7();
 	//test8();
 	//test9();
-	test10();
+	//test10();
+	//test11();
+	//test12();
+	sql();
 	
 	return 0;
 }
