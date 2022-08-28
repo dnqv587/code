@@ -35,9 +35,15 @@ TimerQueue::TimerQueue(EventLoop* loop)
 TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double interval)
 {
 	Timer* timer = new Timer(cb, when, interval);
-	//m_loop->runInLoop();
+	m_loop->runInLoop(std::bind(&TimerQueue::addTimerInLoop,this,timer));
 	return TimerID(timer, timer->sequence());
 
+}
+
+void TimerQueue::addTimerInLoop(Timer* timer)
+{
+	m_loop->assertInLoopThread();
+	bool earliestChanged = this->insert(timer);
 }
 
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
@@ -52,4 +58,10 @@ std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 	//std::move(m_timers.begin(), iter, std::back_inserter(expired));
 
 	return expired;
+}
+
+bool TimerQueue::insert(Timer* timer)
+{
+	m_loop->assertInLoopThread();
+	assert(m_timers.size()==
 }

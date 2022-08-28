@@ -13,7 +13,7 @@ class TimerQueue :noncopyable
 public:
 	TimerQueue(EventLoop* loop);
 
-	//添加一个计时器
+	//添加一个计时器--只能在IO线程调用
 	TimerID addTimer(const TimerCallback& cb, Timestamp when, double interval);
 
 	void cancel(TimerID timerID);
@@ -21,6 +21,9 @@ public:
 private:
 	using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
 	using TimerList = std::set<Entry>;
+
+	void addTimerInLoop(Timer* timer);
+	//当timerfd alarms进行调用
 	void handleRead();
 	//移除已到期时间的Timer，并返回过期Timer容器
 	std::vector<Entry> getExpired(Timestamp now);

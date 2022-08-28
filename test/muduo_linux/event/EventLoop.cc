@@ -6,6 +6,7 @@
 #include "../time/TimerID.h"
 #include "../time/TimerQueue.h"
 #include <sys/poll.h>
+#include <unistd.h>
 
 constexpr int KPollTimeMs = 60 * 1000;
 
@@ -49,6 +50,7 @@ void EventLoop::loop()
 		{
 			(*iter)->handleEvent();//处理事件
 		}
+		this->doPendingFunctors();//执行回调定时回调函数
 	}
 	LOG_TRACE << "EventLoop " << this << " stop looping";
 	m_looping = false;
@@ -81,7 +83,71 @@ TimerID EventLoop::runEvery(double interval, const TimerCallback& cb)
 	return m_timerQueue->addTimer(cb, Timestamp::now() + interval, interval);
 }
 
+void EventLoop::runInLoop(const Functor& cb)
+{
+	if (this->isInLoopThread())
+	{
+		cb();
+	}
+	else
+	{
+		this->queueInLoop(cb);
+	}
+}
+
+void EventLoop::queueInLoop(const Functor& cb)
+{
+	//因为m_pendingFunctors暴露给了其他线程，所以需要锁
+	{
+		MutexLockGuard lock(m_mutex);
+		m_pendingFunctors.push_back(cb);//添加到pending队列当中
+	}
+	if (!this->isInLoopThread() || m_callPendingFunctor)
+	{
+		this->wakeup();//唤醒被阻塞的eventloop线程
+	}
+}
+
+void EventLoop::wakeup()
+{
+	uint64_t one = 1;
+	ssize_t n = ::write(m_wakeupFd, &one, sizeof one);
+	if (n != sizeof one)
+	{
+		LOG_ERROR << "EventLoop::wakeup() writes " << n << " bytes instead of 8";
+	}
+}
+
 void EventLoop::abortNotInLoopThread()
 {
 	abort();
+}
+
+void EventLoop::handleRead()
+{
+	uint64_t one = 1;
+	ssize_t n;
+	do {
+		n = ::read(m_wakeupFd, &one, sizeof one);
+	} while (errno == EINTR);
+	
+	if (n != sizeof one)
+	{
+		LOG_ERROR << "EventLoop::handleRead() reads " << n << " bytes instead of 8";
+	}
+}
+
+void EventLoop::doPendingFunctors()
+{
+	std::vector<Functor> functors;
+	m_callPendingFunctor = true;
+	{
+		MutexLockGuard lock(m_mutex);
+		functors.swap(m_pendingFunctors);//防止调用queueInLoop造成死锁
+	}
+	for (std::vector<Functor>::iterator iter = functors.begin(); iter != functors.end(); ++iter)
+	{
+		(*iter)();//执行回调
+	}
+	m_callPendingFunctor = false;
 }
