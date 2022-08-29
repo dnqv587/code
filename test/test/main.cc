@@ -159,23 +159,19 @@ void test12()
 	}
 }
 
-void sql()
+template<typename T>
+inline T Max(const T& a, const T& b)
 {
-	std::ofstream out("out.txt",std::ofstream::app|| std::ofstream::out);
-	std::string str = "insert into optriskunit(fund_account,branch_no,order_no,optvip_flag) values(%d,33,0,0);insert into optfundaccount(branch_no, client_id, client_name, fund_account, main_flag, organ_flag, client_group, room_code, asset_prop, fare_kind_str, en_entrust_way, fund_account_secu) values(33, %d, 'dai', %d, 1, 1, 1, 1, 'B', '9999999999999999999999999999999999999999999999999999999999999', '#+-0123456789OPTUadglz', %d);";
-	std::string _o;
-	_o.resize(str.size() + 100);
-	std::string ret;
-	for (int i = 90001000; i <= 90003000; ++i)
-	{
-		_o.clear();
-		snprintf(const_cast<char*>(_o.c_str()), str.size() + 100, str.c_str(), i, i, i, i);
-		//ret.append(_o);
-		out << _o.c_str() << std::endl;
-		Sleep(100);
-	}
-	//out << ret.c_str() << std::endl;
+	return a > b ? a : b;
+}
 
+template<typename T>
+void test13()
+{
+	
+	T(*pf)(const T & a, const T & b) = Max;//指向函数的指针
+	std::cout << Max(10, 12) << std::endl;//这个调用会被inlined，因为是正常调用
+	std::cout << pf(8, 4) << std::endl;//这个调用可能不会被inlined，因为它是通过函数指针达成
 }
 
 int main(int argc, char* argv[])
@@ -192,7 +188,7 @@ int main(int argc, char* argv[])
 	//test10();
 	//test11();
 	//test12();
-	sql();
+	test13<int>();
 	
 	return 0;
 }
