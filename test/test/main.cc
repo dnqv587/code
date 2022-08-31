@@ -174,6 +174,12 @@ void test13()
 	std::cout << pf(8, 4) << std::endl;//这个调用可能不会被inlined，因为它是通过函数指针达成
 }
 
+void test14()
+{
+	Combi com(new IMPL("hello"));
+	com.print();
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -188,7 +194,8 @@ int main(int argc, char* argv[])
 	//test10();
 	//test11();
 	//test12();
-	test13<int>();
+	//test13<int>();
+	test14();
 	
 	return 0;
 }

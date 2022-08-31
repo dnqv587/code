@@ -528,3 +528,65 @@ public:
 		std::cout << "this is Impl2\n";
 	}
 };
+
+
+//声明和实现分离
+class API
+{
+public:
+	API(const char* name)
+		:_name(name)
+	{
+
+	}
+
+	virtual const char* api() const = 0;
+
+	virtual ~API()
+	{
+		printf("API destructor\n");
+	}
+
+protected:
+	const char* _name;
+};
+
+class IMPL :public API
+{
+public:
+	IMPL(const char* name)
+		:API(name),
+		_name("IMPL")
+	{
+
+	}
+	const char* api() const
+	{
+		return API::_name;
+	}
+
+	~IMPL()
+	{
+		printf("IMPL destructor\n");
+	}
+private:
+	const char* _name;
+};
+
+class Combi
+{
+public:
+
+	Combi(API* api)
+		:_api(api)
+	{
+
+	}
+	void print()
+	{
+		printf("%s\n",_api->api());
+	}
+
+private:
+	std::shared_ptr<API> _api;//API为纯虚函数，所以不能直接实例化，只能使用pointer或reference
+};
