@@ -587,6 +587,45 @@ public:
 		printf("%s\n",_api->api());
 	}
 
+
 private:
 	std::shared_ptr<API> _api;//API为纯虚函数，所以不能直接实例化，只能使用pointer或reference
+};
+
+//避免遮掩继承而来的名称,基类的重载函数会被掩盖
+class BaseC
+{
+public:
+	
+	virtual void print()
+	{
+		printf("this is base print\n");
+	}
+
+	void print(int v)
+	{
+		printf("this is base print %d\n", v);
+	}
+};
+
+class Base2
+{
+public:
+	void print()
+	{
+		printf("this is base2 print\n");
+	}
+};
+
+class Derive :public BaseC,private Base2
+{
+public:
+	using BaseC::print;//不使用作用域的话，其重载函数会被掩盖
+
+	//因为Base2是private继承，所以不可使用using声明，可以使用转交函数
+	void print()//转交函数
+	{
+		//printf("this is Derive print\n");
+		this->Base2::print();
+	}
 };

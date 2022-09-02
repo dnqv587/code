@@ -180,6 +180,17 @@ void test14()
 	com.print();
 }
 
+void test15()
+{
+	Derive d;
+	BaseC* b = &d;
+	d.print(5);//若没在前面声明using BaseC，则基类中的print会被掩盖导致报错
+	d.BaseC::print(5);//直接声明使用基类中的print，所以可以使用基类中的重载函数
+	d.BaseC::print();//调用基类中的print
+	d.print();//调用Base2中的print
+	b->print();
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -195,7 +206,8 @@ int main(int argc, char* argv[])
 	//test11();
 	//test12();
 	//test13<int>();
-	test14();
+	//test14();
+	test15();
 	
 	return 0;
 }
