@@ -1,11 +1,20 @@
 #include <exception>
 
-class field_value_different:public std::exception
+namespace std
+{
+class field_value_different
+    : public exception
 {
 public:
+
     field_value_different() noexcept
-        :std::exception("字段和值数量不匹配\n",1)
     {
 
     }
+
+     _NODISCARD char const* what() const override 
+    {
+        return "字段和值数量不匹配\n";
+    }
 };
+}
