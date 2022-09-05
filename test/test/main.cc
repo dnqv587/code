@@ -191,6 +191,28 @@ void test15()
 	b->print();
 }
 
+void test16()
+{
+	GameCharacter* g = new GameCharacter2;
+	GameCharacter gg;
+	std::cout << "g:" << g->heathValue() << "gg:" << gg.heathValue() << std::endl;
+	delete g;
+
+
+	Guy1 g1(calcHealth);
+	Guy1 g2(Calcu(g));
+	std::cout << g1.doFunc() << std::endl;
+	//std::cout << g2.doFunc() << std::endl;
+}
+
+void test17()
+{
+	colorBase* c = new color;
+	c->draw();
+	color cc = *(color*)c;
+	cc.draw();
+}
+
 int main(int argc, char* argv[])
 {
 	//test1();
@@ -207,7 +229,9 @@ int main(int argc, char* argv[])
 	//test12();
 	//test13<int>();
 	//test14();
-	test15();
+	//test15();
+	//test16();
+	test17();
 	
 	return 0;
 }

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string>
+#include <functional>
 
 #include <fstream>
 
@@ -629,3 +630,133 @@ public:
 		this->Base2::print();
 	}
 };
+
+
+
+//template method 设计模式
+class GameCharacter
+{
+public:
+	int heathValue() 
+	{
+		//事前工作
+		this->_maxValue = 100;
+		this->_remainderPersont = 0.8;
+
+		int ret = this->doHealthValue();//实际工作
+
+
+		//事后工作
+		this->_maxValue = 0;
+		this->_remainderPersont = 0;
+
+		if (ret < 0)
+		{
+			goto faild;
+		}
+
+		return ret;
+
+	faild:
+		throw std::exception("heathValue faild");
+		return -1;
+		
+	}
+
+private:
+	virtual int doHealthValue() const          //这个设计是让客户通过public non-virtual成员函数间接调用private virtual函数，成为non-virtual interface（NVI）手法
+	{
+		if (!_maxValue && !_remainderPersont)
+		{
+			return -1;
+		}
+		return _maxValue * _remainderPersont;
+	}
+protected:
+	int64_t _maxValue;
+	float_t _remainderPersont;
+};
+
+class GameCharacter2 :public GameCharacter
+{
+public:
+	
+private:
+	int doHealthValue() const override
+	{
+		if (!_maxValue && !_remainderPersont)
+		{
+			return -1;
+		}
+		return _maxValue * _remainderPersont + 10;
+	}
+};
+
+//Strategy模式
+
+using GameFunc = std::function<int(GameCharacter&)>;
+
+int calcHealth(GameCharacter& gc)
+{
+	return gc.heathValue() + 100;
+}
+
+struct Calcu
+{
+	GameFunc operator()(GameCharacter& gc) const
+	{
+		return std::bind(&GameCharacter::heathValue, gc);
+	}
+};
+class GameLevel
+{
+public:
+	float health(GameCharacter& gc) const
+	{
+		return gc.heathValue();
+	}
+};
+
+class Guy1 :public GameCharacter
+{
+public:
+	Guy1(GameFunc func)
+		:_func(func)
+	{
+		
+	}
+
+	float doFunc()
+	{
+		return _func(*this);
+	}
+
+private:
+	GameFunc _func;
+};
+
+
+//绝不要重新定义继承而来的缺省参数值
+class colorBase
+{
+public:
+	virtual void draw(const char* color="red\n")
+	{
+		printf(color);
+	}
+	
+private:
+};
+
+class color :public colorBase
+{
+public:
+
+	void draw(const char* color = "blue\n")
+	{
+		printf(color);
+	}
+	//客户调用上面函数时，如果使用对象调用，必须指定参数值，因为静态绑定下这个函数不从base继承缺省值
+	//如果使用指针或引用调用，可以不指定缺省参数值，动态绑定会从base继承缺省参数值
+};
+
