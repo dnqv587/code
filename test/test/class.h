@@ -677,7 +677,7 @@ protected:
 	float_t _remainderPersont;
 };
 
-class GameCharacter2 :public GameCharacter
+class GameCharacter2 : public GameCharacter
 {
 public:
 	
@@ -689,6 +689,25 @@ private:
 			return -1;
 		}
 		return _maxValue * _remainderPersont + 10;
+	}
+};
+
+class GameCharacter3 : private GameCharacter
+{
+public:
+	int getValue()//转接
+	{
+		return this->GameCharacter::heathValue();
+	}
+
+private:
+	int doHealthValue() const override  //private继承的虚函数任然可被重写
+	{
+		if (!_maxValue && !_remainderPersont)
+		{
+			return -1;
+		}
+		return _maxValue * _remainderPersont + 20;
 	}
 };
 

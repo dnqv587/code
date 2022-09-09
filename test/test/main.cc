@@ -1,3 +1,5 @@
+
+#pragma warning(disable:4996)
 #include <iostream>
 #include "class.h"
 
@@ -10,6 +12,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <windows.h>
+#include <string.h>
+#include <stdio.h>
 
 void test1()
 {
@@ -195,7 +199,8 @@ void test16()
 {
 	GameCharacter* g = new GameCharacter2;
 	GameCharacter gg;
-	std::cout << "g:" << g->heathValue() << "gg:" << gg.heathValue() << std::endl;
+	GameCharacter3 ggg;
+	std::cout << "g:" << g->heathValue() << "gg:" << gg.heathValue() << "ggg:" << ggg.getValue() << std::endl;
 	delete g;
 
 
@@ -212,6 +217,152 @@ void test17()
 	color cc = *(color*)c;
 	cc.draw();
 }
+
+void json()
+{
+	char json[200]="{\"name\" : \"hello\",\"age\":\"18\",\"sex\":\"male\"}";
+	//char json[200] = "{\"all\":\"*\" }";
+	
+
+	char* v_begin = strchr(json, '{');
+	char* v_end = strrchr(json, '}');
+	char* p_pos = json+1;
+
+	while (v_begin&& v_end&&( p_pos != v_end+1))
+	{
+		char* v_mid = strchr(p_pos, ':');
+		if (!v_mid)
+		{
+			break;
+		}
+		char* v_right = strchr(p_pos, ',');
+		if (v_right == NULL)
+		{
+			v_right = v_end;
+		}
+		
+		*v_mid = 0;
+		char* left = strchr(p_pos, '"');
+		char* right = strrchr(p_pos, '"');
+		char* end = (strrchr(p_pos, '"') + 1);
+
+		if (left && right && (end-1))
+		{
+
+			*left = '[';
+			*end = 0;
+			*right = ']';
+
+		}
+		
+		*v_right = 0;
+		end = strrchr(v_mid + 1, '"');
+		if (end)
+		{
+			*end = 0;
+		}
+		char* v_key = strchr(p_pos, '[');
+		char* v_value = strchr(v_mid + 1, '"') + 1;
+		if (v_key && (v_value - 1))
+		{
+			std::cout << "key:" << strchr(p_pos, '[') << std::endl;
+			std::cout << "value:" << strchr(v_mid + 1, '"') + 1 << std::endl;
+		}
+		p_pos = v_right + 1;
+	}
+	
+	
+}
+
+int sohnum(const char* src, char soh)
+{
+	int count = 0;
+	while (*src != 0)
+	{
+		if (*src == soh)
+		{
+			++count;
+		}
+		++src;
+	}
+
+	return count+1;
+}
+
+void strncpysoh(char* src ,int sohpos,char* sub,char soh)
+{
+	char* begin = (char*)src;
+	int count = 0;
+	char* pos = (char*)src;
+	while (*src != 0)
+	{
+		if (*src == soh)
+		{
+			++count;
+			if (count == sohpos)
+			{
+				strncpy(sub, pos, src - pos);
+				sub[src - pos] = 0;
+			}
+			if (count + 1 == sohpos)
+			{
+				strcpy(sub, src+1);
+			}
+			pos = (char*)src;
+		}
+		++src;
+	}
+	
+	if (count == 0)
+	{
+		strcpy(sub, begin);
+	}
+}
+
+void json2()
+{
+	//char json[200] = "{ \"all\":\"*\" }";
+	char json[200] = "{ \"name\" :\"hello\" , \"age\" : \"18\" , \"sex\" :    \"male\"}";
+
+	int count = sohnum(json, ',');
+	char sub[60];
+	char sub2[60];
+	char sub3[60];
+
+	char key[60];
+	char value[60];
+
+	for (int i = 1; i <= count; ++i)
+	{
+		memset(key, 0x00, sizeof(key));
+		memset(value, 0x00, sizeof(value));
+
+		strncpysoh(json, i, sub, ',');
+		
+		strncpysoh(sub, 1, sub2, ':');
+		strncpysoh(sub, 2, sub3, ':');
+
+		char* left=strchr(sub2, '"');
+		char* right = strrchr(sub2, '"');
+		if (left && right)
+		{
+			strncpy(key, left, right - left+1);
+			key[0] = '[';
+			key[right - left] = ']';
+		}
+
+		left = strchr(sub3, '"');
+		right = strrchr(sub3, '"');
+		if (left && right)
+		{
+			strncpy(value, left+1, right - left-1);
+		}
+
+		std::cout << key << std::endl;
+		std::cout << value << std::endl;
+	}
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -231,7 +382,9 @@ int main(int argc, char* argv[])
 	//test14();
 	//test15();
 	//test16();
-	test17();
+	//test17();
+	json();
+	//json2();
 	
 	return 0;
 }
