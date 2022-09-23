@@ -779,3 +779,16 @@ public:
 	//如果使用指针或引用调用，可以不指定缺省参数值，动态绑定会从base继承缺省参数值
 };
 
+
+//typename双重意义
+namespace typenameTest
+{
+	template<typename T>
+	void print(T& container)
+	{
+		//T::const_iterator iter(container.begin());//存在问题，因为编译器在编译阶段不认识T::const_iterator，如果解析器在template中遭遇到一个嵌套从属名称，它便假设这个不是个类型
+		typename T::const_iterator iter(container.begin());//强调T::const_iterator是个类型
+		std::cout << *iter << std::endl;
+	}
+}
+

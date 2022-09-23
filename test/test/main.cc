@@ -220,10 +220,9 @@ void test17()
 
 void json()
 {
-	char json[200]="{\"name\" : \"hello\",\"age\":\"18\",\"sex\":\"male\"}";
+	char json[200] = "{\"starting_threshold_amount(起始监控阈值)\":\"0\", \"second_threshold_amount(第二阶段阈值)\":\"2\"}";
 	//char json[200] = "{\"all\":\"*\" }";
 	
-
 	char* v_begin = strchr(json, '{');
 	char* v_end = strrchr(json, '}');
 	char* p_pos = json+1;
@@ -243,8 +242,8 @@ void json()
 		
 		*v_mid = 0;
 		char* left = strchr(p_pos, '"');
-		char* right = strrchr(p_pos, '"');
-		char* end = (strrchr(p_pos, '"') + 1);
+		char* right = strchr(p_pos, '(');
+		char* end = right +1;
 
 		if (left && right && (end-1))
 		{
@@ -363,6 +362,12 @@ void json2()
 	}
 }
 
+void test18()
+{
+	std::vector<std::string> vec;
+	vec.push_back("hello world!");
+	typenameTest::print(vec);
+}
 
 int main(int argc, char* argv[])
 {
@@ -383,8 +388,9 @@ int main(int argc, char* argv[])
 	//test15();
 	//test16();
 	//test17();
-	json();
+	//json();
 	//json2();
+	test18();
 	
 	return 0;
 }
