@@ -3,6 +3,7 @@
 #include "../base/Callbacks.h"
 #include "../thread/mutex.h"
 #include "../time/Timestamp.h"
+#include "../time/TimerID.h"
 #include <atomic>
 #include <vector>
 #include <memory>
@@ -11,7 +12,6 @@
 
 class Channel;
 class Poller;
-class TimerID;
 class TimerQueue;
 class EventLoop :public noncopyable
 {

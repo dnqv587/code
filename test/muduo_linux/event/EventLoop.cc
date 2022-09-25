@@ -3,7 +3,6 @@
 #include "../logger/logging.h"
 #include "../net/Poller.h"
 #include "Channel.h"
-#include "../time/TimerID.h"
 #include "../time/TimerQueue.h"
 #include <sys/poll.h>
 #include <unistd.h>

@@ -49,13 +49,22 @@ public:
 
 	Timestamp(int64_t microSecondsSinceEpoch);
 
-	bool operator>(const Timestamp& that);
+	bool operator>(const Timestamp that)
+	{
+		return this->m_microSecondsSinceEpoch > that.microSecondsSinceEpoch();
+	}
 
-	bool operator<(const Timestamp& that);
+	
 
-	bool operator== (const Timestamp & that);
+	bool operator== (const Timestamp that)
+	{
+		return this->m_microSecondsSinceEpoch == that.microSecondsSinceEpoch();
+	}
 
-	Timestamp operator+(const double seconds);
+	Timestamp operator+(const double seconds)
+	{
+		return this->addTime(seconds);
+	}
 
 	//返回精确时间的Timestamp类
 	static Timestamp now();
@@ -96,7 +105,12 @@ public:
 	{
 		return Timestamp(m_microSecondsSinceEpoch + seconds * kMicroSecondsPerSecond);
 	}
+
 private:
 	int64_t m_microSecondsSinceEpoch;//微秒
 };
 
+inline bool operator<(const Timestamp lhs,const Timestamp rhs)
+{
+	return lhs.microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
+}
