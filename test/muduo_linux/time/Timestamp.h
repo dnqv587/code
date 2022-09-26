@@ -1,10 +1,12 @@
 #pragma once
 #include "../base/copyable.h"
 #include "../base/Type.h"
+#include "../base/less_than_comparable.h"
 #include <sys/time.h>
 #include <string>
 #include <assert.h>
 #include <concepts>
+
 
 constexpr int kMicroSecondsPerSecond = 1000 * 1000;//每秒中微秒单位
 
@@ -40,25 +42,24 @@ struct DateTime
 * 时间类
 * 自1970-1-1以来的微秒---UTC
 */
-class Timestamp :public copyable
+class Timestamp :public copyable,
+				public less_than_comparable<Timestamp>
 				//public std::equality_comparable<Timestamp>,
-				//public std::less_than_comparable<Timestamp>
 {
 public:
 	Timestamp();
 
 	Timestamp(int64_t microSecondsSinceEpoch);
 
-	bool operator>(const Timestamp that)
-	{
-		return this->m_microSecondsSinceEpoch > that.microSecondsSinceEpoch();
-	}
-
-	
+	//不知为何不许放类外
+	//bool operator<(const Timestamp that)
+	//{
+	//	return this->microSecondsSinceEpoch() < that.microSecondsSinceEpoch();
+	//}
 
 	bool operator== (const Timestamp that)
 	{
-		return this->m_microSecondsSinceEpoch == that.microSecondsSinceEpoch();
+		return this->m_microSecondsSinceEpoch == that.m_microSecondsSinceEpoch;
 	}
 
 	Timestamp operator+(const double seconds)
@@ -110,7 +111,7 @@ private:
 	int64_t m_microSecondsSinceEpoch;//微秒
 };
 
-inline bool operator<(const Timestamp lhs,const Timestamp rhs)
+inline bool operator<(const Timestamp lhs, const Timestamp rhs)
 {
 	return lhs.microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
 }
