@@ -23,7 +23,7 @@ public:
 	void cancel(TimerID timerID);
 
 private:
-	using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
+	using Entry = std::pair<Timestamp, Timer*>;
 	using TimerList = std::set<Entry>;
 	typedef std::pair<Timer*, int64_t> ActiveTimer;
 	typedef std::set<ActiveTimer> ActiveTimerSet;

@@ -171,5 +171,8 @@
     <ClCompile Include="time\Timer.cc">
       <Filter>time</Filter>
     </ClCompile>
+    <ClCompile Include="base\less_than_comparable.h">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

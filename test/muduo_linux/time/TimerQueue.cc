@@ -88,9 +88,9 @@ void TimerQueue::handleRead()
 
 }
 
-std::vector<std::pair<Timestamp, Timer*>> TimerQueue::getExpired(Timestamp now)
+std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 {
-	std::vector<std::pair<Timestamp, Timer*>> expired;
+	std::vector<Entry> expired;
 	//哨兵,UINTPTR_MAX:64bit机器的最大地址
 	Entry sentry(now, reinterpret_cast<Timer*>(UINTPTR_MAX));
 	TimerList::iterator iter = m_timers.lower_bound(sentry);//查找第一个不小于sentry的迭代器,又因为Timer*为UINTPTR_MAX即最大值，所以取得的iter为大于Timestamp的迭代器
