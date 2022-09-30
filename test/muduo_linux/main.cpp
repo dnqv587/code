@@ -29,6 +29,8 @@
 #include "event/EventLoop.h"
 #include "event/Channel.h"
 #include "time/Timer.h"
+#include "net/Poller.h"
+#include "time/TimerQueue.h"
 
 
 using namespace std;
@@ -425,6 +427,32 @@ void TimerTest()
 	t.run();
 }
 
+void less_than_comparableTest()
+{
+	Timestamp t1(65535);
+	Timestamp t2(65536);
+	std::cout << (t2 > t1) << std::endl;
+	std::cout << (t1 < t2) << std::endl;
+	std::cout << (t2 >= t1) << std::endl;
+	std::cout << (t1 <= t2) << std::endl;
+}
+
+void PollerTest()
+{
+	EventLoop loop;
+	//Poller poll(&loop);
+
+	//Poller::ChannelList list;
+	//list.push_back(&channel);
+	//poll.poll(0, &list);
+
+	TimerQueue que(&loop);
+	que.addTimer(std::bind(&timeout, &loop, que.getFd()), Timestamp::now() + 5, 3);
+
+	loop.loop();
+
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -443,7 +471,10 @@ int main(int argc, char* argv[])
 	//prototypeTest();
 	//EventLoopTest();
 	///allEventLoopTest();
-	TimerTest();
+	//TimerTest();
+	//less_than_comparableTest();
+	PollerTest();
+	
 
 	getchar();
 	return 0;

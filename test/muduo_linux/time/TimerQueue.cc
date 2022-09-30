@@ -54,9 +54,11 @@ namespace detail
 TimerQueue::TimerQueue(EventLoop* loop)
 	:m_loop(loop),
 	m_timerfd(detail::createTimerfd()),
-	m_timerfdChannel(m_loop, m_timerfd)
+	m_timerfdChannel(m_loop, m_timerfd),
+	m_timers(),
+	m_callingExpiredTimers(false)
 {
-
+	//m_timerfdChannel.setReadCallback()
 }
 
 TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double interval)
@@ -114,14 +116,15 @@ bool TimerQueue::insert(Timer* timer)
 	assert(m_timers.size() == m_activeTimers.size());
 	bool earliestChanged = false;
 	Timestamp when = timer->expiration();//获取timer运行时间
-	if (m_timers.empty() || when < m_timers.begin()->first)
+	auto it = m_timers.cbegin();
+	if (it == m_timers.cend() || when < m_timers.begin()->first)
 	{
 		earliestChanged = true;
 	}
 	{
 		std::pair<TimerList::iterator, bool> result = m_timers.insert(Entry(when, timer));
 		assert(result.second);
-		(void)result;
+		(void)result;//防止编译时告警，当断言检查关闭时，result编标不会再被使用
 	}
 	{
 		std::pair<ActiveTimerSet::iterator, bool> result = m_activeTimers.insert(ActiveTimer(timer, timer->sequence()));

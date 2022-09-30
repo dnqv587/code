@@ -57,6 +57,8 @@ public:
 	//	return this->microSecondsSinceEpoch() < that.microSecondsSinceEpoch();
 	//}
 
+	//friend bool operator<(const Timestamp lhs, const Timestamp rhs);
+
 	bool operator== (const Timestamp that)
 	{
 		return this->m_microSecondsSinceEpoch == that.m_microSecondsSinceEpoch;

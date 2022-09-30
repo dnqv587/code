@@ -22,6 +22,10 @@ public:
 
 	void cancel(TimerID timerID);
 
+	int getFd()
+	{
+		return m_timerfd;
+	}
 private:
 	using Entry = std::pair<Timestamp, Timer*>;
 	using TimerList = std::set<Entry>;
