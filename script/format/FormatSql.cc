@@ -8,9 +8,10 @@
 #include <stdlib.h>
 #include <vector>
 
-FormatSql::FormatSql(std::string source, std::string obj)
+FormatSql::FormatSql(std::string source, std::string obj,bool tolower)
 	:_in(source),
-	_out(obj)
+	_out(obj),
+	_toLower(tolower)
 {
 	_in >> std::noskipws;
 }
@@ -45,7 +46,7 @@ bool FormatSql::format()
 
 			
 		}
-		else if (*in_iter >= 'A' && *in_iter <= 'Z')
+		else if (_toLower && *in_iter >= 'A' && *in_iter <= 'Z')
 		{
 			flag = false;
 			res.push_back(*in_iter + 32);
@@ -66,25 +67,30 @@ bool FormatSql::format()
 int main(int argc, char* argv[])
 {
     bool ret = false;
-    if (argc == 2)
+	std::string in("sql.txt"), out("FormatSql.txt");
+	bool tolower = false;
+
+	for (int i = 0; i < argc;++i)
 	{
-		FormatSql fm(argv[1], "FormatSql.txt");
-		ret=fm.format();
+		if(!std::string(argv[i]).compare("-i"))
+		{
+			in = argv[i + 1];
+		}
+		else if(!std::string(argv[i]).compare("-o"))
+		{
+			out = argv[i + 1];
+		}
+		else if(!std::string(argv[i]).compare("-l"))
+		{
+			tolower = true;
+		}
 	}
-	else if (argc == 3)
+	FormatSql fm(in, out, tolower);
+	ret=fm.format();
+	if (ret)
 	{
-		FormatSql fm(argv[1], argv[2]);
-		ret=fm.format();
+		std::cout << "Format SQL Success!" << std::endl;
 	}
-	else
-	{
-		FormatSql fm("sql.txt", "FormatSql.txt");
-		ret=fm.format();
-	}
-    if(ret)
-    {
-        std::cout << "Format SQL Success!" << std::endl;
-    }
 
 #ifdef _WIN32
         system("pause");
