@@ -34,10 +34,13 @@ private:
 
 	//修改定时器列表
 	void addTimerInLoop(Timer* timer);
+	//撤销定时器
+	void cancelInLoop(TimerID timerID);
 	//当timerfd alarms进行调用
 	void handleRead();
 	//移除已到期时间的Timer，并返回过期Timer容器
 	std::vector<std::pair<Timestamp, Timer*>> getExpired(Timestamp now);
+	//将已过期的Timer的执行回调，并将timerfd初始化为下一个时间
 	void reset(const std::vector<Entry>& expired, Timestamp now);
 	bool insert(Timer* timer);
 
@@ -47,7 +50,7 @@ private:
 	TimerList m_timers;//Timer容器，根据expiration(执行时间)进行排序
 	//for cancel()
 	ActiveTimerSet m_activeTimers;//未过期的Timer
-	bool m_callingExpiredTimers;
+	bool m_callingExpiredTimers;//是否正在调用ExpiredTimers
 	ActiveTimerSet m_cancelingTimer;//撤销的Timer;
 
 };

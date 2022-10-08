@@ -12,7 +12,7 @@ class EventLoop;
 class Channel
 {
 public:
-	typedef std::function<void* ()> EventCallback;
+	typedef std::function<void ()> EventCallback;
 
 	Channel(EventLoop* loop, const int fd);
 

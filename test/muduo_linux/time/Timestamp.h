@@ -5,7 +5,7 @@
 #include <sys/time.h>
 #include <string>
 #include <assert.h>
-#include <concepts>
+//#include <concepts>
 
 
 constexpr int kMicroSecondsPerSecond = 1000 * 1000;//每秒中微秒单位
@@ -107,6 +107,11 @@ public:
 	Timestamp addTime(const double seconds)
 	{
 		return Timestamp(m_microSecondsSinceEpoch + seconds * kMicroSecondsPerSecond);
+	}
+
+	bool valid()
+	{
+		return m_microSecondsSinceEpoch > 0;
 	}
 
 private:

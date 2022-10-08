@@ -5,6 +5,7 @@
 #include "../logger/logging.h"
 #include <utility>
 #include <sys/timerfd.h>
+#include <unistd.h>
 
 
 namespace detail
@@ -19,6 +20,7 @@ namespace detail
 		}
 		return timerfd;
 	}
+	//将定时时间转换为timespec结构体
 	struct timespec howMuchTimeFromNow(Timestamp when)
 	{
 		int64_t microseconds = when.microSecondsSinceEpoch() - Timestamp::now().microSecondsSinceEpoch();
@@ -47,6 +49,18 @@ namespace detail
 		}
 	}
 
+	//从timerfd中读取8个字节
+	void readTimerfd(int timerfd, Timestamp now)
+	{
+		uint64_t howmany;
+		ssize_t n = ::read(timerfd, &howmany, sizeof howmany);
+		LOG_TRACE << "TimerQueue::handleRead() " << howmany << " at " << now.toString();
+		if (n != sizeof howmany)
+		{
+			LOG_ERROR << "TimerQueue::handleRead() reads " << n << " bytes instead of 8";
+		}
+	}
+
 }
 
 
@@ -58,7 +72,9 @@ TimerQueue::TimerQueue(EventLoop* loop)
 	m_timers(),
 	m_callingExpiredTimers(false)
 {
-	//m_timerfdChannel.setReadCallback()
+	m_timerfdChannel.setReadCallback(std::bind(&TimerQueue::handleRead, this));
+	
+	m_timerfdChannel.enableReading();//监听读事件
 }
 
 TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double interval)
@@ -66,11 +82,6 @@ TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double int
 	Timer* timer = new Timer(cb, when, interval);
 	m_loop->runInLoop(std::bind(&TimerQueue::addTimerInLoop,this,timer));
 	return TimerID(timer, timer->sequence());
-
-}
-
-void TimerQueue::cancel(TimerID timerID)
-{
 
 }
 
@@ -85,13 +96,55 @@ void TimerQueue::addTimerInLoop(Timer* timer)
 	}
 }
 
+
+void TimerQueue::cancel(TimerID timerID)
+{
+	m_loop->runInLoop(std::bind(&TimerQueue::cancelInLoop, this, timerID));
+}
+
+void TimerQueue::cancelInLoop(TimerID timerID)
+{
+	m_loop->assertInLoopThread();
+	assert(m_timers.size() == m_activeTimers.size());
+	ActiveTimer timer(timerID.m_timer, timerID.m_sequence);
+	auto iter = m_activeTimers.find(timer);//查找此TimerID的ActiveTimer
+	if (iter != m_activeTimers.end())
+	{
+		ssize_t n = m_timers.erase(std::pair<Timestamp, Timer*>(iter->first->expiration(), iter->first));
+		assert(n == 1); (void)n;
+		delete iter->first;
+		m_activeTimers.erase(iter);
+	}
+	else if (m_callingExpiredTimers)//正在调用ExpiredTimers
+	{
+		m_cancelingTimer.insert(timer);//先将此Timer存入m_cancelingTimer
+	}
+	assert(m_timers.size() == m_activeTimers.size());
+}
+
 void TimerQueue::handleRead()
 {
+	m_loop->assertInLoopThread();
+	Timestamp now(Timestamp::now());
+	detail::readTimerfd(m_timerfd, now);//读取内容
 
+	std::vector<Entry> expired = this->getExpired(now);//移除过期Timer
+	
+	m_callingExpiredTimers = true;//保持原子性
+	m_cancelingTimer.clear();
+	//调用过期的timer
+	for (const auto& it : expired)
+	{
+		it.second->run();
+	}
+	m_callingExpiredTimers = false;
+
+	this->reset(expired, now);//将过期的Timer重新初始化
 }
 
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 {
+	assert(m_timers.size() == m_activeTimers.size());
 	std::vector<Entry> expired;
 	//哨兵,UINTPTR_MAX:64bit机器的最大地址
 	Entry sentry(now, reinterpret_cast<Timer*>(UINTPTR_MAX));
@@ -100,14 +153,44 @@ std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 	std::copy(m_timers.begin(), iter, std::back_inserter(expired));
 	m_timers.erase(m_timers.begin(), iter);
 	//std::move(m_timers.begin(), iter, std::back_inserter(expired));
-
+	for (const auto& it : expired)
+	{
+		ActiveTimer timer(it.second, it.second->sequence());
+		size_t n = m_activeTimers.erase(timer);
+		assert(n == 1); (void)n;
+	}
+	assert(m_timers.size() == m_activeTimers.size());
 	return expired;
 }
 
 
 void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now)
 {
-
+	Timestamp nextExpire;
+	
+	for (const auto& it : expired)
+	{
+		ActiveTimer timer(it.second, it.second->sequence());
+		//当此Timer是repeat时则重置时间并重新插入
+		if (it.second->repeat() && m_cancelingTimer.find(timer) == m_cancelingTimer.end())
+		{
+			it.second->restart(now);
+			this->insert(it.second);
+		}
+		else //否则，直接删除此Timer
+		{
+			delete it.second;
+		}
+	}
+	//将timerfd定时为下一个时间
+	if (!m_timers.empty())
+	{
+		nextExpire = m_timers.begin()->second->expiration();//获取下一个时间
+	}
+	if (nextExpire.valid())
+	{
+		detail::resetTimerfd(m_timerfd, nextExpire);
+	}
 }
 
 bool TimerQueue::insert(Timer* timer)
