@@ -441,9 +441,9 @@ void timecb(const char* str)
 {
 	printf("this is %s callback\n", str);
 }
-void timerCancel(TimerQueue& que,TimerID id)
+void timerCancel(TimerQueue* que,TimerID id)
 {
-	que.cancel(id);
+	que->cancel(id);
 }
 void PollerTest()
 {
@@ -457,7 +457,7 @@ void PollerTest()
 	TimerQueue que(&loop);
 	TimerID timer1 = que.addTimer(std::bind(&timecb, "timer1"), Timestamp::now() + 5, 3);
 	TimerID timer2 = que.addTimer(std::bind(&timecb, "timer2"), Timestamp::now() + 3, 2);
-	TimerID timer3 = que.addTimer(std::bind(&timerCancel, que,timer2), Timestamp::now() + 10, 0);
+	TimerID timer3 = que.addTimer(std::bind(&timerCancel, &que,timer2), Timestamp::now() + 10, 0);
 
 	loop.loop();
 
