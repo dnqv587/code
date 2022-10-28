@@ -120,6 +120,15 @@
     <ClInclude Include="base\Callbacks.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="net\Acceptor.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\Socket.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Exception.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -173,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="base\less_than_comparable.h">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="net\Acceptor.cc">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\Socket.cc">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

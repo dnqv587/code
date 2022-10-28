@@ -85,6 +85,7 @@
     <ClInclude Include="base\BoundBlockingQueue.h" />
     <ClInclude Include="base\Callbacks.h" />
     <ClInclude Include="base\copyable.h" />
+    <ClInclude Include="base\Exception.h" />
     <ClInclude Include="base\noncopyable.h" />
     <ClInclude Include="base\ProcessInfo.h" />
     <ClInclude Include="base\Type.h" />
@@ -98,8 +99,10 @@
     <ClInclude Include="logger\LogFile.h" />
     <ClInclude Include="logger\logging.h" />
     <ClInclude Include="logger\LogStream.h" />
+    <ClInclude Include="net\Acceptor.h" />
     <ClInclude Include="net\Bufferh.h" />
     <ClInclude Include="net\Poller.h" />
+    <ClInclude Include="net\Socket.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
@@ -124,8 +127,10 @@
     <ClCompile Include="logger\logging.cc" />
     <ClCompile Include="logger\LogStream.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="net\Acceptor.cc" />
     <ClCompile Include="net\Buffercc.cpp" />
     <ClCompile Include="net\Poller.cc" />
+    <ClCompile Include="net\Socket.cc" />
     <ClCompile Include="thread\thread.cc" />
     <ClCompile Include="thread\ThreadPool.cc" />
     <ClCompile Include="time\Timer.cc" />
