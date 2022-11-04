@@ -4,14 +4,14 @@
 
 
 
- Timestamp::Timestamp()
+Timestamp::Timestamp()
 	:m_microSecondsSinceEpoch(0)
 {
 
 }
 
- Timestamp::Timestamp(int64_t microSecondsSinceEpoch)
-	:m_microSecondsSinceEpoch(microSecondsSinceEpoch)
+Timestamp::Timestamp(int64_t microSecondsSinceEpoch)
+	: m_microSecondsSinceEpoch(microSecondsSinceEpoch)
 {
 
 }
@@ -74,7 +74,7 @@ std::string Timestamp::formatString(bool showMicroseconds /*= true*/, bool isLoc
 	{
 		::gmtime_r(&seconds, &timep);
 	}
-	
+
 	if (showMicroseconds)
 	{
 		int microseconds = m_microSecondsSinceEpoch % kMicroSecondsPerSecond;

@@ -3,9 +3,9 @@
 #include <string.h>
 
 AppendFile::AppendFile(const char* fileName) :m_file(::fopen(fileName, "ae")), m_writtenBytes(0)
-{//e:ÉèÖÃÎÄ¼şO_CLOEXECÊôĞÔ£¬·ÀÖ¹·ÀÖ¹±»×Ó½ø³Ì¼Ì³Ğ
+{//e:è®¾ç½®æ–‡ä»¶O_CLOEXECå±æ€§ï¼Œé˜²æ­¢é˜²æ­¢è¢«å­è¿›ç¨‹ç»§æ‰¿
 	assert(m_file);
-	::setbuffer(m_file, m_buf, sizeof(m_buf));//×Ô¶¨ÒåstreamµÄ»º³åÇø
+	::setbuffer(m_file, m_buf, sizeof(m_buf));//è‡ªå®šä¹‰streamçš„ç¼“å†²åŒº
 }
 
 AppendFile::~AppendFile()
@@ -19,13 +19,13 @@ void AppendFile::append(const char* logLine, size_t len)
 	size_t remain = len - written;
 	while (remain)
 	{
-		
+
 		size_t n = this->write(logLine, remain);
-		
-		if (n != remain)//Ã»½«Ê£Óà×Ö·û´®Ğ´Íê
+
+		if (n != remain)//æ²¡å°†å‰©ä½™å­—ç¬¦ä¸²å†™å®Œ
 		{
 			int err = ferror(m_file);
-			if (err)//·¢ÉúÁË´íÎó
+			if (err)//å‘ç”Ÿäº†é”™è¯¯
 			{
 				fprintf(stderr, "AppendFile::append() failed %s\n", strerror(err));
 				break;
@@ -39,7 +39,7 @@ void AppendFile::append(const char* logLine, size_t len)
 
 void AppendFile::flush()
 {
-	::fflush(m_file);//Ë¢ĞÂ»º³åÇø
+	::fflush(m_file);//åˆ·æ–°ç¼“å†²åŒº
 }
 
 inline size_t AppendFile::write(const char* logLine, size_t len)

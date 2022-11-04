@@ -13,10 +13,10 @@ constexpr int LARGE_BUFFERSIZE = 4000 * 1000;//buffer的MAX大小
 constexpr int MAXNUMRICSIZE = 48;//整型转字符串型的最大长度
 
 template<int SIZE>//buffer的大小
-class Buffer:private noncopyable
+class Buffer :private noncopyable
 {
 public:
-	Buffer():m_cur(m_data){}
+	Buffer() :m_cur(m_data) {}
 
 	~Buffer() {}
 
@@ -39,17 +39,17 @@ public:
 	//重置指针
 	void reset() { m_cur = m_data; }
 	//清空数据
-	void bzero() 
-	{ 
+	void bzero()
+	{
 		//memset(m_data, 0x00, sizeof(m_data)); 
 		memZero(m_data, sizeof(m_data));
 	}
-	
-	std::string toString() const 
+
+	std::string toString() const
 	{
 		return std::string(m_data, this->lenght());
 	}
-	
+
 	Buffer& operator++()
 	{
 		++m_cur;
@@ -95,7 +95,7 @@ private:
 
 
 class format;
-class LogStream:private noncopyable
+class LogStream :private noncopyable
 {
 public:
 	typedef Buffer<SMALL_BUFFERSIZE> BUFFER;
@@ -105,7 +105,7 @@ public:
 	}
 	~LogStream() {}
 
-	LogStream& operator<<(bool );
+	LogStream& operator<<(bool);
 
 	LogStream& operator<<(short);
 	LogStream& operator<<(unsigned short);
@@ -122,10 +122,10 @@ public:
 	LogStream& operator<<(double);
 
 	LogStream& operator<<(char);
-	LogStream& operator<<(const char* );
-	LogStream& operator<<(const unsigned char* );
-	LogStream& operator<<(const std::string& );
-	LogStream& operator<<(const BUFFER& );
+	LogStream& operator<<(const char*);
+	LogStream& operator<<(const unsigned char*);
+	LogStream& operator<<(const std::string&);
+	LogStream& operator<<(const BUFFER&);
 	LogStream& operator<<(const format&);
 
 	//追加数据
@@ -150,7 +150,7 @@ private:
 	void formatInteger(T v);
 	//静态检查
 	void staticCheck();
-	
+
 	BUFFER m_buffer;
 };
 

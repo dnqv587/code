@@ -8,11 +8,11 @@
 /*
 条件变量对于RAII技法封装
 */
-class Condition:private noncopyable
+class Condition :private noncopyable
 {
 public:
-	explicit Condition(MutexLock& mutex) :m_mutex(mutex) 
-	{ 
+	explicit Condition(MutexLock& mutex) :m_mutex(mutex)
+	{
 		pthread_cond_init(&m_cond, NULL);
 	}
 	~Condition()
@@ -24,7 +24,7 @@ public:
 	{
 		pthread_cond_wait(&m_cond, m_mutex.getMutexLockPtr());
 	}
-	
+
 	//在指定时间内条件变量阻塞当前线程
 	bool waitTime(int seconds)
 	{

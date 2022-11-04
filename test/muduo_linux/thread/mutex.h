@@ -106,10 +106,10 @@ capability 是 TSA 中的⼀个概念，⽤来为资源的访问提供相应的�
 #ifdef __cplusplus
 extern "C" {
 #endif 
-		extern void __assert_perror_fail(int errnum,
-		const char* file,
-		unsigned int line,
-		const char* function)
+	extern void __assert_perror_fail(int errnum,
+	const char* file,
+	unsigned int line,
+	const char* function)
 		noexcept __attribute__((__noreturn__));
 #ifdef __cplusplus
 }
@@ -130,7 +130,7 @@ extern "C" {
 class MutexLock :private noncopyable
 {
 public:
-	MutexLock() 
+	MutexLock()
 	{
 		pthread_mutex_init(&m_mutex, NULL);
 	}
@@ -158,10 +158,10 @@ private:
 /*
 RAII技法
 */
-class MutexLockGuard:private noncopyable
+class MutexLockGuard :private noncopyable
 {
 public:
-	MutexLockGuard(MutexLock& mutex):m_MutexLock(mutex)
+	MutexLockGuard(MutexLock& mutex) :m_MutexLock(mutex)
 	{
 		m_MutexLock.lock();
 	}

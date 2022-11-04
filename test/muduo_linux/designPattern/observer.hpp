@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../thread/mutex.h"
 /*
-¹Û²ìÕßÄ£Ê½
+è§‚å¯Ÿè€…æ¨¡å¼
 */
 
 class Observable;
@@ -16,11 +16,11 @@ public:
 
 	virtual ~Observer();
 
-	//´¿Ğéº¯Êı£¬ÓÃÓÚÕ¹Ê¾Êı¾İ
+	//çº¯è™šå‡½æ•°ï¼Œç”¨äºå±•ç¤ºæ•°æ®
 	virtual void update() = 0;
-	//×¢²á¹Û²ì
+	//æ³¨å†Œè§‚å¯Ÿ
 	void observe(Observable* observalbe);
-	
+
 
 protected:
 	Observable* m_Obserberable;
@@ -29,12 +29,12 @@ protected:
 class Observable
 {
 public:
-	//Í¨ÖªËùÓĞ¹Û²ìÕß
+	//é€šçŸ¥æ‰€æœ‰è§‚å¯Ÿè€…
 	void notify();
-	//×¢²á
+	//æ³¨å†Œ
 	void register_(std::weak_ptr<Observer> oberserver);
 	/*
-	//×¢Ïú
+	//æ³¨é”€
 	void unregister(Observer* observer)
 	{
 		auto iter = std::find(m_Oberservers.begin(), m_Oberservers.end(), observer);
@@ -58,26 +58,26 @@ Observer::~Observer()
 
 void Observer::observe(Observable* observalbe)
 {
-	observalbe->register_(std::weak_ptr<Observer> (shared_from_this()));
+	observalbe->register_(std::weak_ptr<Observer>(shared_from_this()));
 	m_Obserberable = observalbe;
 }
 
 void Observable::notify()
 {
-	MutexLockGuard lock(m_mutex);//¼ÓËø
+	MutexLockGuard lock(m_mutex);//åŠ é”
 	auto iter = m_Observers.begin();
 	while (iter != m_Observers.end())
 	{
-		std::shared_ptr<Observer> obj(iter->lock());//³¢ÊÔ½«weak_ptrÌáÉıÎªshared_ptr---Èõ»Øµ÷
+		std::shared_ptr<Observer> obj(iter->lock());//å°è¯•å°†weak_ptræå‡ä¸ºshared_ptr---å¼±å›è°ƒ
 		if (obj)
 		{
-			obj->update();//´ËÎªÏß³Ì°²È«µÄ£¬ÒòÎªobj´æÔÚÓÚÕ»ÖĞ
+			obj->update();//æ­¤ä¸ºçº¿ç¨‹å®‰å…¨çš„ï¼Œå› ä¸ºobjå­˜åœ¨äºæ ˆä¸­
 			++iter;
 		}
 		else
 		{
 			std::cout << "observer erase!" << std::endl;
-			iter = m_Observers.erase(iter);//¶ÔÏóÒÑ±»Ïú»Ù£¬´ÓÈİÆ÷ÖĞÉ¾³ı
+			iter = m_Observers.erase(iter);//å¯¹è±¡å·²è¢«é”€æ¯ï¼Œä»å®¹å™¨ä¸­åˆ é™¤
 		}
 	}
 }

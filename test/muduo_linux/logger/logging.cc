@@ -45,9 +45,9 @@ const char* LogLevelName[Logger::NUM_LOG_LEVELS] =
   "ERROR ",
   "FATAL ",
 };
-  
+
 Logger::Impl::Impl(LogLevel level, int old_errno, const SourceFile& file, int line)
-	:m_logLevel(level), m_stream(),m_time(Timestamp::now()), m_line(line), m_baseName(file)
+	:m_logLevel(level), m_stream(), m_time(Timestamp::now()), m_line(line), m_baseName(file)
 {
 	this->formatTime();
 	m_stream << std::to_string(CurrentThread::tid());
@@ -67,7 +67,7 @@ void Logger::Impl::formatTime()
 	if (t_lastSecond != Second)
 	{
 		t_lastSecond = Second;
-		
+
 		int len = snprintf(t_time, sizeof(t_time), "%4d%02d%02d %02d:%02d:%02d", dt.Year, dt.mon, dt.day, dt.hour, dt.min, dt.sec);
 		assert(len == 17);
 	}
@@ -85,7 +85,7 @@ void Logger::Impl::finish()
 }
 
 Logger::Logger(SourceFile file, int line)
-	:m_impl(LogLevel::INFO,0,file,line)
+	:m_impl(LogLevel::INFO, 0, file, line)
 {
 
 }

@@ -4,9 +4,9 @@
 #include "../time/Timestamp.h"
 
 AsynLogging::AsynLogging(const char* baseName, off_t rollSize, int flushInterval /*= 3*/)
-	:m_baseName(baseName),m_rollSize(rollSize),m_flushInterval(flushInterval), m_running(false),
-	m_thread(std::bind(&AsynLogging::threadFunc,this),"logging"), m_mutex(),m_cond(m_mutex), m_latch(1),
-	currentBuffer(new BUFFER), nextBuffer(new BUFFER),m_buffers()
+	:m_baseName(baseName), m_rollSize(rollSize), m_flushInterval(flushInterval), m_running(false),
+	m_thread(std::bind(&AsynLogging::threadFunc, this), "logging"), m_mutex(), m_cond(m_mutex), m_latch(1),
+	currentBuffer(new BUFFER), nextBuffer(new BUFFER), m_buffers()
 {
 	currentBuffer->bzero();
 	nextBuffer->bzero();
@@ -56,7 +56,7 @@ void AsynLogging::threadFunc()
 	newBuffer2->bzero();
 	BufferVector buffersToWrite;//待写入缓冲区容器
 	buffersToWrite.reserve(16);
-	
+
 	while (m_running)
 	{
 		assert(newBuffer1 && newBuffer1->lenght() == 0);
@@ -116,7 +116,7 @@ void AsynLogging::threadFunc()
 			newBuffer2->reset();
 		}
 		buffersToWrite.clear();
-		output.flush();	
+		output.flush();
 	}
 	output.flush();
 }

@@ -3,16 +3,16 @@
 #include <memory>
 #include <time.h>
 
-class TimeZone:public copyable
+class TimeZone :public copyable
 {
 public:
 	TimeZone(int UTC, const char* tzname);
-	//是否有效
+	//鏄惁鏈夋晥
 	bool valid() const
 	{
 		return !!m_data;
 	}
-	//将time_t时间转换为tm结构时间
+	//灏唗ime_t鏃堕棿杞崲涓簍m缁撴瀯鏃堕棿
 	struct tm toLocalTime(time_t sec) const;
 
 

@@ -103,6 +103,6 @@ std::string LogFile::getLogFileName(const std::string baseName, time_t* now)
 	fileName.append(ProcessInfo::pidString());
 	//后缀
 	fileName.append(".log");
-	
+
 	return fileName;
 }

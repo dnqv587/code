@@ -7,7 +7,7 @@
 constexpr int MAX_BUFFER_SIZE = 64 * 1024;//64K
 
 
-class AppendFile:private noncopyable
+class AppendFile :private noncopyable
 {
 public:
 	AppendFile(const char* fileName);

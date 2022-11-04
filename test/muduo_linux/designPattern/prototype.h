@@ -13,7 +13,7 @@ public:
 	virtual void print() = 0;
 };
 
-class Cat:Animal
+class Cat :Animal
 {
 public:
 	Cat(const char* name)
@@ -21,7 +21,7 @@ public:
 	{
 
 	}
-	~Cat(){}
+	~Cat() {}
 
 	Cat(const Cat& cat)
 	{

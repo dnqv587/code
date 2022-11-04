@@ -4,11 +4,11 @@
 
 namespace ProcessInfo
 {
-	//½ø³ÌID
+	//è¿›ç¨‹ID
 	pid_t pid();
 	std::string pidString();
 
-	//Ö÷»úÃû
+	//ä¸»æœºå
 	std::string hostname();
 
 

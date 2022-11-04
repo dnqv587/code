@@ -31,6 +31,7 @@
 #include "time/Timer.h"
 #include "net/Poller.h"
 #include "time/TimerQueue.h"
+#include "net/Socket.h"
 
 
 using namespace std;
@@ -83,7 +84,7 @@ void* Count(void* arg)
 {
 	int count = *(int*)arg;
 	num++;
-	sleep(count+5);
+	sleep(count + 5);
 	test.countDown();
 	return NULL;
 }
@@ -94,9 +95,9 @@ void CountDownLatchTest()
 	pthread_t thread[4];
 	for (int i = 1; i <= 4; ++i)
 	{
-		pthread_create(&thread[i-1], NULL, Count, &i);
+		pthread_create(&thread[i - 1], NULL, Count, &i);
 	}
-	
+
 	test.wait();
 	std::cout << "num:" << num << std::endl;
 }
@@ -113,7 +114,7 @@ Customer cus;
 void copyTest()
 {
 	//Customer* cus = (Customer*)arg;
-	
+
 	sleep(1);
 	while (1)
 	{
@@ -124,19 +125,19 @@ void copyTest()
 		std::cout << CurrentThread::tid() << std::endl;
 		std::cout << CurrentThread::isMainThread() << std::endl;
 	}
-	
+
 }
 
 void copyOnWriteTest()
 {
-	
+
 	//pthread_t thread[5];
 	for (int i = 0; i < 5; ++i)
 	{
 		//pthread_create(&thread[i], NULL, copyTest, &cus);
-		Thread thread1(std::bind(copyTest),to_string(i));
+		Thread thread1(std::bind(copyTest), to_string(i));
 		thread1.start();
-		
+
 	}
 
 	cus.update("A", 1);
@@ -151,8 +152,8 @@ void copyOnWriteTest()
 		sleep(1);
 		cus.destroy("B");
 	}
-	
-	
+
+
 }
 
 BlockingQueue<int> que;
@@ -163,13 +164,13 @@ void addThread()
 		sleep(1);
 		que.put(i);
 	}
-	
+
 }
 void getThread()
 {
 	while (1)
 	{
-		std::cout <<::syscall(SYS_gettid)<<":"<< que.take(ConstructorType::MOVE) << std::endl;
+		std::cout << ::syscall(SYS_gettid) << ":" << que.take(ConstructorType::MOVE) << std::endl;
 	}
 }
 
@@ -179,25 +180,25 @@ void blokingQueueTest()
 	thread1.start();
 	Thread thread2(getThread);
 	thread2.start();
-	
+
 	sleep(1);
 	int n = 0;
 	while (1)
 	{
-		std::cout << ::syscall(SYS_gettid)<<"Z:" << que.take(ConstructorType::MOVE) << std::endl;
+		std::cout << ::syscall(SYS_gettid) << "Z:" << que.take(ConstructorType::MOVE) << std::endl;
 		if (n == 9)
 		{
-			std::cout << "break" <<n<< std::endl;
+			std::cout << "break" << n << std::endl;
 			break;
 		}
 		++n;
 	}
-	
+
 	std::queue<int> q = que.drain();
 	std::cout << "clear:" << que.size() << std::endl;
 	while (!q.empty())
 	{
-		std::cout <<"front:"<< q.front() << std::endl;
+		std::cout << "front:" << q.front() << std::endl;
 		sleep(1);
 		q.pop();
 	}
@@ -222,7 +223,7 @@ void loggerTest()
 	int h = 0x123456;
 	log << (void*)h;
 	log.reset();
-	log << format("%4.2f", 1.2)<<format("% 4d", 43);
+	log << format("%4.2f", 1.2) << format("% 4d", 43);
 	log.reset();
 	log << 12345678901237 << 0.123456789;
 	std::cout << buf.toString() << std::endl;
@@ -246,31 +247,31 @@ static int Fcount = 0;
 MutexLock g_lock;
 void filethread(LogFile* log)
 {
-	
+
 	while (1)
 	{
 		MutexLockGuard lock(g_lock);
 		if (Fcount >= 4096)
 			break;
-		log->append("filethread1:"+std::to_string(++Fcount)+'\n');
+		log->append("filethread1:" + std::to_string(++Fcount) + '\n');
 		log->append("filethread2:" + std::to_string(++Fcount) + '\n');
 		usleep(200);
-		
+
 	}
 }
 
 void LogFileTest()
 {
 	static LogFile log("main", 1024, true, 3, 64);
-	Thread thread(std::bind(filethread,&log));
+	Thread thread(std::bind(filethread, &log));
 	thread.start();
-	
-	while(1)
+
+	while (1)
 	{
 		MutexLockGuard lock(g_lock);
 		if (Fcount >= 4096)
 			break;
-		log.append("LogFileTest1:"+std::to_string(++Fcount) + '\n');
+		log.append("LogFileTest1:" + std::to_string(++Fcount) + '\n');
 		log.append("LogFileTest2:" + std::to_string(++Fcount) + '\n');
 		usleep(200);
 	}
@@ -319,7 +320,7 @@ void ASYNflushFunc()
 
 void AsynLogTest()
 {
-	
+
 	Logger::setOutput(ASYNoutputFunc);
 	Logger::setFlush(ASYNflushFunc);
 	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
@@ -346,11 +347,11 @@ void ThreadPoolTest()
 {
 	ThreadPool threads("threads");
 	threads.start(8);
-	threads.run(std::bind(&addThread1,1));
-	threads.run(std::bind(&addThread1,2));
-	threads.run(std::bind(&addThread1,3));
-	threads.run(std::bind(&addThread1,4));
-	
+	threads.run(std::bind(&addThread1, 1));
+	threads.run(std::bind(&addThread1, 2));
+	threads.run(std::bind(&addThread1, 3));
+	threads.run(std::bind(&addThread1, 4));
+
 	//getchar();
 	threads.stop();
 }
@@ -359,7 +360,7 @@ void prototypeTest()
 {
 	Cat cat("coco");
 	Dog dog("dodo");
-	
+
 	Animal* cloneCat = cat.Clone();
 	Animal* cloneDog = dog.Clone();
 	cloneCat->print();
@@ -384,10 +385,10 @@ void EventLoopTest()
 	Thread t1(std::bind(Eventtest, &event));
 	t1.start();
 	t1.join();
-	
+
 }
 
-void* timeout(EventLoop* loop,int fd)
+void* timeout(EventLoop* loop, int fd)
 {
 	printf("Timeout!\n");
 	char buf[64];
@@ -401,7 +402,7 @@ void allEventLoopTest()
 	EventLoop loop;
 	int fd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
 	Channel channel(&loop, fd);
-	channel.setReadCallback(std::bind(&timeout, &loop,fd));
+	channel.setReadCallback(std::bind(&timeout, &loop, fd));
 	channel.enableReading();
 
 	struct itimerspec howlong;
@@ -422,7 +423,7 @@ void timeCb()
 void TimerTest()
 {
 	Timer t(timeCb, Timestamp::now(), 5);
-	
+
 	t.restart(Timestamp::now());
 	t.run();
 }
@@ -441,7 +442,7 @@ void timecb(const char* str)
 {
 	printf("this is %s callback\n", str);
 }
-void timerCancel(TimerQueue* que,TimerID id)
+void timerCancel(TimerQueue* que, TimerID id)
 {
 	que->cancel(id);
 }
@@ -457,10 +458,21 @@ void PollerTest()
 	TimerQueue que(&loop);
 	TimerID timer1 = que.addTimer(std::bind(&timecb, "timer1"), Timestamp::now() + 5, 3);
 	TimerID timer2 = que.addTimer(std::bind(&timecb, "timer2"), Timestamp::now() + 3, 2);
-	TimerID timer3 = que.addTimer(std::bind(&timerCancel, &que,timer2), Timestamp::now() + 10, 0);
+	TimerID timer3 = que.addTimer(std::bind(&timerCancel, &que, timer2), Timestamp::now() + 10, 0);
 
 	loop.loop();
 
+}
+
+uint16_t HostToNetwork16(uint16_t host16)
+{
+	uint16_t ret;
+	uint8_t* data = (uint8_t*)&ret;
+	data[0] = host16 & 0x0F;
+	data[1] = host16 & 0xF0;
+	//return ret;
+	ret = ::htons(host16);;
+	return ret;
 }
 
 int main(int argc, char* argv[])
@@ -483,8 +495,9 @@ int main(int argc, char* argv[])
 	///allEventLoopTest();
 	//TimerTest();
 	//less_than_comparableTest();
-	PollerTest();
-	
+	//PollerTest();
+
+	std::cout << HostToNetwork16(240) << std::endl;
 
 	getchar();
 	return 0;

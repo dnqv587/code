@@ -30,7 +30,7 @@ private:
 	const double m_interval;//间隔时间
 	const bool m_repeat;//是否为repeat
 	const int64_t m_sequence;//定时顺序
-	
+
 	static std::atomic<int64_t> s_numCreated;//原子静态对象，所建立的timer数量
 
 };

@@ -15,7 +15,7 @@ class Poller;
 class TimerQueue;
 class EventLoop :public noncopyable
 {
-	
+
 public:
 	using Functor = std::function<void()>;
 
@@ -45,7 +45,7 @@ public:
 	}
 
 	//当前线程是否是IO线程
-	bool isInLoopThread() const 
+	bool isInLoopThread() const
 	{
 		return CurrentThread::tid() == this->t_threadId;
 	}
@@ -70,7 +70,7 @@ private:
 	void doPendingFunctors();//执行回调函数
 
 	using ChannelList = std::vector<Channel*>;
-	
+
 
 	std::atomic<bool> m_looping;//是否在loop
 	std::atomic<bool> m_quit;//是否退出loop

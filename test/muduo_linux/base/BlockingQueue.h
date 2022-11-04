@@ -29,14 +29,14 @@ public:
 	}
 
 	//加入---通知阻塞在take上的线程
-	
+
 	void put(const T& val)
 	{
 		MutexLockGuard lock(m_lock);
 		m_queue.push(val);
 		m_waitNotEmpty.notify();
 	}
-	
+
 	void put(T&& val)
 	{
 		MutexLockGuard lock(m_lock);
@@ -52,8 +52,8 @@ public:
 		{
 			m_waitNotEmpty.wait();
 		}
-		
-		
+
+
 		if (m_queue.empty())
 		{
 			return T();
@@ -70,8 +70,8 @@ public:
 			T front(m_queue.front());
 			m_queue.pop();
 			return front;
-		}		
-		
+		}
+
 	}
 
 	//清空

@@ -73,14 +73,14 @@ TimerQueue::TimerQueue(EventLoop* loop)
 	m_callingExpiredTimers(false)
 {
 	m_timerfdChannel.setReadCallback(std::bind(&TimerQueue::handleRead, this));
-	
+
 	m_timerfdChannel.enableReading();//监听读事件
 }
 
 TimerID TimerQueue::addTimer(const TimerCallback& cb, Timestamp when, double interval)
 {
 	Timer* timer = new Timer(cb, when, interval);
-	m_loop->runInLoop(std::bind(&TimerQueue::addTimerInLoop,this,timer));
+	m_loop->runInLoop(std::bind(&TimerQueue::addTimerInLoop, this, timer));
 	return TimerID(timer, timer->sequence());
 
 }
@@ -129,7 +129,7 @@ void TimerQueue::handleRead()
 	detail::readTimerfd(m_timerfd, now);//读取内容
 
 	std::vector<Entry> expired = this->getExpired(now);//移除过期Timer
-	
+
 	m_callingExpiredTimers = true;//保持原子性
 	m_cancelingTimer.clear();
 	//调用过期的timer
@@ -167,7 +167,7 @@ std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now)
 {
 	Timestamp nextExpire;
-	
+
 	for (const auto& it : expired)
 	{
 		ActiveTimer timer(it.second, it.second->sequence());

@@ -8,7 +8,7 @@
 
 
 
-class Thread:private noncopyable
+class Thread :private noncopyable
 {
 public:
 	typedef std::function<void()> ThreadFunc;

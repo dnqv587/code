@@ -5,7 +5,7 @@
 template <class Signature>
 class Signal;
 
-template <class RET,class ...ARGS>
+template <class RET, class ...ARGS>
 class Signal <RET(ARGS...)>
 {
 public:

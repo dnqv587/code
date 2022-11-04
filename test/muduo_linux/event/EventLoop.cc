@@ -129,7 +129,7 @@ void EventLoop::handleRead()
 	do {
 		n = ::read(m_wakeupFd, &one, sizeof one);
 	} while (errno == EINTR);
-	
+
 	if (n != sizeof one)
 	{
 		LOG_ERROR << "EventLoop::handleRead() reads " << n << " bytes instead of 8";

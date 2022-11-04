@@ -39,7 +39,7 @@ Timestamp Poller::poll(int timeoutMs, ChannelList* activeChannels)
 
 void Poller::fillActiveChannels(int numEvents, ChannelList* activeChannels) const
 {
-	for (auto iter = m_pollfds.cbegin(); iter != m_pollfds.cend()&& numEvents; ++iter)
+	for (auto iter = m_pollfds.cbegin(); iter != m_pollfds.cend() && numEvents; ++iter)
 	{
 		if (iter->revents > 0)//有事件发生
 		{
@@ -82,7 +82,7 @@ void Poller::updateChannel(Channel* channel)
 		assert(0 <= idx && idx < static_cast<int>(m_pollfds.size()));
 		struct pollfd& pfd = m_pollfds.at(idx);//引用m_pollfds对应下标的pollfd进行修改
 		assert(pfd.fd == channel->fd() || pfd.fd == -1);
-		pfd.events= static_cast<short>(channel->events());
+		pfd.events = static_cast<short>(channel->events());
 		pfd.revents = 0;
 		if (channel->isNoneEvent())//监听事件为空
 		{

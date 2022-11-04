@@ -7,10 +7,10 @@
 #include <memory>
 
 
-class Customer:private noncopyable
+class Customer :private noncopyable
 {
 public:
-	Customer() :m_map(new Map) 
+	Customer() :m_map(new Map)
 	{
 	}
 
@@ -37,7 +37,7 @@ public:
 			m_map.reset(new Map(*m_map));
 			std::cout << "copy on update" << std::endl;
 		}
-		
+
 		m_map->insert(Pair(str, num));
 	}
 
@@ -56,7 +56,7 @@ private:
 	typedef std::map<std::string, int> Map;
 	typedef std::pair<std::string, int> Pair;
 	typedef std::shared_ptr<Map> MapPtr;
-	
+
 	MapPtr getData()
 	{
 		MutexLockGuard lock(m_lock);

@@ -23,7 +23,7 @@ struct DateTime
 	struct tm tm;
 
 	DateTime()
-		:Year(0), mon(0), day(0), hour(0), min(0), sec(0), msec(0), tm{0}
+		:Year(0), mon(0), day(0), hour(0), min(0), sec(0), msec(0), tm{ 0 }
 	{
 	}
 	DateTime(int Year, int mon, int day, int hour, int min, int sec, int msec, struct tm tm)
@@ -43,8 +43,8 @@ struct DateTime
 * 自1970-1-1以来的微秒---UTC
 */
 class Timestamp :public copyable,
-				public less_than_comparable<Timestamp>
-				//public std::equality_comparable<Timestamp>,
+	public less_than_comparable<Timestamp>
+	//public std::equality_comparable<Timestamp>,
 {
 public:
 	Timestamp();
@@ -81,7 +81,7 @@ public:
 		return fromUnixTime(time, 0);
 	}
 	//交换
-	void swap(Timestamp& that) 
+	void swap(Timestamp& that)
 	{
 		std::swap(this->m_microSecondsSinceEpoch, that.m_microSecondsSinceEpoch);
 	}

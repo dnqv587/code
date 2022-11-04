@@ -11,10 +11,10 @@ template<class T>
 class Singleton :private noncopyable
 {
 public:
-	
+
 	Singleton() = delete;
 	~Singleton() = delete;
-	
+
 	static T* instance()
 	{
 		pthread_once(&m_once, init);//只执行一次实例化

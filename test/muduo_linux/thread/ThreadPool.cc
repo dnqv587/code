@@ -29,10 +29,10 @@ void ThreadPool::start(unsigned int numThreads /*= CORE_NUM*/)
 	}
 	for (int i = 0; i < numThreads; ++i)
 	{
-		m_threads.emplace_back(new Thread(std::bind(&ThreadPool::thread,this), m_name + std::to_string(i)));
+		m_threads.emplace_back(new Thread(std::bind(&ThreadPool::thread, this), m_name + std::to_string(i)));
 		m_threads[i]->start();
 	}
-	
+
 }
 
 

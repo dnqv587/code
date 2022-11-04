@@ -10,7 +10,7 @@ public:
 
 private:
 
-	union 
+	union
 	{
 		sockaddr_in _addr;
 		sockaddr_in6 _addr6;

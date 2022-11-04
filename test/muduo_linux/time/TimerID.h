@@ -18,7 +18,7 @@ public:
 
 	TimerID(Timer* timer, int64_t sequece)
 		:m_timer(timer),
-		 m_sequence(sequece)
+		m_sequence(sequece)
 	{
 
 	}

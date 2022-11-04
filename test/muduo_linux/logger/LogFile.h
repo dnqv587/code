@@ -8,7 +8,7 @@
 class LogFile :private noncopyable
 {
 public:
-	
+
 	/*
 	* 日志输出
 	* baseName:名称，rollSize：文件刷新字节间隔，threadSafe：是否为线程安全，flushInterval：缓冲区刷新间隔，checkEveryN：缓冲区检查大小

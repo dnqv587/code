@@ -6,7 +6,7 @@ Timer::Timer(const TimerCallback& cb, Timestamp when, double interval)
 	:m_callback(cb),
 	m_expiration(when),
 	m_interval(interval),
-	m_repeat(interval >0.0),
+	m_repeat(interval > 0.0),
 	m_sequence(++s_numCreated)
 {
 

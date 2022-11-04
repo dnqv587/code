@@ -16,7 +16,7 @@ Channel::Channel(EventLoop* loop, const int fd)
 	m_revents(NULL),
 	m_index(-1)
 {
-	
+
 }
 
 void Channel::handleEvent()

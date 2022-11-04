@@ -101,6 +101,7 @@
     <ClInclude Include="logger\LogStream.h" />
     <ClInclude Include="net\Acceptor.h" />
     <ClInclude Include="net\Bufferh.h" />
+    <ClInclude Include="net\InetAddress.h" />
     <ClInclude Include="net\Poller.h" />
     <ClInclude Include="net\Socket.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net\Acceptor.cc" />
     <ClCompile Include="net\Buffercc.cpp" />
+    <ClCompile Include="net\InetAddress.cc" />
     <ClCompile Include="net\Poller.cc" />
     <ClCompile Include="net\Socket.cc" />
     <ClCompile Include="thread\thread.cc" />

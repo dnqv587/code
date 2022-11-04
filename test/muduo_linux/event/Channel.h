@@ -3,7 +3,7 @@
 
 /*
 * Reactor最核心的事件分发机制，将IO multiplexing拿到的IO事件分发给各个文件描述符fd的事件处理函数
-* 
+*
 * Channel是selectable IO channel，负责注册与响应IO事件。但是它没有file descriptor，它是TcpConnection、
 * Acceptor、TcpConnection、TimeQueue的成员，其生命周期由后者控制
 */
@@ -12,7 +12,7 @@ class EventLoop;
 class Channel
 {
 public:
-	typedef std::function<void ()> EventCallback;
+	typedef std::function<void()> EventCallback;
 
 	Channel(EventLoop* loop, const int fd);
 
@@ -51,7 +51,7 @@ public:
 		m_events &= ~kWriteEvent;
 		update();
 	}
-	
+
 	void disableALL()
 	{
 		m_events = kNoneEvent;
@@ -68,7 +68,7 @@ public:
 		return m_fd;
 	}
 
-	int events() const 
+	int events() const
 	{
 		return m_events;
 	}

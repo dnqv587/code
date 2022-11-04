@@ -6,12 +6,12 @@
 
 namespace detail
 {
-	// ¼ÇÂ¼GMTÊ±¼äºÍ±¾µØÊ±¼äµÄ×ª»¯ĞÅÏ¢»ù±¾µ¥Ôª
+	// è®°å½•GMTæ—¶é—´å’Œæœ¬åœ°æ—¶é—´çš„è½¬åŒ–ä¿¡æ¯åŸºæœ¬å•å…ƒ
 	struct Transition
 	{
-		time_t gmttime;//GMTÊ±¼ä
-		time_t localtime;//±¾µØµØÇøÊ±¼ä
-		int localtimeIdx;// Data.localtimesÀï¶ÔÓ¦µÄ±¾µØÊ±ÇøÊ±¼äË÷Òı
+		time_t gmttime;//GMTæ—¶é—´
+		time_t localtime;//æœ¬åœ°åœ°åŒºæ—¶é—´
+		int localtimeIdx;// Data.localtimesé‡Œå¯¹åº”çš„æœ¬åœ°æ—¶åŒºæ—¶é—´ç´¢å¼•
 
 		Transition(time_t t, time_t l, int localIdx)
 			: gmttime(t), localtime(l), localtimeIdx(localIdx)
@@ -19,12 +19,12 @@ namespace detail
 
 	};
 
-	// ¼ÇÂ¼±¾µØÊ±ÇøÊ±¼äĞÅÏ¢»ù±¾µ¥Ôª
+	// è®°å½•æœ¬åœ°æ—¶åŒºæ—¶é—´ä¿¡æ¯åŸºæœ¬å•å…ƒ
 	struct Localtime
 	{
-		time_t gmtOffset;// GMTÊ±¼ä×ª»¯Îª±¾µØÊ±¼äµÄ²îÖµ
-		bool isDst;// ÏÄÁîÊ±±ê¼Ç
-		int arrbIdx;// Data.names¶ÔÓ¦µÄÊ±ÇøÃûÃûË÷Òı
+		time_t gmtOffset;// GMTæ—¶é—´è½¬åŒ–ä¸ºæœ¬åœ°æ—¶é—´çš„å·®å€¼
+		bool isDst;// å¤ä»¤æ—¶æ ‡è®°
+		int arrbIdx;// Data.nameså¯¹åº”çš„æ—¶åŒºååç´¢å¼•
 
 		Localtime(time_t offset, bool dst, int arrb)
 			: gmtOffset(offset), isDst(dst), arrbIdx(arrb)
@@ -32,9 +32,9 @@ namespace detail
 	};
 }
 
-// Ê±ÇøÊı¾İ¹ÜÀíÀà,Ö÷ÒªÓÃÓÚ¹ÜÀíGMTÊ±¼äºÍ±¾µØÊ±ÇøÊ±¼äµÄ×ª»¯
-// Ğ­µ÷ÊÀ½çÊ±UTC²»ÓëÈÎºÎµØÇøÎ»ÖÃÏà¹Ø£¬Ò²²»´ú±í´Ë¿ÌÄ³µØµÄÊ±¼ä£¬ËùÒÔÔÚËµÃ÷Ä³µØÊ±¼äÊ±Òª¼ÓÉÏÊ±Çø
-// Ò²¾ÍÊÇËµGMT²¢²»µÈÓÚUTC£¬¶øÊÇµÈÓÚUTC+0£¬Ö»ÊÇ¸ñÁÖÄáÖÎ¸ÕºÃÔÚ0Ê±ÇøÉÏ¡£
+// æ—¶åŒºæ•°æ®ç®¡ç†ç±»,ä¸»è¦ç”¨äºç®¡ç†GMTæ—¶é—´å’Œæœ¬åœ°æ—¶åŒºæ—¶é—´çš„è½¬åŒ–
+// åè°ƒä¸–ç•Œæ—¶UTCä¸ä¸ä»»ä½•åœ°åŒºä½ç½®ç›¸å…³ï¼Œä¹Ÿä¸ä»£è¡¨æ­¤åˆ»æŸåœ°çš„æ—¶é—´ï¼Œæ‰€ä»¥åœ¨è¯´æ˜æŸåœ°æ—¶é—´æ—¶è¦åŠ ä¸Šæ—¶åŒº
+// ä¹Ÿå°±æ˜¯è¯´GMTå¹¶ä¸ç­‰äºUTCï¼Œè€Œæ˜¯ç­‰äºUTC+0ï¼Œåªæ˜¯æ ¼æ—å°¼æ²»åˆšå¥½åœ¨0æ—¶åŒºä¸Šã€‚
 struct TimeZone::Data
 {
 	std::vector<detail::Transition> transitions;
