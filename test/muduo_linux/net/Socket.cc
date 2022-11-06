@@ -98,3 +98,8 @@ int Socket::create(sa_family_t family, IO type = NIO)
 	}
 	return socket;
 }
+
+void Socket::fromIpPort(std::string ip, in_port_t port, sockaddr_in* addr)
+{
+
+}

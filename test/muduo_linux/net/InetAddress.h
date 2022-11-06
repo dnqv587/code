@@ -1,12 +1,15 @@
 #pragma once
 #include "../base/copyable.h"
 #include <netinet/in.h>
+#include <string>
 
 
 class InetAddress :copyable
 {
 public:
-	InetAddress(uint8_t port, bool loopbackOnly = false, bool ipv6 = false);
+	explicit InetAddress(in_port_t port, bool loopbackOnly = false, bool ipv6 = false);
+
+	explicit InetAddress(std::string addr, in_port_t port, bool ipv6 = false);
 
 private:
 

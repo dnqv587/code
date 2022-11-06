@@ -464,16 +464,6 @@ void PollerTest()
 
 }
 
-uint16_t HostToNetwork16(uint16_t host16)
-{
-	uint16_t ret;
-	uint8_t* data = (uint8_t*)&ret;
-	data[0] = host16 & 0x0F;
-	data[1] = host16 & 0xF0;
-	//return ret;
-	ret = ::htons(host16);;
-	return ret;
-}
 
 int main(int argc, char* argv[])
 {
@@ -496,8 +486,6 @@ int main(int argc, char* argv[])
 	//TimerTest();
 	//less_than_comparableTest();
 	//PollerTest();
-
-	std::cout << HostToNetwork16(240) << std::endl;
 
 	getchar();
 	return 0;
