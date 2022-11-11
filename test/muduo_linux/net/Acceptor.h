@@ -1,8 +1,8 @@
 #pragma once 
 #include "../base/noncopyable.h"
 #include "Socket.h"
+#include "../Event/Channel.h"
 #include <functional>
-
 
 
 
@@ -35,7 +35,9 @@ public:
 	{
 		return m_listenning;
 	}
-
+	/// <summary>
+	/// 开始监听
+	/// </summary>
 	void listen();
 
 private:
@@ -45,4 +47,5 @@ private:
 	NewConnectionCallback m_newConnectionCallback;
 	bool m_listenning;
 	Socket m_acceptSocket;
+	Channel m_acceptChannel;
 };

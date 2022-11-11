@@ -41,3 +41,23 @@ public:
 
 	}
 };
+
+class pton_error :public socket_error
+{
+public:
+	pton_error() noexcept
+		:socket_error("pton_error")
+	{
+
+	}
+};
+
+class ntop_error :public socket_error
+{
+public:
+	ntop_error() noexcept
+		:socket_error("ntop_error")
+	{
+
+	}
+};

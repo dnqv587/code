@@ -1,11 +1,14 @@
 #pragma once
 #include "../base/noncopyable.h"
+#include "../base/Type.h"
 #include <bits/sockaddr.h>
 #include <endian.h>
 #include <stdint.h>
 #include <string>
 #include <netinet/in.h>
 
+
+class InetAddress;
 /// <summary>
 /// 封装socket文件描述符
 /// 符合RAII
@@ -44,8 +47,74 @@ public:
 		return m_sockfd;
 	}
 
-	static void fromIpPort(std::string ip, in_port_t port, sockaddr_in* addr);
-	static void fromIpPort(std::string ip, in_port_t port, sockaddr_in6* addr);
+	/// <summary>
+	/// 设置重用地址
+	/// </summary>
+	/// <param name="on">是否启用</param>
+	void setReuseAddr(bool on);
+	/// <summary>
+	/// 绑定地址
+	/// </summary>
+	/// <param name="addr">InetAddress对象</param>
+	void bindAddress(const InetAddress& addr);
+
+	/// <summary>
+	/// 监听
+	/// </summary>
+	void listen();
+
+	/// <summary>
+	/// 解析字符串类型点分十进制IP地址为网络IP
+	/// </summary>
+	/// <param name="ip">String类型的点分十进制IP</param>
+	/// <param name="port">端口号</param>
+	/// <param name="addr">IPV4 socket地址 [IO]</param>
+	static void fromIpPort(std::string& ip, in_port_t port, sockaddr_in* addr);
+	/// <summary>
+	/// 解析字符串类型点分十进制IP地址为网络IP
+	/// </summary>
+	/// <param name="ip">String类型的点分十进制IP</param>
+	/// <param name="port">端口号</param>
+	/// <param name="addr">IPV6 socket地址 [IO]</param>
+	static void fromIpPort(std::string& ip, in_port_t port, sockaddr_in6* addr);
+
+	/// <summary>
+	/// 网络IP格式化为点分十进制IP
+	/// </summary>
+	/// <param name="addr">socket地址</param>
+	/// <returns></returns>
+	static std::string toIpString(struct sockaddr* addr);
+	static std::string toIpString(const struct sockaddr* addr);
+
+	/// <summary>
+	/// sockaddr_in转sockaddr
+	/// </summary>
+	static const struct sockaddr* sockaddr_cast(const struct sockaddr_in* addr)
+	{
+		return static_cast<const struct sockaddr*>(implicit_cast<const void*>(addr));
+	}
+	static struct sockaddr* sockaddr_cast(struct sockaddr_in6* addr6)
+	{
+		return static_cast<struct sockaddr*>(implicit_cast<void*>(addr6));
+	}
+	static const struct sockaddr* sockaddr_cast(const struct sockaddr_in6* addr6)
+	{
+		return static_cast<const struct sockaddr*>(implicit_cast<const void*>(addr6));
+	}
+	/// <summary>
+	/// sockaddr转sockaddr_in
+	/// </summary>
+	static const struct sockaddr_in* sockaddr_in_cast(const struct sockaddr* addr)
+	{
+		return static_cast<const struct sockaddr_in*>(implicit_cast<const void*>(addr));
+	}
+	/// <summary>
+	/// sockaddr转sockaddr_in6
+	/// </summary>
+	static const struct sockaddr_in6* sockaddr_in6_cast(const struct sockaddr* addr)
+	{
+		return static_cast<const struct sockaddr_in6*>(implicit_cast<const void*>(addr));
+	}
 
 private:
 	int m_sockfd;
@@ -85,7 +154,7 @@ namespace Endian
 	/// </summary>
 	/// <param name="network16">16位大端字节序</param>
 	/// <returns>16位主机字节序</returns>
-	inline uint16_t NetworkToHost(uint16_t network16)
+	inline uint16_t NetworkToHost16(uint16_t network16)
 	{
 		return ::be16toh(network16);
 	}
@@ -94,7 +163,7 @@ namespace Endian
 	/// </summary>
 	/// <param name="network32">32位大端字节序</param>
 	/// <returns>32位主机字节序</returns>
-	inline uint32_t NetworkToHost(uint32_t network32)
+	inline uint32_t NetworkToHost32(uint32_t network32)
 	{
 		return ::be32toh(network32);
 	}
@@ -103,7 +172,7 @@ namespace Endian
 	/// </summary>
 	/// <param name="network64">64位大端字节序</param>
 	/// <returns>64位主机字节序</returns>
-	inline uint64_t NetworkToHost(uint64_t network64)
+	inline uint64_t NetworkToHost64(uint64_t network64)
 	{
 		return ::be64toh(network64);
 	}
@@ -111,27 +180,11 @@ namespace Endian
 	/// 是否为小端字节序
 	/// </summary>
 	/// <returns></returns>
-	bool isLittleEndian()
-	{
-		static union
-		{
-			short _s = 0x0102;
-			char _cc[sizeof(short)];
-		};
-		return (_cc[0] == 0x02 && _cc[1] == 0x01);
-	}
+	bool isLittleEndian();
 	/// <summary>
 	/// 是否为大端字节序
 	/// </summary>
 	/// <returns></returns>
-	bool isBigEndian()
-	{
-		static union
-		{
-			short _s = 0x0102;
-			char _cc[sizeof(short)];
-		};
-		return (_cc[0] == 0x01 && _cc[1] == 0x02);
-	}
+	bool isBigEndian();
 }
 

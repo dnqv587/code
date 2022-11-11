@@ -32,6 +32,7 @@
 #include "net/Poller.h"
 #include "time/TimerQueue.h"
 #include "net/Socket.h"
+#include "net/InetAddress.h"
 
 
 using namespace std;
@@ -464,6 +465,15 @@ void PollerTest()
 
 }
 
+void InetAddressTest()
+{
+	InetAddress ip(8888, true, false);
+	if (Endian::isLittleEndian())
+	{
+		std::cout << ip.ipString() << ip.port() << std::endl;
+	}
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -486,6 +496,7 @@ int main(int argc, char* argv[])
 	//TimerTest();
 	//less_than_comparableTest();
 	//PollerTest();
+	InetAddressTest();
 
 	getchar();
 	return 0;

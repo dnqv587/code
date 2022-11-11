@@ -1,12 +1,19 @@
 #include "Socket.h"
 #include "../logger/logging.h"
 #include "../base/Exception.h"
+#include "InetAddress.h"
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+
+static union
+{
+	short _s = 0x0102;
+	char _cc[sizeof(short)];
+};
 
 namespace detail
 {
@@ -99,7 +106,84 @@ int Socket::create(sa_family_t family, IO type = NIO)
 	return socket;
 }
 
-void Socket::fromIpPort(std::string ip, in_port_t port, sockaddr_in* addr)
+void Socket::setReuseAddr(bool on)
 {
-
+	int val = on ? 1 : 0;
+	if (::setsockopt(m_sockfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val) && on)
+	{
+		LOG_SYSERR << "setReuseAddr failed " << ::strerror(errno);
+	}
 }
+
+void Socket::bindAddress(const InetAddress& addr)
+{
+	if (::bind(m_sockfd, addr.getSockAddr(), sizeof(sockaddr_in6)))
+	{
+		LOG_SYSERR << "bindAddress failed " << ::strerror(errno);
+	}
+}
+
+void Socket::listen()
+{
+	if (::listen(m_sockfd, SOMAXCONN))
+	{
+		LOG_SYSERR << "Socket::listen defailed " << ::strerror(errno);
+	}
+}
+
+void Socket::fromIpPort(std::string& ip, in_port_t port, sockaddr_in* addr)
+{
+	addr->sin_family = AF_INET;
+	addr->sin_port = Endian::HostToNetwork16(port);
+	if (-1 == ::inet_pton(AF_INET, ip.c_str(), &addr->sin_addr.s_addr))
+	{
+		throw pton_error();
+		LOG_SYSERR << ::strerror(errno);
+	}
+}
+
+void Socket::fromIpPort(std::string& ip, in_port_t port, sockaddr_in6* addr)
+{
+	addr->sin6_family = AF_INET6;
+	addr->sin6_port = Endian::HostToNetwork16(port);
+	if (-1 == ::inet_pton(AF_INET6, ip.c_str(), &addr->sin6_addr))
+	{
+		throw pton_error();
+		LOG_SYSERR << ::strerror(errno);
+	}
+}
+
+std::string Socket::toIpString(const struct sockaddr* addr)
+{
+	char ip[64];
+	if (addr->sa_family == AF_INET)
+	{
+		uint32_t src = Endian::NetworkToHost32(sockaddr_in_cast(addr)->sin_addr.s_addr);
+		if (!::inet_ntop(AF_INET, &src, ip, sizeof ip / sizeof ip[0]))
+		{
+			throw ntop_error();
+			LOG_SYSERR << ::strerror(errno);
+		}
+	}
+	else if (addr->sa_family == AF_INET6)
+	{
+		if (!::inet_ntop(AF_INET6, &sockaddr_in6_cast(addr)->sin6_addr, ip, sizeof ip / sizeof ip[0]))
+		{
+			throw ntop_error();
+			LOG_SYSERR << ::strerror(errno);
+		}
+	}
+	return ip;
+}
+
+
+bool Endian::isLittleEndian()
+{
+	return (_cc[0] == 0x02 && _cc[1] == 0x01);
+}
+
+bool Endian::isBigEndian()
+{
+	return (_cc[0] == 0x01 && _cc[1] == 0x02);
+}
+

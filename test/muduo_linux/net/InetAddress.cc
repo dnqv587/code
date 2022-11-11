@@ -1,7 +1,6 @@
 #include "InetAddress.h"
 #include "Socket.h"
 #include <stddef.h>
-#include "../base/Type.h"
 
 
 InetAddress::InetAddress(in_port_t port, bool loopbackOnly, bool ipv6)
@@ -27,8 +26,18 @@ InetAddress::InetAddress(in_port_t port, bool loopbackOnly, bool ipv6)
 
 InetAddress::InetAddress(std::string addr, in_port_t port, bool ipv6)
 {
-
+	if (ipv6)
+	{
+		memZero(&_addr6, sizeof _addr6);
+		Socket::fromIpPort(addr, port, &_addr6);
+	}
+	else
+	{
+		memZero(&_addr, sizeof _addr);
+		Socket::fromIpPort(addr, port, &_addr);
+	}
 }
+
 
 
 
