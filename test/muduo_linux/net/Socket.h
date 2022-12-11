@@ -62,6 +62,18 @@ public:
 	/// 监听
 	/// </summary>
 	void listen();
+	/// <summary>
+	/// accept封装函数
+	/// </summary>
+	/// <param name="peerAddr">传出地址</param>
+	/// <returns></returns>
+	int accept(InetAddress* peerAddr);
+
+	/// <summary>
+	/// 关闭文件描述符
+	/// </summary>
+	/// <param name="sockfd"></param>
+	static void close(int sockfd);
 
 	/// <summary>
 	/// 解析字符串类型点分十进制IP地址为网络IP
@@ -115,6 +127,8 @@ public:
 	{
 		return static_cast<const struct sockaddr_in6*>(implicit_cast<const void*>(addr));
 	}
+	//设置sockfd属性为O_NONBLOCK | FD_CLOEXEC
+	void setNonBlockAndCloseOnExec(int sockfd);
 
 private:
 	int m_sockfd;

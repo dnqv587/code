@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 
 static union
 {
@@ -58,6 +59,23 @@ namespace detail
 			LOG_ERROR << "socket detail::create_bio_socket error";
 		}
 		return sockfd;
+	}
+
+	int accept(int sockfd, struct sockaddr_in6* addr)
+	{
+		socklen_t addrLen = static_cast<socklen_t>(sizeof * addr);
+
+#if VALGRIND || defined(NO_ACCEPT4)
+		int connfd = ::accept(sockfd, Socket::sockaddr_cast(addr), &addrLen);
+		Socket::setNonBlockAndCloseOnExec(connfd);
+#else//GNU
+		int connfd = ::accept4(sockfd, Socket::sockaddr_cast(addr), &addrLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
+#endif
+		if (connfd < 0)
+		{
+			LOG_SYSERR << "accept failed " << errno << ::strerror(errno);
+		}
+		return connfd;
 	}
 }
 
@@ -131,6 +149,31 @@ void Socket::listen()
 	}
 }
 
+int Socket::accept(InetAddress* peerAddr)
+{
+	struct sockaddr_in6 addr;
+	memZero(&addr, sizeof addr);
+	int connfd = detail::accept(m_sockfd, &addr);
+	if (connfd >= 0)
+	{
+		peerAddr->setSockAddrInet6(addr);
+	}
+	return connfd;
+}
+
+void Socket::close(int sockfd)
+{
+	try
+	{
+		detail::close(sockfd);
+	}
+	catch (std::exception ex)
+	{
+		throw ex;
+	}
+	
+}
+
 void Socket::fromIpPort(std::string& ip, in_port_t port, sockaddr_in* addr)
 {
 	addr->sin_family = AF_INET;
@@ -176,6 +219,23 @@ std::string Socket::toIpString(const struct sockaddr* addr)
 	return ip;
 }
 
+
+void Socket::setNonBlockAndCloseOnExec(int sockfd)
+{
+	// non-block
+	int flags = ::fcntl(sockfd, F_GETFL, 0);
+	flags |= O_NONBLOCK;
+	int ret = ::fcntl(sockfd, F_SETFL, flags);
+	// FIXME check
+
+	// close-on-exec
+	flags = ::fcntl(sockfd, F_GETFD, 0);
+	flags |= FD_CLOEXEC;
+	ret = ::fcntl(sockfd, F_SETFD, flags);
+	// FIXME check
+
+	(void)ret;
+}
 
 bool Endian::isLittleEndian()
 {

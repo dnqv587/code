@@ -26,6 +26,8 @@ public:
 	//更新和维护Poller
 	void updateChannel(Channel* channel);
 
+	void removeChannel(Channel* channel);
+
 	void quit()
 	{
 		m_quit = true;

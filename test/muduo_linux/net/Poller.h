@@ -30,6 +30,11 @@ public:
 	* 将fd挂在到内核监控范围中
 	*/
 	void updateChannel(Channel* channel);
+	/// <summary>
+	/// 去除channel，从channel和fd容器
+	/// </summary>
+	/// <param name="channel"></param>
+	void removeChannel(Channel* channel);
 
 	void assertInLoopThread()
 	{

@@ -91,3 +91,33 @@ void Poller::updateChannel(Channel* channel)
 		}
 	}
 }
+
+void Poller::removeChannel(Channel* channel)
+{
+	assertInLoopThread();
+	LOG_TRACE << "fd= " << channel->fd();
+	assert(m_channels.find(channel->fd()) != m_channels.end());
+	assert(m_channels.at(channel->fd()) == channel);
+	assert(channel->isNoneEvent());
+	int index = channel->index();
+	assert(index >= 0 && index < static_cast<int>(m_channels.size()));
+	size_t n = m_channels.erase(channel->fd());
+	assert(n == 1);
+	//从fd容器m_pollfds去除
+	if (implicit_cast<size_t>(index) == m_pollfds.size())
+	{
+		m_pollfds.pop_back();
+	}
+	else
+	{
+		int pollfdEnd = m_pollfds.back().fd;
+		std::iter_swap(m_pollfds.begin() + index, m_pollfds.end() - 1);//调换位置
+		if (pollfdEnd < 0)
+		{
+			pollfdEnd = -pollfdEnd - 1;//?
+		}
+		m_channels[pollfdEnd]->set_index(index);//调换位置后将index更换
+		m_pollfds.pop_back();
+	}
+
+}

@@ -51,12 +51,18 @@ public:
 		m_events &= ~kWriteEvent;
 		update();
 	}
-
+	/// <summary>
+	/// 取消监听
+	/// </summary>
 	void disableALL()
 	{
 		m_events = kNoneEvent;
 		update();
 	}
+	/// <summary>
+	/// 将当前Channel从Loop中去除
+	/// </summary>
+	void remove();
 
 	void set_revents(int revt)
 	{

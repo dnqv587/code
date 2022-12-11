@@ -33,6 +33,7 @@
 #include "time/TimerQueue.h"
 #include "net/Socket.h"
 #include "net/InetAddress.h"
+#include "net/Acceptor.h"
 
 
 using namespace std;
@@ -474,6 +475,25 @@ void InetAddressTest()
 	}
 }
 
+void newConnection(int sockfd, const InetAddress& peerAddr)
+{
+	std::cout << "newConnection" << peerAddr.ipString() << peerAddr.port() << std::endl;
+
+	::write(sockfd, "How are you?\n", 13);
+	Socket::close(sockfd);
+}
+
+void AcceptTest()
+{
+	InetAddress listenAddr(8888);
+	EventLoop loop;
+
+	Acceptor accetror(&loop, listenAddr);
+	accetror.setNewConnectionCallback(newConnection);
+	accetror.listen();
+	loop.loop();
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -496,7 +516,8 @@ int main(int argc, char* argv[])
 	//TimerTest();
 	//less_than_comparableTest();
 	//PollerTest();
-	InetAddressTest();
+	//InetAddressTest();
+	AcceptTest();
 
 	getchar();
 	return 0;

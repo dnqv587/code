@@ -30,6 +30,14 @@ public:
 		return Socket::sockaddr_cast(&_addr6);
 	}
 	/// <summary>
+	/// 设置addr
+	/// </summary>
+	/// <param name="addr6"></param>
+	void setSockAddrInet6(const struct sockaddr_in6& addr6)
+	{
+		_addr6 = addr6;
+	}
+	/// <summary>
 	/// 获取点分十进制IP
 	/// </summary>
 	/// <returns></returns>

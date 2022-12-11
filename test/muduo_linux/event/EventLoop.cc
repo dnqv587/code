@@ -62,6 +62,17 @@ void EventLoop::updateChannel(Channel* channel)
 	m_poller->updateChannel(channel);
 }
 
+void EventLoop::removeChannel(Channel* channel)
+{
+	assert(channel->ownerLoop() == this);
+	assertInLoopThread();
+	if (m_eventHandling)
+	{
+		//
+	}
+	m_poller->removeChannel(channel);
+}
+
 EventLoop* EventLoop::getEventLoopOfCurrentThread()
 {
 	return t_loopInThisThread;

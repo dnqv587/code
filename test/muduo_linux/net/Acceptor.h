@@ -1,7 +1,7 @@
 #pragma once 
 #include "../base/noncopyable.h"
 #include "Socket.h"
-#include "../Event/Channel.h"
+#include "../event/Channel.h"
 #include <functional>
 
 
@@ -19,6 +19,7 @@ public:
 
 	Acceptor(EventLoop* loop, const InetAddress& listenAddr);
 
+	~Acceptor();
 	/// <summary>
 	/// 设置接受新连接的回调
 	/// </summary>
@@ -41,11 +42,15 @@ public:
 	void listen();
 
 private:
+	/// <summary>
+	/// 读事件回调-处理连接请求
+	/// </summary>
 	void handleRead();
 
 	EventLoop* m_loop;
-	NewConnectionCallback m_newConnectionCallback;
+	NewConnectionCallback m_newConnectionCallback;//连接回调
 	bool m_listenning;
 	Socket m_acceptSocket;
 	Channel m_acceptChannel;
+	int m_idleFd;//占位文件描述符，用来判断文件描述符是否达上限
 };
