@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\public\_public.cpp">
+      <Filter>public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crtsurfdata.cpp">
+      <Filter>src\source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\public\_cmpublic.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\_public.h">
+      <Filter>public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="public">
+      <UniqueIdentifier>{3d91fc93-3628-4034-803f-5c47a6a2b3b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd">
+      <UniqueIdentifier>{3b64a386-357a-4065-887c-0a3b2e24bc71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{66ab079f-8d21-4ab2-8dfd-a921f9c8d8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\header">
+      <UniqueIdentifier>{8ee99fb5-d1a2-4540-91a0-fc597aa003f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\source">
+      <UniqueIdentifier>{2338fb76-4b39-4110-be7a-12424fc3f739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{e4bc7b94-83f2-430d-8a6c-89dcb2856006}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
