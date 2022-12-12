@@ -52,6 +52,8 @@ void Acceptor::handleRead()
 		{
 			Socket::close(connfd);
 		}
+
+		LOG_TRACE << "Connetion OK IP:" << peerAddr.ipString() << peerAddr.port();
 	}
 	else
 	{

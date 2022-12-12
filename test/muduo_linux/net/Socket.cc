@@ -64,12 +64,19 @@ namespace detail
 	int accept(int sockfd, struct sockaddr_in6* addr)
 	{
 		socklen_t addrLen = static_cast<socklen_t>(sizeof * addr);
-
+		int connfd;
 #if VALGRIND || defined(NO_ACCEPT4)
-		int connfd = ::accept(sockfd, Socket::sockaddr_cast(addr), &addrLen);
+		do
+		{
+			connfd = ::accept(sockfd, Socket::sockaddr_cast(addr), &addrLen);
+		} while (errno == EINTR);
+
 		Socket::setNonBlockAndCloseOnExec(connfd);
 #else//GNU
-		int connfd = ::accept4(sockfd, Socket::sockaddr_cast(addr), &addrLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
+		do 
+		{
+			connfd = ::accept4(sockfd, Socket::sockaddr_cast(addr), &addrLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
+		} while (errno == EINTR);
 #endif
 		if (connfd < 0)
 		{

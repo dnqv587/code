@@ -34,6 +34,7 @@
 #include "net/Socket.h"
 #include "net/InetAddress.h"
 #include "net/Acceptor.h"
+#include "base/Tools.h"
 
 
 using namespace std;
@@ -284,19 +285,21 @@ void TimestampTest()
 	std::cout << Timestamp::now().formatString(true, true) << std::endl;
 }
 
-LogFile logFile("SyncLog", 655350000, true, 3, 1024);
+LogFile* logFile;
 void outputFunc(const char* msg, int len)
 {
-	logFile.append(msg, len);
+	logFile->append(msg, len);
 }
 
 void flushFunc()
 {
-	logFile.flush();
+	logFile->flush();
 }
 
 void SyncLogTest()
 {
+	LogFile l_logFile("SyncLog", 655350000, true, 3, 1024);
+	logFile = &l_logFile;
 	Logger::setOutput(outputFunc);
 	Logger::setFlush(flushFunc);
 	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
@@ -309,30 +312,32 @@ void SyncLogTest()
 
 }
 
-AsynLogging ASYNlog("AsynLog", 655350000);
+AsynLogging* ASYNlog;
 void ASYNoutputFunc(const char* msg, int len)
 {
-	ASYNlog.append(msg, len);
+	ASYNlog->append(msg, len);
 }
 
 void ASYNflushFunc()
 {
-	//ASYNlog.flush();
+	//ASYNlog->flush();
 }
 
 void AsynLogTest()
 {
+	AsynLogging l_ASYNlog("AsynLog", 655350000);
+	ASYNlog = &l_ASYNlog;
 
 	Logger::setOutput(ASYNoutputFunc);
 	Logger::setFlush(ASYNflushFunc);
 	std::string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-	ASYNlog.start();
+	ASYNlog->start();
 	for (int i = 0; i < 4096000; ++i)
 	{
 		LOG_INFO << line << "---" << i;
 		//usleep(1000);
 	}
-	ASYNlog.stop();
+	ASYNlog->stop();
 }
 
 MutexLock mutex;
@@ -480,24 +485,46 @@ void newConnection(int sockfd, const InetAddress& peerAddr)
 	std::cout << "newConnection" << peerAddr.ipString() << peerAddr.port() << std::endl;
 
 	::write(sockfd, "How are you?\n", 13);
+	LOG_INFO << "How are you?\n";
 	Socket::close(sockfd);
 }
 
 void AcceptTest()
 {
 	InetAddress listenAddr(8888);
+	InetAddress listenAddr2(9999);
 	EventLoop loop;
 
 	Acceptor accetror(&loop, listenAddr);
+	Acceptor accetror2(&loop, listenAddr2);
 	accetror.setNewConnectionCallback(newConnection);
 	accetror.listen();
+	accetror2.setNewConnectionCallback(newConnection);
+	accetror2.listen();
+
 	loop.loop();
 
 }
 
+void splitTest()
+{
+	std::string str("1,2,3,4,5,6,7,8,9,10");
+
+	std::vector<std::string> vec = Tools::String::Split(str, ',');
+	for (auto v : vec)
+	{
+		std::cout << v << " ";
+	}
+}
+
 int main(int argc, char* argv[])
 {
-
+	AsynLogging m_ASYNlog("AsynLog", 65535);
+	ASYNlog = &m_ASYNlog;
+	Logger::setOutput(ASYNoutputFunc);
+	Logger::setFlush(ASYNflushFunc);
+	Logger::setLogLevel(Logger::LogLevel::TRACE);
+	ASYNlog->start();
 	//observerTest();
 	//CountDownLatchTest();
 	//singletonTest();
@@ -517,8 +544,10 @@ int main(int argc, char* argv[])
 	//less_than_comparableTest();
 	//PollerTest();
 	//InetAddressTest();
-	AcceptTest();
+	//AcceptTest();
+	splitTest();
 
+	ASYNlog->stop();
 	getchar();
 	return 0;
 }

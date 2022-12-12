@@ -132,6 +132,9 @@
     <ClInclude Include="net\InetAddress.h">
       <Filter>net</Filter>
     </ClInclude>
+    <ClInclude Include="base\Tools.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="net\InetAddress.cc">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Tools.cc">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
