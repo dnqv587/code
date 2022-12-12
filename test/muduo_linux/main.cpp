@@ -492,7 +492,7 @@ void newConnection(int sockfd, const InetAddress& peerAddr)
 void AcceptTest()
 {
 	InetAddress listenAddr(8888);
-	InetAddress listenAddr2(9999);
+	InetAddress listenAddr2(8899);
 	EventLoop loop;
 
 	Acceptor accetror(&loop, listenAddr);
@@ -544,10 +544,11 @@ int main(int argc, char* argv[])
 	//less_than_comparableTest();
 	//PollerTest();
 	//InetAddressTest();
-	//AcceptTest();
-	splitTest();
+	AcceptTest();
+	//splitTest();
+
 
 	ASYNlog->stop();
-	getchar();
+	//getchar();
 	return 0;
 }

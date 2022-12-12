@@ -2,6 +2,7 @@
 #include "../logger/logging.h"
 #include "../base/Exception.h"
 #include "InetAddress.h"
+#include "../base/Tools.h"
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -223,7 +224,14 @@ std::string Socket::toIpString(const struct sockaddr* addr)
 			LOG_SYSERR << ::strerror(errno);
 		}
 	}
-	return ip;
+	std::string IP;
+	std::vector<std::string> vec = Tools::String::Split(ip, '.');
+	for (int n = vec.size()-1; n > 0; --n)
+	{
+		IP.append(vec[n] + '.');
+	}
+	IP.append(vec[0] );
+	return IP;
 }
 
 
