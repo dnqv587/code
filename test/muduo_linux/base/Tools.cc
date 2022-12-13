@@ -32,6 +32,7 @@ void Tools::String::Trim(std::string& str)
 {
 	std::string::const_iterator begin;
 	std::string::const_reverse_iterator end;
+
 	for (std::string::const_iterator iter = str.cbegin(); iter != str.cend(); ++iter)
 	{
 		if (*iter != ' ')
@@ -40,21 +41,20 @@ void Tools::String::Trim(std::string& str)
 			break;
 		}
 	}
-	for (std::string::const_reverse_iterator riter = str.crbegin(); riter != str.crend(); ++riter)
-	{
-		char a = *riter;
-		if (*riter != ' ')
-		{
-			end = ++riter;
-			break;
-		}
-	}
 	if (begin != str.cbegin())
 	{
 		str.erase(str.begin(), begin);
 	}
+	for (std::string::const_reverse_iterator riter = str.crbegin(); riter != str.crend() ; ++riter)
+	{
+		if (*riter != ' ')
+		{
+			end = riter;
+			break;
+		}
+	}
 	if (end != str.crbegin())
 	{
-		str.erase(end.base()-1, str.end());
+		str.erase(end.base(), str.end());
 	}
 }

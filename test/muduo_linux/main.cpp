@@ -544,11 +544,12 @@ int main(int argc, char* argv[])
 	//less_than_comparableTest();
 	//PollerTest();
 	//InetAddressTest();
-	AcceptTest();
+	//AcceptTest();
 	//splitTest();
 
 
+
 	ASYNlog->stop();
-	//getchar();
+	getchar();
 	return 0;
 }

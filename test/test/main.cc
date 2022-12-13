@@ -39,7 +39,7 @@ void test3()
 	std::cout << t1.p << ";" << t2.p << std::endl;
 	t2 = t2;
 	std::cout << t1.p << ";" << t2.p << std::endl;
-	
+
 }
 
 void exp()
@@ -81,7 +81,7 @@ void test5()
 {
 	Person p("lili", 12);
 	PersonWrapper pw(p);
-	
+
 	Person p2 = pw;
 	std::cout << p2._name << p2._age << std::endl;
 }
@@ -120,7 +120,7 @@ void test9()
 	Widget1 w2 = w;
 	Foo* f2 = w2.getFoo();
 	f2->setVal(8);
-	
+
 	std::cout << w.getFoo()->getVal() << w2.getFoo()->getVal() << std::endl;
 }
 
@@ -159,7 +159,7 @@ void test12()
 		{
 			i->print();
 		}
-		
+
 	}
 }
 
@@ -172,7 +172,7 @@ inline T Max(const T& a, const T& b)
 template<typename T>
 void test13()
 {
-	
+
 	T(*pf)(const T & a, const T & b) = Max;//指向函数的指针
 	std::cout << Max(10, 12) << std::endl;//这个调用会被inlined，因为是正常调用
 	std::cout << pf(8, 4) << std::endl;//这个调用可能不会被inlined，因为它是通过函数指针达成
@@ -222,12 +222,12 @@ void json()
 {
 	char json[200] = "{\"starting_threshold_amount(起始监控阈值)\":\"0\", \"second_threshold_amount(第二阶段阈值)\":\"2\"}";
 	//char json[200] = "{\"all\":\"*\" }";
-	
+
 	char* v_begin = strchr(json, '{');
 	char* v_end = strrchr(json, '}');
-	char* p_pos = json+1;
+	char* p_pos = json + 1;
 
-	while (v_begin&& v_end&&( p_pos != v_end+1))
+	while (v_begin && v_end && (p_pos != v_end + 1))
 	{
 		char* v_mid = strchr(p_pos, ':');
 		if (!v_mid)
@@ -239,13 +239,13 @@ void json()
 		{
 			v_right = v_end;
 		}
-		
+
 		*v_mid = 0;
 		char* left = strchr(p_pos, '"');
 		char* right = strchr(p_pos, '(');
-		char* end = right +1;
+		char* end = right + 1;
 
-		if (left && right && (end-1))
+		if (left && right && (end - 1))
 		{
 
 			*left = '[';
@@ -253,7 +253,7 @@ void json()
 			*right = ']';
 
 		}
-		
+
 		*v_right = 0;
 		end = strrchr(v_mid + 1, '"');
 		if (end)
@@ -269,8 +269,8 @@ void json()
 		}
 		p_pos = v_right + 1;
 	}
-	
-	
+
+
 }
 
 int sohnum(const char* src, char soh)
@@ -285,10 +285,10 @@ int sohnum(const char* src, char soh)
 		++src;
 	}
 
-	return count+1;
+	return count + 1;
 }
 
-void strncpysoh(char* src ,int sohpos,char* sub,char soh)
+void strncpysoh(char* src, int sohpos, char* sub, char soh)
 {
 	char* begin = (char*)src;
 	int count = 0;
@@ -305,13 +305,13 @@ void strncpysoh(char* src ,int sohpos,char* sub,char soh)
 			}
 			if (count + 1 == sohpos)
 			{
-				strcpy(sub, src+1);
+				strcpy(sub, src + 1);
 			}
 			pos = (char*)src;
 		}
 		++src;
 	}
-	
+
 	if (count == 0)
 	{
 		strcpy(sub, begin);
@@ -337,15 +337,15 @@ void json2()
 		memset(value, 0x00, sizeof(value));
 
 		strncpysoh(json, i, sub, ',');
-		
+
 		strncpysoh(sub, 1, sub2, ':');
 		strncpysoh(sub, 2, sub3, ':');
 
-		char* left=strchr(sub2, '"');
+		char* left = strchr(sub2, '"');
 		char* right = strrchr(sub2, '"');
 		if (left && right)
 		{
-			strncpy(key, left, right - left+1);
+			strncpy(key, left, right - left + 1);
 			key[0] = '[';
 			key[right - left] = ']';
 		}
@@ -354,7 +354,7 @@ void json2()
 		right = strrchr(sub3, '"');
 		if (left && right)
 		{
-			strncpy(value, left+1, right - left-1);
+			strncpy(value, left + 1, right - left - 1);
 		}
 
 		std::cout << key << std::endl;
@@ -367,6 +367,53 @@ void test18()
 	std::vector<std::string> vec;
 	vec.push_back("hello world!");
 	typenameTest::print(vec);
+}
+
+
+
+std::string GccText = R"(s_as_acctoptpubflow.gcc   s_as_doptsettflow.gcc        s_as_noticeflow.gcc         s_as_optpubflow.gcc         s_as_oquryoptflow.gcc       s_as_soptplatflow.gcc     s_as_userpubflow.gcc      s_ls_ofilquryoptflow.gcc  s_ls_optreptflow.gcc       s_ls_quryoptpubflow.gcc
+s_as_afilquryoptflow.gcc  s_as_extquryoptflow.gcc      s_as_ofilquryoptflow.gcc    s_as_optreportflow.gcc      s_as_oquryoptholdflow.gcc   s_as_svroptassetflow.gcc  s_ls_afilquryoptflow.gcc  s_ls_ohquryoptflow.gcc    s_ls_optriskflow.gcc       s_ls_svroptflow.gcc
+s_as_ahquryoptflow.gcc    s_as_extuserflow.gcc         s_as_ohquryoptflow.gcc      s_as_optreptflow.gcc        s_as_oqurysecuordflow.gcc   s_as_svroptflow.gcc       s_ls_ahquryoptflow.gcc    s_ls_ooptplatflow.gcc     s_ls_optriskpubflow.gcc    s_ls_svrufkoptflow.gcc
+s_as_aoptplatflow.gcc     s_as_foptsettflow.gcc        s_as_ooptplatflow.gcc       s_as_optriskflow.gcc        s_as_oquryuserflow.gcc      s_as_svroptuserflow.gcc   s_ls_aoptplatflow.gcc     s_ls_optargflow.gcc       s_ls_optsettflow.gcc       s_ls_uoptplatflow.gcc
+s_as_aoptsettflow.gcc     s_as_fundoptpubflow.gcc      s_as_ooptsettflow.gcc       s_as_optsettflow.gcc        s_as_organoptplatflow.gcc   s_as_svruserflow.gcc      s_ls_aquryoptflow.gcc     s_ls_optbopflow.gcc       s_ls_optsubmitflow.gcc
+s_as_aquryoptflow.gcc     s_as_fundpubflow.gcc         s_as_optargflow.gcc         s_as_optsubmitflow.gcc      s_as_organplatuserflow.gcc  s_as_sysoptpubflow.gcc    s_ls_extapioptflow.gcc    s_ls_optdailyflow.gcc     s_ls_opttradeflow.gcc
+s_as_assetoptpubflow.gcc  s_as_fundsettflow.gcc        s_as_optdailyflow.gcc       s_as_optsync06crdtflow.gcc  s_as_organqryflow.gcc       s_as_syspubflow.gcc       s_ls_extassetoptflow.gcc  s_ls_optholdflow.gcc      s_ls_optutodbflow.gcc
+s_as_assetplatflow.gcc    s_as_hisplatflow.gcc         s_as_optencryptionflow.gcc  s_as_optsyncflow.gcc        s_as_pollingoptflow.gcc     s_as_uoptplatflow.gcc     s_ls_extoptflow.gcc       s_ls_optpluginflow.gcc    s_ls_oquryoptflow.gcc
+s_as_assetpubflow.gcc     s_as_hoptplatflow.gcc        s_as_optholdflow.gcc        s_as_opttradeflow.gcc       s_as_quryoptpubflow.gcc     s_as_uoptsettflow.gcc     s_ls_extquryoptflow.gcc   s_ls_optpubflow.gcc       s_ls_oquryoptholdflow.gcc
+s_as_assetsyncflow.gcc    s_as_icsoptunitreptflow.gcc  s_as_optnoticeflow.gcc      s_as_oquryassetflow.gcc     s_as_secupubflow.gcc        s_as_useroptpubflow.gcc   s_ls_hoptplatflow.gcc     s_ls_optreportflow.gcc    s_ls_organoptplatflow.gcc)";
+
+std::ofstream _out("Make.txt");
+
+std::vector<std::string> ParseStringGcc(const std::string& str)
+{
+	bool flag = false;
+	std::string gcc;
+	std::vector<std::string> vec;
+	for (const char c : str)
+	{
+		if (c == ' ')
+		{
+			if (flag)
+			{
+				vec.push_back(gcc);
+				gcc.clear();
+				flag = false;
+			}
+
+		}
+		else
+		{
+			flag = true;
+			gcc.push_back(c);
+		}
+
+	}
+	for (auto& s : vec)
+	{
+		s.insert(0, "make -f ");
+		s.append(" ORA_VER=10\n");
+	}
+	return vec;
 }
 
 int main(int argc, char* argv[])
@@ -391,7 +438,13 @@ int main(int argc, char* argv[])
 	//json();
 	//json2();
 	//test18();
-	
+
+	std::vector<std::string> result(ParseStringGcc(GccText));
+	for (const auto& v : result)
+	{
+		_out << v;
+	}
+
 	return 0;
 }
 
