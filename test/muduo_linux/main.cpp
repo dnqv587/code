@@ -552,4 +552,4 @@ int main(int argc, char* argv[])
 	ASYNlog->stop();
 	getchar();
 	return 0;
-}
+} 

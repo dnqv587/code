@@ -38,6 +38,13 @@ public:
 
 
 private:
+	/// <summary>
+	/// 新连接到达，Acceptor调用此回调，创建TcpConnection，加入ConnectionMap
+	/// </summary>
+	/// <param name="sockfd"></param>
+	/// <param name="peerAddr"></param>
+	void newConnection(int sockfd, const InetAddress& peerAddr);
+
 	using ConnectionMap = std::map<std::string, TcpConnectionPtr>;
 	EventLoop* m_loop;
 	const std::string m_name;
