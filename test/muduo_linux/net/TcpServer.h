@@ -9,18 +9,20 @@
 class EventLoop;
 class InetAddress;
 class Acceptor;
-class TcpConnectionPtr;
+class TcpConnection;
 class Buffer;
+
 /// <summary>
-/// 用来管理accept获得的TcpConnection
+/// 用来管理accept获得的TcpConnection,用户使用
 /// </summary>
 class TcpServer :noncopyable
 {
 public:
-	typedef std::function<void(const TcpConnectionPtr&,Buffer*,Timestamp)> MessageCallback;
+	using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
+	typedef std::function<void(const TcpConnectionPtr&, Buffer*, Timestamp)> MessageCallback;
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
 
-	TcpServer(EventLoop* loop, const InetAddress& listenAddr);
+	TcpServer(EventLoop* loop, std::string name ,const InetAddress& listenAddr);
 
 	~TcpServer();
 

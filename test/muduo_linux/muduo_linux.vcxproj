@@ -105,6 +105,7 @@
     <ClInclude Include="net\InetAddress.h" />
     <ClInclude Include="net\Poller.h" />
     <ClInclude Include="net\Socket.h" />
+    <ClInclude Include="net\TcpServer.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="net\InetAddress.cc" />
     <ClCompile Include="net\Poller.cc" />
     <ClCompile Include="net\Socket.cc" />
+    <ClCompile Include="net\TcpServer.cc" />
     <ClCompile Include="thread\thread.cc" />
     <ClCompile Include="thread\ThreadPool.cc" />
     <ClCompile Include="time\Timer.cc" />
