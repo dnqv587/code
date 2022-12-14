@@ -5,13 +5,12 @@
 #include <string.h>
 #include "../base/Type.h"
 
-//log数据流
-
 constexpr int SMALL_BUFFERSIZE = 4000;//budder的MIN大小
 constexpr int LARGE_BUFFERSIZE = 4000 * 1000;//buffer的MAX大小
 
 constexpr int MAXNUMRICSIZE = 48;//整型转字符串型的最大长度
 
+//log数据流
 template<int SIZE>//buffer的大小
 class Buffer :private noncopyable
 {
@@ -92,7 +91,6 @@ private:
 
 	char* m_cur;//指针
 };
-
 
 class format;
 class LogStream :private noncopyable
