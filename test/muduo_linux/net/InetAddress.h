@@ -15,12 +15,12 @@ public:
 
 	InetAddress(std::string addr, in_port_t port, bool ipv6 = false);
 
-	explicit InetAddress(sockaddr_in& addr)
+	explicit InetAddress(const struct sockaddr_in& addr)
 		:_addr(addr)
 	{
 	}
 
-	explicit InetAddress(sockaddr_in6& addr6)
+	explicit InetAddress(const struct sockaddr_in6& addr6)
 		:_addr6(addr6)
 	{
 	}

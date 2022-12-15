@@ -21,9 +21,21 @@ public:
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
 	typedef std::function<void(const TcpConnectionPtr&, char*, Timestamp)> MessageCallback;
 
-	TcpConnection();
+	TcpConnection(EventLoop* loop,const std::string name,int sockfd,const InetAddress& localAddr,InetAddress& peerAddr);
 
 	~TcpConnection();
+
+	void setConnectionCallback(ConnectionCallback cb)
+	{
+		m_connectionCallback = cb;
+	}
+
+	void setMessageCallback(MessageCallback cb)
+	{
+		m_messageCallback = cb;
+	}
+
+	void connectEstablished();
 
 private:
 	enum StateE
@@ -41,6 +53,8 @@ private:
 	}
 
 	void handleRead();
+	void handleWrite();
+	void handleError();
 
 	EventLoop* m_loop;
 	std::string m_name;

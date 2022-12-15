@@ -234,6 +234,28 @@ std::string Socket::toIpString(const struct sockaddr* addr)
 	return IP;
 }
 
+struct sockaddr_in6 Socket::getLocalAddr(int sockfd)
+{
+	struct sockaddr_in6 localAddr;
+	socklen_t len = static_cast<socklen_t>(sizeof(localAddr));
+	if (::getsockname(sockfd, sockaddr_cast(&localAddr), &len) == -1)
+	{
+		LOG_SYSERR << "Socket::getLocalAddr";
+	}
+	return localAddr;
+}
+
+sockaddr_in6 Socket::getPeerAddr(int sockfd)
+{
+	struct sockaddr_in6 peerAddr;
+	socklen_t len = static_cast<socklen_t>(sizeof(peerAddr));
+	if (::getpeername(sockfd, sockaddr_cast(&peerAddr), &len) == -1)
+	{
+		LOG_SYSERR << "Socket::getPeerAddr";
+	}
+	return peerAddr;
+}
+
 
 void Socket::setNonBlockAndCloseOnExec(int sockfd)
 {

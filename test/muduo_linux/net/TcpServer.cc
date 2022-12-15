@@ -4,6 +4,8 @@
 #include "InetAddress.h"
 #include "Acceptor.h"
 #include "functional"
+#include "Socket.h"
+#include "TcpConnection.h"
 
 
 TcpServer::TcpServer(EventLoop* loop, std::string name, const InetAddress& listenAddr)
@@ -27,6 +29,12 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
 	LOG_INFO << "TcpServer::newConnection [" << m_name
 		<< "] - new connection [" << connName
 		<< "] from " << peerAddr.port();
-	//...
+	
+	InetAddress localAddr(Socket::getLocalAddr(sockfd));
+	TcpConnectionPtr conn(std::make_shared<TcpConnection>(m_loop, sockfd, localAddr, peerAddr));
+	m_connections[connName] = conn;
+	conn->setConnectionCallback(m_connetionCallback);
+	conn->setMessageCallback(m_messageCallback);
+	conn->connectEstablished();
 }
 

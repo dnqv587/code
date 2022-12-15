@@ -99,6 +99,20 @@ public:
 	static std::string toIpString(const struct sockaddr* addr);
 
 	/// <summary>
+	/// 获取本端sock地址
+	/// </summary>
+	/// <param name="sockfd"></param>
+	/// <returns></returns>
+	static struct sockaddr_in6 getLocalAddr(int sockfd);
+
+	/// <summary>
+	/// 获取远端sock地址
+	/// </summary>
+	/// <param name="sockfd"></param>
+	/// <returns></returns>
+	static struct sockaddr_in6 getPeerAddr(int sockfd);
+
+	/// <summary>
 	/// sockaddr_in转sockaddr
 	/// </summary>
 	static const struct sockaddr* sockaddr_cast(const struct sockaddr_in* addr)
@@ -128,7 +142,7 @@ public:
 		return static_cast<const struct sockaddr_in6*>(implicit_cast<const void*>(addr));
 	}
 	//设置sockfd属性为O_NONBLOCK | FD_CLOEXEC
-	void setNonBlockAndCloseOnExec(int sockfd);
+	static void setNonBlockAndCloseOnExec(int sockfd);
 
 private:
 	int m_sockfd;
