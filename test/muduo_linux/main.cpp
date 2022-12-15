@@ -35,6 +35,8 @@
 #include "net/InetAddress.h"
 #include "net/Acceptor.h"
 #include "base/Tools.h"
+#include "net/TcpServer.h"
+#include "net/TcpConnection.h"
 
 
 using namespace std;
@@ -517,6 +519,36 @@ void splitTest()
 	}
 }
 
+void onConnect(const TcpConnection::TcpConnectionPtr& tcp)
+{
+	if (tcp->connected())
+	{
+		std::cout << "onConnect:" << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << std::endl;
+	}
+	else
+	{
+		std::cout << "disConnect:" << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << std::endl;
+	}
+	
+}
+
+void onMessage(const TcpConnection::TcpConnectionPtr tcp,const char* msg ,int len)
+{
+	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg << std::endl;
+}
+
+void TcpServerTest()
+{
+	EventLoop loop;
+	InetAddress listenAddr(8888);
+	TcpServer Tcp(&loop, "8899", listenAddr);
+	Tcp.setConnectionCallback(onConnect);
+	Tcp.setMessageCallback(onMessage);
+	Tcp.start();
+
+	loop.loop();
+}
+
 int main(int argc, char* argv[])
 {
 	AsynLogging m_ASYNlog("AsynLog", 65535);
@@ -546,7 +578,7 @@ int main(int argc, char* argv[])
 	//InetAddressTest();
 	//AcceptTest();
 	//splitTest();
-
+	TcpServerTest();
 
 
 	ASYNlog->stop();

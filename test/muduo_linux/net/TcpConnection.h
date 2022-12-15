@@ -19,9 +19,9 @@ class TcpConnection :noncopyable, public std::enable_shared_from_this<TcpConnect
 public:
 	using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
-	typedef std::function<void(const TcpConnectionPtr&, char*, Timestamp)> MessageCallback;
+	typedef std::function<void(const TcpConnectionPtr&, const char*, int n)> MessageCallback;
 
-	TcpConnection(EventLoop* loop,const std::string name,int sockfd,const InetAddress& localAddr,InetAddress& peerAddr);
+	TcpConnection(EventLoop* loop,const std::string& name,int sockfd,const InetAddress& localAddr,const InetAddress& peerAddr);
 
 	~TcpConnection();
 
@@ -36,6 +36,27 @@ public:
 	}
 
 	void connectEstablished();
+
+	std::string name() const
+	{
+		return m_name;
+	}
+
+	InetAddress localAddr() const
+	{
+		return m_localAddr;
+	}
+
+	InetAddress peerAddr() const
+	{
+		return m_peerAddr;
+	}
+
+	bool connected()
+	{
+		return m_state == kConnected;
+	}
+
 
 private:
 	enum StateE

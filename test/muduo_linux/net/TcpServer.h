@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 #include <functional>
+#include <atomic>
 
 class EventLoop;
 class InetAddress;
@@ -19,7 +20,7 @@ class TcpServer :noncopyable
 {
 public:
 	using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
-	typedef std::function<void(const TcpConnectionPtr&, char*, Timestamp)> MessageCallback;
+	typedef std::function<void(const TcpConnectionPtr&, const char*, int n)> MessageCallback;
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
 
 	TcpServer(EventLoop* loop, std::string name ,const InetAddress& listenAddr);
@@ -28,12 +29,12 @@ public:
 
 	void start();
 
-	void setConnectionCallback(ConnectionCallback& cb)
+	void setConnectionCallback(const ConnectionCallback& cb)
 	{
 		m_connetionCallback = cb;
 	}
 
-	void setMessageCallback(MessageCallback& cb)
+	void setMessageCallback(const MessageCallback& cb)
 	{
 		m_messageCallback = cb;
 	}
@@ -51,7 +52,7 @@ private:
 	EventLoop* m_loop;
 	const std::string m_name;
 	std::unique_ptr<Acceptor> m_acceptor;
-	bool m_started;
+	std::atomic<bool> m_started;
 	int m_nextConnId;
 	ConnectionMap m_connections;
 	MessageCallback m_messageCallback;

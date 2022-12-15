@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 
-TcpConnection::TcpConnection(EventLoop* loop, const std::string name, int sockfd, const InetAddress& localAddr, InetAddress& peerAddr)
+TcpConnection::TcpConnection(EventLoop* loop, const std::string& name, int sockfd, const InetAddress& localAddr, const InetAddress& peerAddr)
 	:m_loop(loop),
 	m_name(name),
 	m_state(kConnecting),
@@ -37,10 +37,12 @@ void TcpConnection::connectEstablished()
 void TcpConnection::handleRead()
 {
 	char buf[65536];
+	memZero(buf, sizeof buf);
 	ssize_t n = ::read(m_channel->fd(), buf, sizeof buf);
 	if (n == 0)
 	{
-		TcpConnection::~TcpConnection();
+		//TcpConnection::~TcpConnection();
+		m_state = kConnecting;
 		return;
 	}
 	m_messageCallback(shared_from_this(), buf, n);
