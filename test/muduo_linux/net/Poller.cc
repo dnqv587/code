@@ -66,7 +66,7 @@ void Poller::updateChannel(Channel* channel)
 		struct pollfd pfd;
 		pfd.fd = channel->fd();
 		pfd.events = static_cast<short>(channel->events());
-		pfd.revents = 0;
+		pfd.revents = NULL;
 		m_pollfds.push_back(pfd);
 		int idx = static_cast<int>(m_pollfds.size()) - 1;
 		channel->set_index(idx);
@@ -81,13 +81,13 @@ void Poller::updateChannel(Channel* channel)
 		int idx = channel->index();
 		assert(0 <= idx && idx < static_cast<int>(m_pollfds.size()));
 		struct pollfd& pfd = m_pollfds.at(idx);//引用m_pollfds对应下标的pollfd进行修改
-		assert(pfd.fd == channel->fd() || pfd.fd == -1);
+		assert(pfd.fd == channel->fd() || pfd.fd == -channel->fd() - 1);
 		pfd.events = static_cast<short>(channel->events());
-		pfd.revents = 0;
+		pfd.revents = NULL;
 		if (channel->isNoneEvent())//监听事件为空
 		{
 			//忽略此pollfd
-			pfd.fd = -1;
+			pfd.fd = -channel->fd() - 1;
 		}
 	}
 }
@@ -104,7 +104,7 @@ void Poller::removeChannel(Channel* channel)
 	size_t n = m_channels.erase(channel->fd());
 	assert(n == 1);
 	//从fd容器m_pollfds去除
-	if (implicit_cast<size_t>(index) == m_pollfds.size())
+	if (implicit_cast<size_t>(index) == m_pollfds.size()-1)
 	{
 		m_pollfds.pop_back();
 	}
@@ -114,7 +114,7 @@ void Poller::removeChannel(Channel* channel)
 		std::iter_swap(m_pollfds.begin() + index, m_pollfds.end() - 1);//调换位置
 		if (pollfdEnd < 0)
 		{
-			pollfdEnd = -pollfdEnd - 1;//?
+			pollfdEnd = -pollfdEnd - 1;
 		}
 		m_channels[pollfdEnd]->set_index(index);//调换位置后将index更换
 		m_pollfds.pop_back();

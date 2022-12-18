@@ -10,6 +10,7 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/uio.h>
 
 static union
 {
@@ -180,6 +181,76 @@ void Socket::close(int sockfd)
 		throw ex;
 	}
 	
+}
+
+void Socket::close()
+{
+	try
+	{
+		detail::close(m_sockfd);
+	}
+	catch (std::exception ex)
+	{
+		throw ex;
+	}
+}
+
+int Socket::getSocketError()
+{
+	int optval;
+	socklen_t optlen = static_cast<socklen_t>(sizeof optval);
+	if (::getsockopt(m_sockfd, SOL_SOCKET, SO_ERROR, &optval, &optlen) == -1)
+	{
+		return errno;
+	}
+	else
+	{
+		return optval;
+	}
+}
+
+int Socket::getSocketError(int sockfd)
+{
+	int optval;
+	socklen_t optlen = static_cast<socklen_t>(sizeof optval);
+	if (::getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &optval, &optlen) == -1)
+	{
+		return errno;
+	}
+	else
+	{
+		return optval;
+	}
+}
+
+ssize_t Socket::read(void* buf, size_t count)
+{
+	return ::read(m_sockfd, buf, count);
+}
+
+ssize_t Socket::read(int sockfd, void* buf, size_t count)
+{
+	return ::read(sockfd, buf, count);
+}
+
+ssize_t Socket::readv(const struct iovec* iov, int iovcnt)
+{
+	return ::readv(m_sockfd, iov, iovcnt);
+}
+
+ssize_t Socket::readv(int sockfd, const struct iovec* iov, int iovcnt)
+{
+	return ::readv(sockfd, iov, iovcnt);
+}
+
+ssize_t Socket::write(void* buf, size_t count)
+{
+	return ::write(m_sockfd, buf, count);
+}
+
+ssize_t Socket::write(int sockfd, void* buf, size_t count)
+{
+	return ::write(sockfd, buf, count);
 }
 
 void Socket::fromIpPort(std::string& ip, in_port_t port, sockaddr_in* addr)

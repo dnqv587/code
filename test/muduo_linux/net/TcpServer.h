@@ -11,7 +11,7 @@ class EventLoop;
 class InetAddress;
 class Acceptor;
 class TcpConnection;
-//class Buffer;
+class Buffer;
 
 /// <summary>
 /// 用来管理accept获得的TcpConnection,用户使用
@@ -20,7 +20,7 @@ class TcpServer :noncopyable
 {
 public:
 	using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
-	typedef std::function<void(const TcpConnectionPtr&, const char*, int n)> MessageCallback;
+	typedef std::function<void(const TcpConnectionPtr&, Buffer*, Timestamp)> MessageCallback;
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
 
 	TcpServer(EventLoop* loop, std::string name ,const InetAddress& listenAddr);
@@ -39,7 +39,6 @@ public:
 		m_messageCallback = cb;
 	}
 
-
 private:
 	/// <summary>
 	/// 新连接到达，Acceptor调用此回调，创建TcpConnection，加入ConnectionMap
@@ -47,6 +46,8 @@ private:
 	/// <param name="sockfd"></param>
 	/// <param name="peerAddr"></param>
 	void newConnection(int sockfd, const InetAddress& peerAddr);
+
+	void removeConnection(const TcpConnectionPtr& conn);
 
 	using ConnectionMap = std::map<std::string, TcpConnectionPtr>;
 	EventLoop* m_loop;

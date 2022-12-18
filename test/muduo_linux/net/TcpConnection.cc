@@ -1,7 +1,8 @@
 #include "TcpConnection.h"
-#include "../base/Buffer.hpp"
+#include "../base/Buffer.h"
 #include "../event/Channel.h"
 #include "../event/EventLoop.h"
+#include "../logger/logging.h"
 #include <unistd.h>
 
 
@@ -14,15 +15,16 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& name, int sockf
 	m_localAddr(localAddr),
 	m_peerAddr(peerAddr)
 {
-	m_channel->setReadCallback(std::bind(&TcpConnection::handleRead, this));
+	m_channel->setReadCallback(std::bind(&TcpConnection::handleRead, this,std::placeholders::_1));
 	m_channel->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
 	m_channel->setErrorCallback(std::bind(&TcpConnection::handleError, this));
-	//m_channel->setCloseCallback();
+	//m_channel->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
 }
 
 TcpConnection::~TcpConnection()
 {
-
+	LOG_DEBUG << "~TcpConnection [" << m_name << "] at" << this << " fd=" << m_channel->fd() << " state=" << m_state;
+	assert(m_state == kDisconnected);
 }
 
 void TcpConnection::connectEstablished()
@@ -34,18 +36,37 @@ void TcpConnection::connectEstablished()
 	m_connectionCallback(shared_from_this());
 }
 
-void TcpConnection::handleRead()
+void TcpConnection::connectDestroyed()
 {
-	char buf[65536];
-	memZero(buf, sizeof buf);
-	ssize_t n = ::read(m_channel->fd(), buf, sizeof buf);
-	if (n == 0)
+	m_loop->assertInLoopThread();
+	assert(m_state == kConnected);
+	setState(kDisconnected);
+	//主动断开连接，所以再次disableALL
+	m_channel->disableALL();
+	//通知给用户连接断开
+	m_connectionCallback(shared_from_this());
+
+	m_loop->removeChannel(m_channel.get());
+}
+
+void TcpConnection::handleRead(Timestamp receiveTime)
+{
+	m_loop->assertInLoopThread();
+	int saveError = NULL;
+	ssize_t n = m_inputBuffer.readFd(m_channel->fd(), &saveError);
+	switch (n)
 	{
-		//TcpConnection::~TcpConnection();
-		m_state = kConnecting;
-		return;
+	case 0:
+		handleClose();
+		break;
+	case -1:
+		errno = saveError;
+		handleError();
+		break;
+	default:
+		m_messageCallback(shared_from_this(), &m_inputBuffer, receiveTime);
 	}
-	m_messageCallback(shared_from_this(), buf, n);
+	
 }
 
 void TcpConnection::handleWrite()
@@ -55,4 +76,15 @@ void TcpConnection::handleWrite()
 
 void TcpConnection::handleError()
 {
+	int err = m_socket->getSocketError();
+	LOG_ERROR << "TcpConnection::handleError [" << m_name << "] errno=" << err << "  " << ::strerror(err);
+}
+
+void TcpConnection::handleClose()
+{
+	m_loop->assertInLoopThread();
+	LOG_TRACE << "TcpConnection::handleClose state=" << (m_state == StateE::kConnected ? "kConnected" : "kConnecting");
+	assert(m_state == kConnected);
+	m_channel->disableALL();
+	m_closeCallback(shared_from_this());
 }

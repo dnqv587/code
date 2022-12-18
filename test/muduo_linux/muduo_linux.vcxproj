@@ -83,7 +83,7 @@
   <ItemGroup>
     <ClInclude Include="base\BlockingQueue.h" />
     <ClInclude Include="base\BoundBlockingQueue.h" />
-    <ClInclude Include="base\Buffer.hpp" />
+    <ClInclude Include="base\Buffer.h" />
     <ClInclude Include="base\Callbacks.h" />
     <ClInclude Include="base\copyable.h" />
     <ClInclude Include="base\Exception.h" />
@@ -122,6 +122,7 @@
     <ClInclude Include="time\TimeZone.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="base\Buffer.cc" />
     <ClCompile Include="base\less_than_comparable.h" />
     <ClCompile Include="base\ProcessInfo.cc" />
     <ClCompile Include="base\Tools.cc" />

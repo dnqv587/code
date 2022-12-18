@@ -44,10 +44,10 @@ void EventLoop::loop()
 	while (!m_quit)
 	{
 		m_activeChannels.clear();
-		m_poller->poll(KPollTimeMs, &m_activeChannels);
+		Timestamp pollReturnTime = m_poller->poll(KPollTimeMs, &m_activeChannels);
 		for (auto iter = m_activeChannels.begin(); iter != m_activeChannels.end(); ++iter)
 		{
-			(*iter)->handleEvent();//处理事件
+			(*iter)->handleEvent(pollReturnTime);//处理事件
 		}
 		this->doPendingFunctors();//执行回调定时回调函数
 	}

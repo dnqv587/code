@@ -141,7 +141,7 @@
     <ClInclude Include="net\TcpConnection.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="base\Buffer.hpp">
+    <ClInclude Include="base\Buffer.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -215,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="net\TcpConnection.cc">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Buffer.cc">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

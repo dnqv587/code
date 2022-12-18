@@ -14,13 +14,21 @@ Channel::Channel(EventLoop* loop, const int fd)
 	m_fd(fd),
 	m_events(NULL),
 	m_revents(NULL),
-	m_index(-1)
+	m_index(-1),
+	m_eventHandling(false)
 {
 
 }
 
-void Channel::handleEvent()
+Channel::~Channel()
 {
+	//断言当前不在处理事件
+	assert(!m_eventHandling);
+}
+
+void Channel::handleEvent(Timestamp receiveTime)
+{
+	m_eventHandling = true;
 	if (m_revents & POLLNVAL)
 	{
 		LOG_WARN << "Channel::handleEvent() POLLNVAL";
@@ -36,7 +44,7 @@ void Channel::handleEvent()
 	{
 		if (m_readCallback)
 		{
-			m_readCallback();//读事件回调
+			m_readCallback(receiveTime);//读事件回调
 		}
 	}
 	if (m_revents & POLLOUT)
@@ -46,7 +54,7 @@ void Channel::handleEvent()
 			m_writeCallback();//写事件回调
 		}
 	}
-
+	m_eventHandling = false;
 }
 
 void Channel::remove()

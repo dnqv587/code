@@ -532,16 +532,16 @@ void onConnect(const TcpConnection::TcpConnectionPtr& tcp)
 	
 }
 
-void onMessage(const TcpConnection::TcpConnectionPtr tcp,const char* msg ,int len)
+void onMessage(const TcpConnection::TcpConnectionPtr tcp,Buffer* msg , Timestamp time)
 {
-	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg << std::endl;
+	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg->toString()<<time.formatString(false,true) << std::endl;
 }
 
 void TcpServerTest()
 {
 	EventLoop loop;
 	InetAddress listenAddr(8888);
-	TcpServer Tcp(&loop, "8899", listenAddr);
+	TcpServer Tcp(&loop, "8888", listenAddr);
 	Tcp.setConnectionCallback(onConnect);
 	Tcp.setMessageCallback(onMessage);
 	Tcp.start();

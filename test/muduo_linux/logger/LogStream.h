@@ -12,12 +12,12 @@ constexpr int MAXNUMRICSIZE = 48;//整型转字符串型的最大长度
 
 //log数据流
 template<int SIZE>//buffer的大小
-class Buffer :private noncopyable
+class LogBuffer :private noncopyable
 {
 public:
-	Buffer() :m_cur(m_data) {}
+	LogBuffer() :m_cur(m_data) {}
 
-	~Buffer() {}
+	~LogBuffer() {}
 
 	//追加数据
 	void append(const char* buf, int len)
@@ -49,22 +49,22 @@ public:
 		return std::string(m_data, this->lenght());
 	}
 
-	Buffer& operator++()
+	LogBuffer& operator++()
 	{
 		++m_cur;
 		return *this;
 	}
-	Buffer& operator--()
+	LogBuffer& operator--()
 	{
 		--m_cur;
 		return *this;
 	}
-	Buffer& operator+(const int n)
+	LogBuffer& operator+(const int n)
 	{
 		m_cur += n;
 		return *this;
 	}
-	Buffer& operator-(const int n)
+	LogBuffer& operator-(const int n)
 	{
 		m_cur -= n;
 		return *this;
@@ -76,7 +76,7 @@ public:
 		this->m_cur = buf.m_cur;
 		return *this;
 	}*/
-	Buffer& operator+=(const int n)
+	LogBuffer& operator+=(const int n)
 	{
 		m_cur += n;
 		return *this;
@@ -96,7 +96,7 @@ class format;
 class LogStream :private noncopyable
 {
 public:
-	typedef Buffer<SMALL_BUFFERSIZE> BUFFER;
+	typedef LogBuffer<SMALL_BUFFERSIZE> BUFFER;
 
 	LogStream()
 	{

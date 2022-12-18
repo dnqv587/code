@@ -1,4 +1,5 @@
 #pragma once
+#include "../time/Timestamp.h"
 #include <functional>
 
 /*
@@ -13,13 +14,16 @@ class Channel
 {
 public:
 	typedef std::function<void()> EventCallback;
+	using ReadEventCallback = std::function<void(Timestamp)>;
 
 	Channel(EventLoop* loop, const int fd);
 
+	~Channel();
+
 	//核心，有EventLoop::loop()调用，根据m_revents的事件分别处理不同的事件
-	void handleEvent();
+	void handleEvent(Timestamp receiveTime);
 	//设置读事件回调
-	void setReadCallback(const EventCallback& cb)
+	void setReadCallback(const ReadEventCallback& cb)
 	{
 		m_readCallback = cb;
 	}
@@ -107,6 +111,7 @@ private:
 	int m_events;//所监听的事件
 	int m_revents;//所发生的事件
 	int m_index;//Poller中m_pollfds的下标
+	bool m_eventHandling;//是否在处理事件，若在处理则不能被析构
 
 	//监听事件
 	static const int kNoneEvent;//空事件
@@ -114,7 +119,7 @@ private:
 	static const int kWriteEvent;//写事件
 
 
-	EventCallback m_readCallback;//读事件回调
+	ReadEventCallback m_readCallback;//读事件回调
 	EventCallback m_writeCallback;//写事件回调
 	EventCallback m_errorCallback;//错误事件回调
 };

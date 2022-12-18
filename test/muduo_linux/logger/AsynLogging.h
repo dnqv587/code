@@ -37,7 +37,7 @@ public:
 private:
 	void threadFunc();//异步日志线程
 
-	typedef Buffer<LARGE_BUFFERSIZE> BUFFER;//4MB
+	typedef LogBuffer<LARGE_BUFFERSIZE> BUFFER;//4MB
 	typedef std::vector<std::unique_ptr<BUFFER>> BufferVector;
 	typedef BufferVector::value_type BufferPtr;
 

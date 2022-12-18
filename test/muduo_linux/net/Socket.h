@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <string>
 #include <netinet/in.h>
+#include <sys/types.h>
 
 
 class InetAddress;
@@ -74,6 +75,22 @@ public:
 	/// </summary>
 	/// <param name="sockfd"></param>
 	static void close(int sockfd);
+	void close();
+
+	/// <summary>
+	/// 获取sockfd错误号
+	/// </summary>
+	/// <returns></returns>
+	int getSocketError();
+	static int getSocketError(int sockfd);
+
+	ssize_t read(void* buf, size_t count);
+	static ssize_t read(int sockfd, void* buf, size_t count);
+	ssize_t readv(const struct iovec* iov, int iovcnt);
+	static ssize_t readv(int sockfd,const struct iovec* iov, int iovcnt);
+
+	ssize_t write(void* buf, size_t count);
+	static ssize_t write(int sockfd, void* buf, size_t count);
 
 	/// <summary>
 	/// 解析字符串类型点分十进制IP地址为网络IP
