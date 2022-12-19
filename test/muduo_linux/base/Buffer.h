@@ -15,6 +15,7 @@
 class Buffer :public copyable
 {
 	static const size_t kInitialSize = 1024;//默认buf大小
+	static const size_t kCheapPrepend = 8;//buf预留包头长度
 public:
 	explicit Buffer(size_t initialSize = kInitialSize);
 
@@ -44,9 +45,50 @@ public:
 		return m_readerIndex;
 	}
 
-	std::string toString() const
+	/// <summary>
+	/// 读取字符串
+	/// </summary>
+	/// <returns></returns>
+	const char* readString()
 	{
-		return std::string(beginRead(), readableBytes());
+		const char* buf = peek();
+		retrieve(m_writeIndex-kInitialSize);
+		return buf;
+	}
+
+	/// <summary>
+	/// 读取buf，不移动偏移值
+	/// </summary>
+	/// <returns></returns>
+	const char* peek() const 
+	{
+		return beginRead();
+	}
+
+	/// <summary>
+	/// 移动偏移值
+	/// </summary>
+	/// <param name="len"></param>
+	void retrieve(size_t len)
+	{
+		if (readableBytes() > len)
+		{
+			m_readerIndex + len;
+		}
+		else
+		{
+			retrieveAll();
+		}
+
+	}
+
+	/// <summary>
+	/// 移动所有偏移值
+	/// </summary>
+	void retrieveAll()
+	{
+		m_readerIndex = kCheapPrepend;
+		m_writeIndex = kCheapPrepend;
 	}
 
 	/// <summary>

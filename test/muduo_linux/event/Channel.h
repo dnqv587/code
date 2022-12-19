@@ -98,6 +98,11 @@ public:
 		return m_events == kNoneEvent;
 	}
 
+	bool isWriting() const
+	{
+		return m_events & kWriteEvent;
+	}
+
 	EventLoop* ownerLoop()
 	{
 		return m_loop;

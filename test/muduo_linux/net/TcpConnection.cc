@@ -69,10 +69,6 @@ void TcpConnection::handleRead(Timestamp receiveTime)
 	
 }
 
-void TcpConnection::handleWrite()
-{
-
-}
 
 void TcpConnection::handleError()
 {
@@ -87,4 +83,14 @@ void TcpConnection::handleClose()
 	assert(m_state == kConnected);
 	m_channel->disableALL();
 	m_closeCallback(shared_from_this());
+}
+
+void TcpConnection::sendInLoop(const std::string& msg)
+{
+
+}
+
+void TcpConnection::shutdownInLoop()
+{
+
 }

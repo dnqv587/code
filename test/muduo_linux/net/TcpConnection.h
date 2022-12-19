@@ -42,6 +42,19 @@ public:
 	}
 
 	/// <summary>
+	/// 发送msg
+	/// </summary>
+	/// <param name="msg"></param>
+	/// <param name="len"></param>
+	void send(const void* msg, size_t len);
+	void send(const std::string& msg);
+
+	/// <summary>
+	/// 关闭连接
+	/// </summary>
+	void shutdown();
+
+	/// <summary>
 	/// 当TcpServer接受一个新连接时调用
 	/// </summary>
 	void connectEstablished();
@@ -106,9 +119,10 @@ private:
 	}
 
 	void handleRead(Timestamp receiveTime);
-	void handleWrite();
 	void handleError();
 	void handleClose();
+	void sendInLoop(const std::string& msg);
+	void shutdownInLoop();
 
 	EventLoop* m_loop;
 	std::shared_ptr<Socket> m_socket;
@@ -120,6 +134,7 @@ private:
 	StateE m_state;//当前状态
 
 	Buffer m_inputBuffer;
+	Buffer m_outputBuffer;
 
 	//回调
 	ConnectionCallback m_connectionCallback;

@@ -3,8 +3,6 @@
 #include "../net/Socket.h"
 
 
-constexpr size_t kCheapPrepend = 8;//buf预留包头长度
-
 Buffer::Buffer(size_t initialSize /*= kInitialSize*/)
 	:m_buffer(kCheapPrepend+ initialSize),
 	m_readerIndex(kCheapPrepend),

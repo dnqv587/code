@@ -534,7 +534,7 @@ void onConnect(const TcpConnection::TcpConnectionPtr& tcp)
 
 void onMessage(const TcpConnection::TcpConnectionPtr tcp,Buffer* msg , Timestamp time)
 {
-	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg->toString()<<time.formatString(false,true) << std::endl;
+	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg->readString()<<time.formatString(false,true) << std::endl;
 }
 
 void TcpServerTest()
