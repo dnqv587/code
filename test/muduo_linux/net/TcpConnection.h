@@ -43,6 +43,7 @@ public:
 
 	/// <summary>
 	/// 发送msg
+	/// --线程安全，inLoop
 	/// </summary>
 	/// <param name="msg"></param>
 	/// <param name="len"></param>
@@ -50,7 +51,7 @@ public:
 	void send(const std::string& msg);
 
 	/// <summary>
-	/// 关闭连接
+	/// 关闭连接--写
 	/// </summary>
 	void shutdown();
 
@@ -121,7 +122,8 @@ private:
 	void handleRead(Timestamp receiveTime);
 	void handleError();
 	void handleClose();
-	void sendInLoop(const std::string& msg);
+
+	void sendInLoop(const void* data,size_t len);
 	void shutdownInLoop();
 
 	EventLoop* m_loop;

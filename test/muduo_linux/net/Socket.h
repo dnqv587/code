@@ -78,6 +78,12 @@ public:
 	void close();
 
 	/// <summary>
+	/// 单向关闭写通道
+	/// </summary>
+	void shutdownWrite();
+	static void shutdownWrite(int sockfd);
+
+	/// <summary>
 	/// 获取sockfd错误号
 	/// </summary>
 	/// <returns></returns>

@@ -86,6 +86,7 @@ namespace detail
 		}
 		return connfd;
 	}
+
 }
 
 
@@ -192,6 +193,22 @@ void Socket::close()
 	catch (std::exception ex)
 	{
 		throw ex;
+	}
+}
+
+void Socket::shutdownWrite()
+{
+	if (::shutdown(m_sockfd, SHUT_WR) == -1)
+	{
+		LOG_SYSERR << "Socket::shutdownWrite error";
+	}
+}
+
+void Socket::shutdownWrite(int sockfd)
+{
+	if (::shutdown(sockfd, SHUT_WR) == -1)
+	{
+		LOG_SYSERR << "Socket::shutdownWrite error";
 	}
 }
 
