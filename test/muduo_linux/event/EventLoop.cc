@@ -6,11 +6,25 @@
 #include "../time/TimerQueue.h"
 #include <sys/poll.h>
 #include <unistd.h>
+#include <signal.h>
 
 constexpr int KPollTimeMs = 60 * 1000;
 
 //每个线程只能有一个EventLoop对象
 __thread EventLoop* t_loopInThisThread = nullptr;
+
+
+//忽略信号SIGPIPE，防止对方断开连接后继续发送数据导致进程退出
+class IgnoreSigPipe
+{
+public:
+	IgnoreSigPipe()
+	{
+		::signal(SIGPIPE, SIG_IGN);
+	}
+};
+
+IgnoreSigPipe g_ignoreSIGPIPE;
 
 EventLoop::EventLoop()
 	:m_looping(false),

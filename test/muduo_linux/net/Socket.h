@@ -95,8 +95,8 @@ public:
 	ssize_t readv(const struct iovec* iov, int iovcnt);
 	static ssize_t readv(int sockfd,const struct iovec* iov, int iovcnt);
 
-	ssize_t write(void* buf, size_t count);
-	static ssize_t write(int sockfd, void* buf, size_t count);
+	ssize_t write(const void* buf, size_t count);
+	static ssize_t write(int sockfd, const void* buf, size_t count);
 
 	/// <summary>
 	/// 解析字符串类型点分十进制IP地址为网络IP

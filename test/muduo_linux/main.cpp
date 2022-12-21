@@ -524,17 +524,23 @@ void onConnect(const TcpConnection::TcpConnectionPtr& tcp)
 	if (tcp->connected())
 	{
 		std::cout << "onConnect:" << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << std::endl;
+		::sleep(5);
+		tcp->send("123");
+		tcp->send("123");
+		tcp->shutdown();
 	}
 	else
 	{
 		std::cout << "disConnect:" << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << std::endl;
 	}
-	
+
 }
 
 void onMessage(const TcpConnection::TcpConnectionPtr tcp,Buffer* msg , Timestamp time)
 {
-	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg->readString()<<time.formatString(false,true) << std::endl;
+	
+	std::cout << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << ":"<<msg->peek()<<time.formatString(false,true) << std::endl;
+	tcp->send(msg->peek());
 }
 
 void TcpServerTest()

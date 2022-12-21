@@ -93,9 +93,6 @@
     <ClInclude Include="thread\ThreadPool.h">
       <Filter>thread</Filter>
     </ClInclude>
-    <ClInclude Include="net\Bufferh.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="designPattern\prototype.h">
       <Filter>designPattern</Filter>
     </ClInclude>
@@ -176,9 +173,6 @@
     </ClCompile>
     <ClCompile Include="thread\ThreadPool.cc">
       <Filter>thread</Filter>
-    </ClCompile>
-    <ClCompile Include="net\Buffercc.cpp">
-      <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="event\EventLoop.cc">
       <Filter>event</Filter>

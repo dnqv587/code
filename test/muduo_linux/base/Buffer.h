@@ -49,12 +49,12 @@ public:
 	/// 读取字符串
 	/// </summary>
 	/// <returns></returns>
-	const char* readString()
-	{
-		const char* buf = peek();
-		retrieve(m_writeIndex-kInitialSize);
-		return buf;
-	}
+	//const char* readString()
+	//{
+	//	const char* buf = peek();
+	//	retrieve(m_writeIndex-kInitialSize);
+	//	return buf;
+	//}
 
 	/// <summary>
 	/// 读取buf，不移动偏移值

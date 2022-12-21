@@ -122,7 +122,7 @@ private:
 	void handleRead(Timestamp receiveTime);
 	void handleError();
 	void handleClose();
-
+	void handleWrite();
 	void sendInLoop(const void* data,size_t len);
 	void shutdownInLoop();
 

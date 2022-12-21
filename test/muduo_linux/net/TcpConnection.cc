@@ -16,7 +16,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& name, int sockf
 	m_peerAddr(peerAddr)
 {
 	m_channel->setReadCallback(std::bind(&TcpConnection::handleRead, this,std::placeholders::_1));
-	//m_channel->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
+	m_channel->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
 	m_channel->setErrorCallback(std::bind(&TcpConnection::handleError, this));
 	//m_channel->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
 }
@@ -116,18 +116,52 @@ void TcpConnection::handleClose()
 
 
 
+void TcpConnection::handleWrite()
+{
+	m_loop->assertInLoopThread();
+	if (m_channel->isWriting())
+	{
+		ssize_t n = m_socket->write(m_outputBuffer.peek(), m_outputBuffer.writableBytes());
+		if (n > 0)
+		{
+			m_outputBuffer.retrieve(n);
+			if (m_outputBuffer.readableBytes() == 0)//如果发送完毕，则disableWriting防止busy loop
+			{
+				m_channel->disableWriting();
+				if (m_state == kDisconnecting)//如果此时正在关闭连接，则调用shutdownInLoop
+				{
+					shutdownInLoop();
+				}
+			}
+			else
+			{
+				LOG_TRACE << "TcpConnection::sendInLoop write:" << n << " less:" << m_outputBuffer.readableBytes();
+			}
+		}
+		else
+		{
+			LOG_SYSERR << "TcpConnection::handleWrite error";
+		}
+	}
+	else
+	{
+		LOG_TRACE << "Connection is down,no more writing";
+	}
+}
+
 void TcpConnection::sendInLoop(const void* data,size_t len)
 {
 	m_loop->assertInLoopThread();
 	ssize_t nwrote = 0;
 	if (!m_channel->isWriting() && m_outputBuffer.readableBytes() == 0)
 	{
-		nwrote = ::write(m_channel->fd(), data, len);
+		nwrote = m_socket->write(data, len);
 		if (nwrote >= 0)
 		{
 			if (implicit_cast<size_t>(nwrote) < len)
 			{
 				LOG_TRACE << "TcpConnection::sendInLoop write:" << nwrote << " all:" << len;
+				m_outputBuffer.append(static_cast<const char*>(data) + nwrote, len);
 			}
 		}
 		else
@@ -145,7 +179,7 @@ void TcpConnection::sendInLoop(const void* data,size_t len)
 void TcpConnection::shutdownInLoop()
 {
 	m_loop->assertInLoopThread();
-	if (!m_channel->isWriting())
+	if (!m_channel->isWriting())//如果正在写则写完之后再关闭
 	{
 		m_socket->shutdownWrite();
 	}
