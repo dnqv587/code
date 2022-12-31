@@ -56,6 +56,12 @@ public:
 	void shutdown();
 
 	/// <summary>
+	/// 禁用Nagle算法 -- 避免连续发包出现延迟
+	/// </summary>
+	/// <param name="on">开关</param>
+	void setTcpNoDelay(bool on);
+
+	/// <summary>
 	/// 当TcpServer接受一个新连接时调用
 	/// </summary>
 	void connectEstablished();

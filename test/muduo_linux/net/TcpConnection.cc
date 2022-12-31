@@ -19,6 +19,8 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& name, int sockf
 	m_channel->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
 	m_channel->setErrorCallback(std::bind(&TcpConnection::handleError, this));
 	//m_channel->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
+
+	m_socket->setKeepAlive(true);
 }
 
 TcpConnection::~TcpConnection()
@@ -54,6 +56,11 @@ void TcpConnection::shutdown()
 		setState(kDisconnecting);
 		m_loop->runInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
 	}
+}
+
+void TcpConnection::setTcpNoDelay(bool on)
+{
+	m_socket->setTcpNoDelay(on);
 }
 
 void TcpConnection::connectEstablished()
@@ -153,15 +160,17 @@ void TcpConnection::sendInLoop(const void* data,size_t len)
 {
 	m_loop->assertInLoopThread();
 	ssize_t nwrote = 0;
+	size_t remain = len;
 	if (!m_channel->isWriting() && m_outputBuffer.readableBytes() == 0)
 	{
 		nwrote = m_socket->write(data, len);
+		remain = len - nwrote;
 		if (nwrote >= 0)
 		{
 			if (implicit_cast<size_t>(nwrote) < len)
 			{
 				LOG_TRACE << "TcpConnection::sendInLoop write:" << nwrote << " all:" << len;
-				m_outputBuffer.append(static_cast<const char*>(data) + nwrote, len);
+				m_outputBuffer.append(static_cast<const char*>(data) + nwrote, remain);
 			}
 		}
 		else

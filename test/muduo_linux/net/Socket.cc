@@ -11,6 +11,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/uio.h>
+#include <netinet/tcp.h>
+
 
 static union
 {
@@ -209,6 +211,24 @@ void Socket::shutdownWrite(int sockfd)
 	if (::shutdown(sockfd, SHUT_WR) == -1)
 	{
 		LOG_SYSERR << "Socket::shutdownWrite error";
+	}
+}
+
+void Socket::setTcpNoDelay(bool on)
+{
+	int optval = on ? 1 : 0;
+	if (::setsockopt(m_sockfd, IPPROTO_TCP, TCP_NODELAY, &optval, static_cast<socklen_t>(sizeof(optval))) == -1)
+	{
+		LOG_SYSERR << "Socket::setTcpNoDelay";
+	}
+}
+
+void Socket::setKeepAlive(bool on)
+{
+	int optval = on ? 1 : 0;
+	if (::setsockopt(m_sockfd, IPPROTO_TCP, SO_KEEPALIVE, &optval, static_cast<socklen_t>(sizeof(optval))) == -1)
+	{
+		LOG_SYSERR << "Socket::setKeepAlive";
 	}
 }
 

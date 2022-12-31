@@ -84,6 +84,18 @@ public:
 	static void shutdownWrite(int sockfd);
 
 	/// <summary>
+	/// 禁用Nagle算法 -- 避免连续发包出现延迟
+	/// </summary>
+	/// <param name="on">开关</param>
+	void setTcpNoDelay(bool on);
+
+	/// <summary>
+	/// 发送周期性保活报文以维持连接
+	/// </summary>
+	/// <param name="on">开关</param>
+	void setKeepAlive(bool on);
+
+	/// <summary>
 	/// 获取sockfd错误号
 	/// </summary>
 	/// <returns></returns>

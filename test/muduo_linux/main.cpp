@@ -584,8 +584,8 @@ int main(int argc, char* argv[])
 	//InetAddressTest();
 	//AcceptTest();
 	//splitTest();
-	TcpServerTest();
-
+	//TcpServerTest();
+	//std::cout << Endian::isBigEndian() << " " << Endian::isLittleEndian() << std::endl;
 
 	ASYNlog->stop();
 	getchar();
