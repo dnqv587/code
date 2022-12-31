@@ -524,10 +524,6 @@ void onConnect(const TcpConnection::TcpConnectionPtr& tcp)
 	if (tcp->connected())
 	{
 		std::cout << "onConnect:" << tcp->name() << tcp->peerAddr().ipString() << ":" << tcp->peerAddr().port() << std::endl;
-		::sleep(5);
-		tcp->send("123");
-		tcp->send("123");
-		tcp->shutdown();
 	}
 	else
 	{
@@ -550,9 +546,27 @@ void TcpServerTest()
 	TcpServer Tcp(&loop, "8888", listenAddr);
 	Tcp.setConnectionCallback(onConnect);
 	Tcp.setMessageCallback(onMessage);
+	auto func = [](const TcpConnection::TcpConnectionPtr& tcp) {
+		std::cout << "数据发送完成" << std::endl;
+	};
+	Tcp.setWriteCompleteCallback(func);
 	Tcp.start();
 
 	loop.loop();
+}
+
+void EventThreadPoolTest()
+{
+	EventLoop loop;
+	InetAddress listenAddr(8888);
+	TcpServer Tcp(&loop, "8888", listenAddr);
+	Tcp.setConnectionCallback(onConnect);
+	Tcp.setMessageCallback(onMessage);
+	Tcp.setThreadNum(9);
+	Tcp.start();
+
+	loop.loop();
+
 }
 
 int main(int argc, char* argv[])
@@ -585,7 +599,7 @@ int main(int argc, char* argv[])
 	//AcceptTest();
 	//splitTest();
 	//TcpServerTest();
-	//std::cout << Endian::isBigEndian() << " " << Endian::isLittleEndian() << std::endl;
+	EventThreadPoolTest();
 
 	ASYNlog->stop();
 	getchar();

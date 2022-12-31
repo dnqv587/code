@@ -21,6 +21,8 @@ public:
 	typedef std::function<void(const TcpConnectionPtr&)> ConnectionCallback;
 	typedef std::function<void(const TcpConnectionPtr&, Buffer*, Timestamp)> MessageCallback;
 	using CloseCallback = std::function<void(const TcpConnectionPtr&)>;
+	using WriteCompleteCallback = std::function<void(const TcpConnectionPtr&)>;
+	using HighWaterMarkCallback = std::function<void(const TcpConnectionPtr&, size_t)>;
 
 	TcpConnection(EventLoop* loop,const std::string& name,int sockfd,const InetAddress& localAddr,const InetAddress& peerAddr);
 
@@ -39,6 +41,17 @@ public:
 	void setCloseCallbck(const CloseCallback& cb)
 	{
 		m_closeCallback = cb;
+	}
+
+	void setWriteCompleteCallback(const WriteCompleteCallback& cb)
+	{
+		m_writeCompleteCallback = cb;
+	}
+
+	void setHighWaterMarkCallback(const HighWaterMarkCallback& cb,size_t highWaterMark)
+	{
+		m_highWaterMarkCallback = cb;
+		m_highWaterMark = highWaterMark;
 	}
 
 	/// <summary>
@@ -107,6 +120,10 @@ public:
 		return m_state == kConnected;
 	}
 
+	EventLoop* getLoop()
+	{
+		return m_loop;
+	}
 
 private:
 	enum StateE
@@ -140,6 +157,7 @@ private:
 	InetAddress m_peerAddr;
 	std::string m_name;
 	StateE m_state;//当前状态
+	size_t m_highWaterMark;//高水位限值
 
 	Buffer m_inputBuffer;
 	Buffer m_outputBuffer;
@@ -148,5 +166,7 @@ private:
 	ConnectionCallback m_connectionCallback;
 	MessageCallback m_messageCallback;
 	CloseCallback m_closeCallback;
+	WriteCompleteCallback m_writeCompleteCallback;
+	HighWaterMarkCallback m_highWaterMarkCallback;
 };
 

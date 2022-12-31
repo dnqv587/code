@@ -135,6 +135,10 @@ void TcpConnection::handleWrite()
 			if (m_outputBuffer.readableBytes() == 0)//如果发送完毕，则disableWriting防止busy loop
 			{
 				m_channel->disableWriting();
+				if (m_writeCompleteCallback)
+				{
+					m_loop->queueInLoop(std::bind(m_writeCompleteCallback, shared_from_this()));//低水位回调
+				}
 				if (m_state == kDisconnecting)//如果此时正在关闭连接，则调用shutdownInLoop
 				{
 					shutdownInLoop();
@@ -161,16 +165,17 @@ void TcpConnection::sendInLoop(const void* data,size_t len)
 	m_loop->assertInLoopThread();
 	ssize_t nwrote = 0;
 	size_t remain = len;
+	bool faultError = false;
 	if (!m_channel->isWriting() && m_outputBuffer.readableBytes() == 0)
 	{
 		nwrote = m_socket->write(data, len);
 		remain = len - nwrote;
 		if (nwrote >= 0)
 		{
-			if (implicit_cast<size_t>(nwrote) < len)
+
+			if (remain == 0 && m_writeCompleteCallback)
 			{
-				LOG_TRACE << "TcpConnection::sendInLoop write:" << nwrote << " all:" << len;
-				m_outputBuffer.append(static_cast<const char*>(data) + nwrote, remain);
+				m_loop->queueInLoop(std::bind(m_writeCompleteCallback, shared_from_this()));//低水位回调
 			}
 		}
 		else
@@ -179,9 +184,29 @@ void TcpConnection::sendInLoop(const void* data,size_t len)
 			if (errno != EWOULDBLOCK)
 			{
 				LOG_SYSERR << "TcpConnection::sendInLoop error";
+				if (errno == EPIPE || errno == ECONNRESET)
+				{
+					faultError = true;
+				}
 			}
 		}
-		
+	}
+	assert(remain <= len);
+
+	if (!faultError && remain > 0)
+	{
+		size_t preLen = m_outputBuffer.writableBytes();
+		m_outputBuffer.append(static_cast<const char*>(data) + nwrote, remain);
+		assert(m_outputBuffer.writableBytes() == preLen + remain);
+		if (m_outputBuffer.writableBytes() >= m_highWaterMark && preLen < m_highWaterMark && m_highWaterMarkCallback)
+		{
+			m_loop->queueInLoop(std::bind(m_highWaterMarkCallback, shared_from_this(), preLen + remain));//高水位回调
+		}
+
+		if (!m_channel->isWriting())
+		{
+			m_channel->enableWriting();
+		}
 	}
 }
 

@@ -141,6 +141,12 @@
     <ClInclude Include="base\Buffer.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="event\EventLoopThreadPool.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="event\EventLoopThread.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -212,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="base\Buffer.cc">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="event\EventLoopThreadPool.cc">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="event\EventLoopThread.cc">
+      <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
