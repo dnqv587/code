@@ -198,6 +198,44 @@ void Socket::close()
 	}
 }
 
+
+int Socket::connect(int sockfd, const struct sockaddr* addr)
+{
+	return ::connect(sockfd, addr, static_cast<socklen_t>(sizeof(sockaddr_in6)));
+}
+
+int Socket::connect(const struct sockaddr* addr)
+{
+	connect(m_sockfd, addr);
+}
+
+bool Socket::isSelfConnect(int sockfd)
+{
+	struct sockaddr_in6 localaddr = getLocalAddr(sockfd);
+	struct sockaddr_in6 peeraddr = getPeerAddr(sockfd);
+	if (localaddr.sin6_family == AF_INET)
+	{
+		const struct sockaddr_in* laddr4 = reinterpret_cast<struct sockaddr_in*>(&localaddr);
+		const struct sockaddr_in* raddr4 = reinterpret_cast<struct sockaddr_in*>(&peeraddr);
+		return laddr4->sin_port == raddr4->sin_port
+			&& laddr4->sin_addr.s_addr == raddr4->sin_addr.s_addr;
+	}
+	else if (localaddr.sin6_family == AF_INET6)
+	{
+		return localaddr.sin6_port == peeraddr.sin6_port
+			&& memcmp(&localaddr.sin6_addr, &peeraddr.sin6_addr, sizeof localaddr.sin6_addr) == 0;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Socket::isSelfConnect()
+{
+	isSelfConnect(m_sockfd);
+}
+
 void Socket::shutdownWrite()
 {
 	if (::shutdown(m_sockfd, SHUT_WR) == -1)

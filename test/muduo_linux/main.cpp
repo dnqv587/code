@@ -10,6 +10,7 @@
 #include <sys/syscall.h>
 #include <sys/timerfd.h>
 #include <signal.h>
+#include <arpa/inet.h>
 #include <time.h>
 #include "designPattern/observer.hpp"
 #include "thread/SignalSlot.h"
@@ -37,6 +38,7 @@
 #include "base/Tools.h"
 #include "net/TcpServer.h"
 #include "net/TcpConnection.h"
+#include "net/Connector.h"
 
 
 using namespace std;
@@ -562,11 +564,30 @@ void EventThreadPoolTest()
 	TcpServer Tcp(&loop, "8888", listenAddr);
 	Tcp.setConnectionCallback(onConnect);
 	Tcp.setMessageCallback(onMessage);
-	Tcp.setThreadNum(9);
+	Tcp.setThreadNum(2);
 	Tcp.start();
 
 	loop.loop();
 
+}
+
+void connectCallback(int sockfd)
+{
+	std::cout << "new connection" << std::endl;
+
+	::write(sockfd, "123456789", 10);
+}
+
+void ConnectorTest()
+{
+	EventLoop loop;
+
+	InetAddress addr("127.0.0.1",8888);
+	Connctor conn(&loop, addr);
+	conn.setNewConnectionCallback(connectCallback);
+	conn.start();
+
+	loop.loop();
 }
 
 int main(int argc, char* argv[])
@@ -591,7 +612,7 @@ int main(int argc, char* argv[])
 	//ThreadPoolTest();
 	//prototypeTest();
 	//EventLoopTest();
-	///allEventLoopTest();
+	//allEventLoopTest();
 	//TimerTest();
 	//less_than_comparableTest();
 	//PollerTest();
@@ -599,7 +620,8 @@ int main(int argc, char* argv[])
 	//AcceptTest();
 	//splitTest();
 	//TcpServerTest();
-	EventThreadPoolTest();
+	//EventThreadPoolTest();
+	ConnectorTest();
 
 	ASYNlog->stop();
 	getchar();

@@ -7,6 +7,7 @@
 #include <sys/poll.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/eventfd.h>
 
 constexpr int KPollTimeMs = 60 * 1000;
 
@@ -26,11 +27,29 @@ public:
 
 IgnoreSigPipe g_ignoreSIGPIPE;
 
+extern "C"
+{
+	static int createEventfd()
+	{
+		int eventfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+		if (0 > eventfd)
+		{
+			LOG_SYSERR << "Failed in eventfd";
+			abort();
+		}
+		return eventfd;
+	}
+}
+
 EventLoop::EventLoop()
 	:m_looping(false),
+	m_quit(false),
+	m_callPendingFunctor(false),
 	t_threadId(CurrentThread::tid()),
 	m_timerQueue(new TimerQueue(this)),
-	m_poller(new Poller(this))
+	m_poller(new Poller(this)),
+	m_wakeupFd(createEventfd()),
+	m_wakeupChannel(new Channel(this, m_wakeupFd))
 {
 	if (t_loopInThisThread)
 	{
@@ -41,6 +60,8 @@ EventLoop::EventLoop()
 	{
 		t_loopInThisThread = this;
 	}
+	m_wakeupChannel->setReadCallback(std::bind(&EventLoop::handleRead, this));
+	m_wakeupChannel->enableReading();
 }
 
 EventLoop::~EventLoop()

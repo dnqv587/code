@@ -78,6 +78,23 @@ public:
 	void close();
 
 	/// <summary>
+	/// 建立连接
+	/// </summary>
+	/// <param name="sockfd"></param>
+	/// <param name="addr"></param>
+	/// <returns></returns>
+	static int connect(int sockfd, const struct sockaddr* addr);
+	int connect(const struct sockaddr* addr);
+
+	/// <summary>
+	/// 是否自连接
+	/// </summary>
+	/// <param name="sockfd"></param>
+	/// <returns></returns>
+	static bool isSelfConnect(int sockfd);
+	bool isSelfConnect();
+
+	/// <summary>
 	/// 单向关闭写通道
 	/// </summary>
 	void shutdownWrite();

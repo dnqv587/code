@@ -30,7 +30,7 @@ EventLoop* EventLoopThread::startLoop()
 
 	{
 		MutexLockGuard lock(m_mutex);
-		while (m_loop = nullptr)
+		while (m_loop == nullptr)
 		{
 			m_cond.wait();
 		}

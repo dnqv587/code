@@ -84,7 +84,7 @@ void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn)
 	LOG_INFO << " TcpServer::removeConnection [" << m_name << "] - connection " << conn->name();
 	size_t n = m_connections.erase(conn->name());//释放连接并close socket fd
 	assert(n == 1);
-	EventLoop* ioLoop = m_threadPool->getNextLoop();
+	EventLoop* ioLoop = conn->getLoop();
 	ioLoop->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
 }
 

@@ -147,6 +147,9 @@
     <ClInclude Include="event\EventLoopThread.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="net\Connector.h">
+      <Filter>net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -224,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="event\EventLoopThread.cc">
       <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="net\Connector.cc">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
