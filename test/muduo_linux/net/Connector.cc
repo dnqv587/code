@@ -171,6 +171,7 @@ void Connctor::retry(int sockfd)
 	if (m_connect)
 	{
 		LOG_INFO << " Connctor::retry " << m_serverAddr.ipString() << ":" << m_serverAddr.port() << " delay:" << m_retryDelayMs;
+		//注意当前对象须为由shared_ptr管理的对象
 		m_loop->runAfter(m_retryDelayMs / 1000, std::bind(&Connctor::startInLoop, shared_from_this()));//防止等待过程中，当前对象被销毁
 		m_retryDelayMs = std::min(m_retryDelayMs * 2, kMaxRetryDelayMs);//每次delay时间翻倍，但不超过30秒
 	}

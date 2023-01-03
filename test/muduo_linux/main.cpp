@@ -583,9 +583,9 @@ void ConnectorTest()
 	EventLoop loop;
 
 	InetAddress addr("127.0.0.1",8888);
-	Connctor conn(&loop, addr);
-	conn.setNewConnectionCallback(connectCallback);
-	conn.start();
+	std::shared_ptr<Connctor> conn = std::make_shared<Connctor>(&loop, addr);
+	conn->setNewConnectionCallback(connectCallback);
+	conn->start();
 
 	loop.loop();
 }
