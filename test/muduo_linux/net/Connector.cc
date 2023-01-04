@@ -9,7 +9,7 @@
 constexpr int kInitRetryDelayMs = 500;
 constexpr int kMaxRetryDelayMs = 30 * 1000;
 
-Connctor::Connctor(EventLoop* loop, const InetAddress& serverAddr)
+Connector::Connector(EventLoop* loop, const InetAddress& serverAddr)
 	:m_loop(loop),
 	m_serverAddr(serverAddr),
 	m_state(kDisconnected),
@@ -19,18 +19,18 @@ Connctor::Connctor(EventLoop* loop, const InetAddress& serverAddr)
 
 }
 
-Connctor::~Connctor()
+Connector::~Connector()
 {
 
 }
 
-void Connctor::start()
+void Connector::start()
 {
 	m_connect = true;
-	m_loop->runInLoop(std::bind(&Connctor::startInLoop, this));
+	m_loop->runInLoop(std::bind(&Connector::startInLoop, this));
 }
 
-void Connctor::restart()
+void Connector::restart()
 {
 	m_loop->assertInLoopThread();
 	setState(kDisconnected);
@@ -39,13 +39,13 @@ void Connctor::restart()
 	startInLoop();
 }
 
-void Connctor::stop()
+void Connector::stop()
 {
 	m_connect = false;
-	m_loop->runInLoop(std::bind(&Connctor::stopInLoop, this));
+	m_loop->runInLoop(std::bind(&Connector::stopInLoop, this));
 }
 
-void Connctor::startInLoop()
+void Connector::startInLoop()
 {
 	m_loop->assertInLoopThread();
 	assert(m_state == kDisconnected);
@@ -55,7 +55,7 @@ void Connctor::startInLoop()
 	}
 }
 
-void Connctor::stopInLoop()
+void Connector::stopInLoop()
 {
 	m_loop->assertInLoopThread();
 	if (m_state == kConnecting)
@@ -66,7 +66,7 @@ void Connctor::stopInLoop()
 	}
 }
 
-void Connctor::connect()
+void Connector::connect()
 {
 	int sockfd = Socket::create(m_serverAddr.family(), Socket::IO::NIO);
 	int ret = Socket::connect(sockfd, m_serverAddr.getSockAddr());
@@ -107,17 +107,17 @@ void Connctor::connect()
 	}
 }
 
-void Connctor::connecting(int sockfd)
+void Connector::connecting(int sockfd)
 {
 	setState(kConnecting);
 	assert(!m_channel);
 	m_channel.reset(new Channel(m_loop, sockfd));
-	m_channel->setWriteCallback(std::bind(&Connctor::handleWrite, this));
-	m_channel->setErrorCallback(std::bind(&Connctor::handleError, this));
+	m_channel->setWriteCallback(std::bind(&Connector::handleWrite, this));
+	m_channel->setErrorCallback(std::bind(&Connector::handleError, this));
 	m_channel->enableWriting();
 }
 
-void Connctor::handleWrite()
+void Connector::handleWrite()
 {
 	if (m_state == kConnecting)
 	{
@@ -125,12 +125,12 @@ void Connctor::handleWrite()
 		int err = Socket::getSocketError(sockfd);
 		if (err)
 		{
-			LOG_WARN << "Connctor::handleWrite errno=" << err << strerror(err);
+			LOG_WARN << "Connector::handleWrite errno=" << err << strerror(err);
 			retry(sockfd);
 		}
 		else if (Socket::isSelfConnect(sockfd))
 		{
-			LOG_WARN << "Connctor::handleWrite self connect";
+			LOG_WARN << "Connector::handleWrite self connect";
 			retry(sockfd);
 		}
 		else
@@ -152,7 +152,7 @@ void Connctor::handleWrite()
 	}
 }
 
-void Connctor::handleError()
+void Connector::handleError()
 {
 	LOG_ERROR << "Connector::handleError state=" << m_state;
 	if (m_state == kConnecting)
@@ -164,29 +164,29 @@ void Connctor::handleError()
 	}
 }
 
-void Connctor::retry(int sockfd)
+void Connector::retry(int sockfd)
 {
 	Socket::close(sockfd);
 	setState(kDisconnected);
 	if (m_connect)
 	{
-		LOG_INFO << " Connctor::retry " << m_serverAddr.ipString() << ":" << m_serverAddr.port() << " delay:" << m_retryDelayMs;
+		LOG_INFO << " Connector::retry " << m_serverAddr.ipString() << ":" << m_serverAddr.port() << " delay:" << m_retryDelayMs;
 		//注意当前对象须为由shared_ptr管理的对象
-		m_loop->runAfter(m_retryDelayMs / 1000, std::bind(&Connctor::startInLoop, shared_from_this()));//防止等待过程中，当前对象被销毁
+		m_loop->runAfter(m_retryDelayMs / 1000, std::bind(&Connector::startInLoop, shared_from_this()));//防止等待过程中，当前对象被销毁
 		m_retryDelayMs = std::min(m_retryDelayMs * 2, kMaxRetryDelayMs);//每次delay时间翻倍，但不超过30秒
 	}
 }
 
-int Connctor::removeAndResetChannel()
+int Connector::removeAndResetChannel()
 {
 	m_channel->disableALL();
 	m_channel->remove();
 	int sockfd = m_channel->fd();
-	m_loop->queueInLoop(std::bind(&Connctor::resetChannel, this));
+	m_loop->queueInLoop(std::bind(&Connector::resetChannel, this));
 	return sockfd;
 }
 
-void Connctor::resetChannel()
+void Connector::resetChannel()
 {
 	m_channel.reset();
 }

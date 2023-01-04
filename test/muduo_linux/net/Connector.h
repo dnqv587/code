@@ -6,13 +6,13 @@
 
 class EventLoop;
 class Channel;
-class Connctor :noncopyable,public std::enable_shared_from_this<Connctor>
+class Connector :noncopyable,public std::enable_shared_from_this<Connector>
 {
 public:
 	using NewConnectionCallback = std::function<void(int)>;
-	Connctor(EventLoop* loop, const InetAddress& serverAddr);
+	Connector(EventLoop* loop, const InetAddress& serverAddr);
 
-	~Connctor();
+	~Connector();
 
 	void start();
 
@@ -23,6 +23,11 @@ public:
 	void setNewConnectionCallback(const NewConnectionCallback& cb)
 	{
 		m_newConnectionCallback = cb;
+	}
+
+	const InetAddress& serverAddress() const 
+	{
+		return m_serverAddr;
 	}
 
 private:
