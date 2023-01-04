@@ -85,6 +85,11 @@ public:
 	void connectDestroyed();
 
 	/// <summary>
+	/// 强制关闭连接
+	/// </summary>
+	void forceClose();
+
+	/// <summary>
 	/// 连接名
 	/// </summary>
 	/// <returns></returns>
@@ -148,6 +153,7 @@ private:
 	void handleWrite();
 	void sendInLoop(const void* data,size_t len);
 	void shutdownInLoop();
+	void forceCloseInLoop();
 
 	EventLoop* m_loop;
 	std::shared_ptr<Socket> m_socket;

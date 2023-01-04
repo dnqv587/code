@@ -85,6 +85,15 @@ void TcpConnection::connectDestroyed()
 	m_loop->removeChannel(m_channel.get());
 }
 
+void TcpConnection::forceClose()
+{
+	if (m_state == kConnected || m_state == kDisconnecting)
+	{
+		setState(kDisconnecting);
+		m_loop->queueInLoop(std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
+	}
+}
+
 void TcpConnection::handleRead(Timestamp receiveTime)
 {
 	m_loop->assertInLoopThread();
@@ -216,5 +225,14 @@ void TcpConnection::shutdownInLoop()
 	if (!m_channel->isWriting())//如果正在写则写完之后再关闭
 	{
 		m_socket->shutdownWrite();
+	}
+}
+
+void TcpConnection::forceCloseInLoop()
+{
+	m_loop->assertInLoopThread();
+	if (m_state == kConnected || m_state == kDisconnecting)
+	{
+		handleClose();
 	}
 }

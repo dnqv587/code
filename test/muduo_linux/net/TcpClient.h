@@ -1,9 +1,16 @@
 #pragma once
 #include "../base/noncopyable.h"
-#include "TcpConnection.h"
+#include "InetAddress.h"
+#include "../time/Timestamp.h"
+#include "../thread/mutex.h"
+#include <memory>
+#include <functional>
 
 
 class Connector;
+class TcpConnection;
+class Buffer;
+class EventLoop;
 class TcpClient :noncopyable
 {
 public:
@@ -38,11 +45,16 @@ public:
 
 private:
 	void newConnection(int sockfd);
+	void removeConnection(const TcpConnectionPtr& conn);
 
 	EventLoop* m_loop;
 	ConnectorPtr m_connector;
 	const std::string m_name;
 	bool m_connect;
+	bool m_retry;
+	int m_nextID;
+	MutexLock m_mutex;
+	TcpConnectionPtr m_connection GUARDED_BY(m_mutex);
 
 	MessageCallback m_messageCallback;
 	ConnectionCallback m_connetionCallback;
