@@ -106,15 +106,15 @@ void EPoll::removeChannel(Channel* channel)
 void EPoll::fillActiveChannels(int numEvents, ChannelList* activeChannels) const
 {
 	assert(implicit_cast<size_t>(numEvents) <= m_events.size());
-	for (const auto& event : m_events)
+	for (int i = 0; i < numEvents; ++i)
 	{
-		Channel* channel = static_cast<Channel*>(event.data.ptr);
+		Channel* channel = static_cast<Channel*>(m_events[i].data.ptr);
 #ifndef NDEBUG
 		const auto iter = m_channels.find(channel->fd());
 		assert(iter != m_channels.cend());
 		assert(iter->second == channel);
 #endif
-		channel->set_revents(event.events);
+		channel->set_revents(m_events[i].events);
 		activeChannels->push_back(channel);
 	}
 }

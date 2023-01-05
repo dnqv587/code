@@ -36,6 +36,12 @@ public:
 	/// <param name="channel"></param>
 	virtual void removeChannel(Channel* channel) = 0;
 
+	/// <summary>
+	/// new实例对象
+	/// </summary>
+	/// <param name="loop"></param>
+	/// <returns></returns>
+	static Poller* newPoller(EventLoop* loop);
 
 protected:
 	void assertInLoopThread()

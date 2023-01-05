@@ -30,7 +30,7 @@
 #include "event/EventLoop.h"
 #include "event/Channel.h"
 #include "time/Timer.h"
-#include "net/Poller.h"
+#include "event/Poller.h"
 #include "time/TimerQueue.h"
 #include "net/Socket.h"
 #include "net/InetAddress.h"
@@ -612,6 +612,7 @@ void TcpClientTest()
 
 int main(int argc, char* argv[])
 {
+	::setenv("_USE_EPOLL_", "1", 1);
 	AsynLogging m_ASYNlog("AsynLog", 65535);
 	ASYNlog = &m_ASYNlog;
 	Logger::setOutput(ASYNoutputFunc);

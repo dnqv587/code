@@ -1,8 +1,7 @@
 #pragma once
 #include "EventLoop.h"
 #include "../logger/logging.h"
-#include "Poll.h"
-#include "EPoll.h"
+#include "Poller.h"
 #include "Channel.h"
 #include "../time/TimerQueue.h"
 #include <sys/poll.h>
@@ -48,7 +47,7 @@ EventLoop::EventLoop()
 	m_callPendingFunctor(false),
 	t_threadId(CurrentThread::tid()),
 	m_timerQueue(new TimerQueue(this)),
-	m_poller(new EPoll(this)),
+	m_poller(Poller::newPoller(this)),
 	m_wakeupFd(createEventfd()),
 	m_wakeupChannel(new Channel(this, m_wakeupFd))
 {

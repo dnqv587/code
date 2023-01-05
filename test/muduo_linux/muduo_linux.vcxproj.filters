@@ -102,9 +102,6 @@
     <ClInclude Include="event\Channel.h">
       <Filter>event</Filter>
     </ClInclude>
-    <ClInclude Include="net\Poller.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="time\TimerQueue.h">
       <Filter>time</Filter>
     </ClInclude>
@@ -159,6 +156,9 @@
     <ClInclude Include="event\Poll.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="event\Poller.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -197,9 +197,6 @@
     </ClCompile>
     <ClCompile Include="event\Channel.cc">
       <Filter>event</Filter>
-    </ClCompile>
-    <ClCompile Include="net\Poller.cc">
-      <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="time\TimerQueue.cc">
       <Filter>time</Filter>
@@ -247,6 +244,9 @@
       <Filter>event</Filter>
     </ClCompile>
     <ClCompile Include="event\Poll.cc">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="event\Poller.cc">
       <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>
