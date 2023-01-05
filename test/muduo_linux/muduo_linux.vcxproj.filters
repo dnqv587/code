@@ -153,6 +153,9 @@
     <ClInclude Include="net\TcpClient.h">
       <Filter>net</Filter>
     </ClInclude>
+    <ClInclude Include="event\EPoll.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -236,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="net\TcpClient.cc">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="event\EPoll.cc">
+      <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

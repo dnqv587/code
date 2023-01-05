@@ -39,6 +39,7 @@
 #include "net/TcpServer.h"
 #include "net/TcpConnection.h"
 #include "net/Connector.h"
+#include "net/TcpClient.h"
 
 
 using namespace std;
@@ -590,6 +591,25 @@ void ConnectorTest()
 	loop.loop();
 }
 
+void TcpClientTest()
+{
+	EventLoop loop;
+	InetAddress addr("127.0.0.1", 8888);
+	TcpClient client(&loop, addr, "8888");
+	client.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
+		printf("new connection %s:%d\n", conn->peerAddr().ipString(), conn->peerAddr().port());
+		});
+	client.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf, Timestamp time) {
+		printf("msg %s:%d -[%s] %s\n", conn->peerAddr().ipString(), conn->peerAddr().port(),buf->peek(),time.toDateTime(true));
+		});
+	client.setWriteCompleteCallback([](const std::shared_ptr<TcpConnection>& conn) {
+		printf("connected %s:%d\n", conn->localAddr().ipString(), conn->localAddr().port());
+		});
+	client.connect();
+
+	loop.loop();
+}
+
 int main(int argc, char* argv[])
 {
 	AsynLogging m_ASYNlog("AsynLog", 65535);
@@ -621,7 +641,8 @@ int main(int argc, char* argv[])
 	//splitTest();
 	//TcpServerTest();
 	//EventThreadPoolTest();
-	ConnectorTest();
+	//ConnectorTest();
+	TcpClientTest();
 
 	ASYNlog->stop();
 	getchar();

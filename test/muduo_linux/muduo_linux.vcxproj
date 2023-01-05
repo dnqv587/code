@@ -95,6 +95,7 @@
     <ClInclude Include="designPattern\prototype.h" />
     <ClInclude Include="designPattern\singleton.h" />
     <ClInclude Include="event\Channel.h" />
+    <ClInclude Include="event\EPoll.h" />
     <ClInclude Include="event\EventLoop.h" />
     <ClInclude Include="event\EventLoopThread.h" />
     <ClInclude Include="event\EventLoopThreadPool.h" />
@@ -130,6 +131,7 @@
     <ClCompile Include="base\ProcessInfo.cc" />
     <ClCompile Include="base\Tools.cc" />
     <ClCompile Include="event\Channel.cc" />
+    <ClCompile Include="event\EPoll.cc" />
     <ClCompile Include="event\EventLoop.cc" />
     <ClCompile Include="event\EventLoopThread.cc" />
     <ClCompile Include="event\EventLoopThreadPool.cc" />
