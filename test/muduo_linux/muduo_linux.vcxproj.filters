@@ -156,6 +156,9 @@
     <ClInclude Include="event\EPoll.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="event\Poll.h">
+      <Filter>event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -241,6 +244,9 @@
       <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="event\EPoll.cc">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="event\Poll.cc">
       <Filter>event</Filter>
     </ClCompile>
   </ItemGroup>

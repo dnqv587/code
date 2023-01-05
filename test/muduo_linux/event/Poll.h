@@ -2,14 +2,13 @@
 #include "../net/Poller.h"
 #include <vector>
 
-
 class EventLoop;
 struct epoll_event;
-class EPoll :public Poller
+class Poll :public Poller
 {
 public:
-	EPoll(EventLoop* loop);
-	~EPoll();
+	Poll(EventLoop* loop);
+	~Poll();
 
 	Timestamp poll(int timeoutMs, ChannelList* activeChannels) override;
 
@@ -18,12 +17,10 @@ public:
 	void removeChannel(Channel* channel) override;
 
 private:
+	//遍历m_pollfds，找出活动事件的fd，将对应事件的Channel填入activeChannels
 	void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
 
-	void update(int operation, Channel* channel);
+	typedef std::vector<struct pollfd> PollFdList;
 
-	using EventList = std::vector<struct epoll_event>;
-	int m_epollfd;
-	EventList m_events;
+	PollFdList m_pollfds;//fd容器
 };
-

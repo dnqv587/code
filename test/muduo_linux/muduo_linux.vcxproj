@@ -99,6 +99,7 @@
     <ClInclude Include="event\EventLoop.h" />
     <ClInclude Include="event\EventLoopThread.h" />
     <ClInclude Include="event\EventLoopThreadPool.h" />
+    <ClInclude Include="event\Poll.h" />
     <ClInclude Include="logger\AsynLogging.h" />
     <ClInclude Include="logger\File.h" />
     <ClInclude Include="logger\LogFile.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="event\EventLoop.cc" />
     <ClCompile Include="event\EventLoopThread.cc" />
     <ClCompile Include="event\EventLoopThreadPool.cc" />
+    <ClCompile Include="event\Poll.cc" />
     <ClCompile Include="logger\AsynLogging.cc" />
     <ClCompile Include="logger\File.cc" />
     <ClCompile Include="logger\LogFile.cc" />
