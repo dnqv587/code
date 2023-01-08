@@ -4,8 +4,6 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
-#define _USE_EPOLL_
-
 constexpr int KInitEventListSize = 16;
 
 EPoll::EPoll(EventLoop* loop)
