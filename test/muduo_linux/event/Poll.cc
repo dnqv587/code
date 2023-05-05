@@ -3,8 +3,6 @@
 #include "Channel.h"
 #include <sys/poll.h>
 
-#define _USE_POLL_
-
 Poll::Poll(EventLoop* loop)
 	:Poller(loop)
 {

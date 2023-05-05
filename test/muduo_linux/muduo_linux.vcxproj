@@ -114,6 +114,7 @@
     <ClInclude Include="net\TcpConnection.h" />
     <ClInclude Include="net\TcpServer.h" />
     <ClInclude Include="test\CopyOnWrite.h" />
+    <ClInclude Include="test\web.h" />
     <ClInclude Include="thread\condition.h" />
     <ClInclude Include="thread\CountDownLatch.h" />
     <ClInclude Include="thread\mutex.h" />

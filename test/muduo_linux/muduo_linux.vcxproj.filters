@@ -159,6 +159,9 @@
     <ClInclude Include="event\Poller.h">
       <Filter>event</Filter>
     </ClInclude>
+    <ClInclude Include="test\web.h">
+      <Filter>test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -545,8 +545,8 @@ void onMessage(const TcpConnection::TcpConnectionPtr tcp,Buffer* msg , Timestamp
 void TcpServerTest()
 {
 	EventLoop loop;
-	InetAddress listenAddr(8888);
-	TcpServer Tcp(&loop, "8888", listenAddr);
+	InetAddress listenAddr(8080);
+	TcpServer Tcp(&loop, "8080", listenAddr);
 	Tcp.setConnectionCallback(onConnect);
 	Tcp.setMessageCallback(onMessage);
 	auto func = [](const TcpConnection::TcpConnectionPtr& tcp) {
@@ -598,9 +598,11 @@ void TcpClientTest()
 	TcpClient client(&loop, addr, "8888");
 	client.setConnectionCallback([](const std::shared_ptr<TcpConnection>& conn) {
 		printf("new connection %s:%d\n", conn->peerAddr().ipString(), conn->peerAddr().port());
+		//conn->send("123");
 		});
 	client.setMessageCallback([](const std::shared_ptr<TcpConnection>& conn, Buffer* buf, Timestamp time) {
 		printf("msg %s:%d -[%s] %s\n", conn->peerAddr().ipString(), conn->peerAddr().port(),buf->peek(),time.toDateTime(true));
+		conn->send(buf->peek());
 		});
 	client.setWriteCompleteCallback([](const std::shared_ptr<TcpConnection>& conn) {
 		printf("connected %s:%d\n", conn->localAddr().ipString(), conn->localAddr().port());
@@ -640,10 +642,10 @@ int main(int argc, char* argv[])
 	//InetAddressTest();
 	//AcceptTest();
 	//splitTest();
-	//TcpServerTest();
+	TcpServerTest();
 	//EventThreadPoolTest();
 	//ConnectorTest();
-	TcpClientTest();
+	//TcpClientTest();
 
 	ASYNlog->stop();
 	getchar();

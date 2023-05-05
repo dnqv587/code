@@ -5,6 +5,7 @@
 #include <sys/poll.h>
 #include <sys/epoll.h>
 
+
 #ifdef _USE_EPOLL_
 const int Channel::kNoneEvent = NULL;
 const int Channel::kReadEvent = EPOLLIN | EPOLLPRI;
@@ -24,6 +25,12 @@ constexpr int kErrorRevent = POLLERR | POLLNVAL;
 constexpr int kWriteRevent = POLLOUT;
 constexpr int kFDNVAL = POLLNVAL;
 #endif
+
+static_assert(EPOLLIN == POLLIN);
+static_assert(EPOLLPRI == POLLPRI);
+static_assert(EPOLLRDHUP == POLLRDHUP);
+static_assert(EPOLLERR == POLLERR);
+static_assert(EPOLLOUT == POLLOUT);
 
 Channel::Channel(EventLoop* loop, const int fd)
 	:m_loop(loop),
