@@ -1,0 +1,4 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/dai/code/asio -B /home/dai/code/asio/cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/dai/code/asio/cmake-build-debug

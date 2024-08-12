@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -rdynamic CMakeFiles/lessons1.dir/lessons1.cc.o -o ../../bin/lessons1 
