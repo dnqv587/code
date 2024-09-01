@@ -21,34 +21,34 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{95220c71-8bf7-4e15-9214-32c12af9ca27}</ProjectGuid>
-    <RootNamespace>dataStructure</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{5734580c-9e64-4595-94f3-1320b9dadec5}</ProjectGuid>
+    <RootNamespace>CodingInterview</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,20 +140,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="CodingInterview.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="array.hpp" />
-    <ClInclude Include="BinaryTree.hpp" />
-    <ClInclude Include="CircularBuffer.hpp" />
-    <ClInclude Include="linkQueue.hpp" />
-    <ClInclude Include="linkStack.hpp" />
-    <ClInclude Include="ListGraph.hpp" />
-    <ClInclude Include="matrixGraph.hpp" />
-    <ClInclude Include="sqList.hpp" />
-    <ClInclude Include="linkList.hpp" />
-    <ClInclude Include="sqQueue.hpp" />
-    <ClInclude Include="sqStack.hpp" />
+    <ClInclude Include="..\dataStructure\array.hpp" />
+    <ClInclude Include="..\dataStructure\BinaryTree.hpp" />
+    <ClInclude Include="..\dataStructure\linkList.hpp" />
+    <ClInclude Include="..\dataStructure\linkQueue.hpp" />
+    <ClInclude Include="..\dataStructure\linkStack.hpp" />
+    <ClInclude Include="..\dataStructure\matrixGraph.hpp" />
+    <ClInclude Include="..\dataStructure\sqList.hpp" />
+    <ClInclude Include="..\dataStructure\sqQueue.hpp" />
+    <ClInclude Include="..\dataStructure\sqStack.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
