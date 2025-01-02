@@ -1,5 +1,0 @@
-/home/dai/code/asio/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/dai/code/asio/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/dai/code/asio/cmake-build-debug/lessons/CMakeFiles/lessons1.dir
-/home/dai/code/asio/cmake-build-debug/lessons/CMakeFiles/edit_cache.dir
-/home/dai/code/asio/cmake-build-debug/lessons/CMakeFiles/rebuild_cache.dir
