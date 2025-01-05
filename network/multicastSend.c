@@ -18,8 +18,8 @@ int main()
     }
 
     //启用组播
-    int multicast_enable = 1;
-    int ret = setsockopt(sockfd,IPPROTO_IP,IP_MULTICAST_TTL,&multicast_enable,sizeof(multicast_enable));
+    int ttl = 64;
+    int ret = setsockopt(sockfd,IPPROTO_IP,IP_MULTICAST_TTL,&ttl,sizeof(ttl));
     if(ret < 0)
     {
         perror("setsockopt failed!");
