@@ -62,8 +62,23 @@ void client()
 	service.run();
 }
 
+std::string HostNameToIP(std::string_view host)
+{
+	io_service s;
+	ip::tcp::resolver resolver(s);
+	ip::tcp::resolver::query q(host.data(), "80");
+	ip::tcp::resolver::iterator iter = resolver.resolve( q);
+	ip::tcp::endpoint ep = *iter;
+	std::cout << ep.address().to_string() << ":" << ep.port()
+			  << "/" << ep.protocol().type() << std::endl;
+
+	return ep.address().to_string();
+}
+
 int main(int argc, char const *argv[])
 {
+
+
 	if(argc > 1 && ::strcmp(argv[1], "c") == 0)
 	{
 		std::cout<<"client"<<std::endl;
