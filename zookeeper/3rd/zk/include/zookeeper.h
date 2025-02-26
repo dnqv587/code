@@ -331,7 +331,7 @@ typedef struct _zsock {
  * should be treated as opaque. It is received from the server when a session
  * is established and needs to be sent back as-is when reconnecting a session.
  */
-typedef struct {
+typedef struct clientid_t{
     int64_t client_id;
     char passwd[16];
 } clientid_t;
