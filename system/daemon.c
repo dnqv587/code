@@ -8,6 +8,8 @@
 #include <netinet/in.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/file.h>
 
 
 
@@ -74,17 +76,32 @@ int main(int argc, char* argv[])
 	pid_t pid = fork();
 	if (pid < 0 || pid>0)
 	{
-		exit(1);
+		exit(0);
 	}
 	//创建会话
 	pid_t sid = setsid();
 	//改变当前工作目录
-	chdir("/home/dai/projects/code/system");
+	chdir("./IO");
 	//改变文件掩码
 	umask(0000);
 	//关闭标准输入、标准输出、标准错误
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
+    close(STDIN_FILENO);
+ 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
+
+    int lock = open("./daemon.lock",O_RDWR|O_CREAT,0644);
+    if(lock < 0)
+    {
+        perror("open error!");
+        exit(1);
+    }
+
+    int stat = flock(lock,LOCK_EX|LOCK_NB);
+    if(stat < 0)
+    {
+        perror("another daemon is already running!");
+        exit(1);
+    }
+
 	TCP();
 }

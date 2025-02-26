@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="Server (7fc059bf-9a51-45f1-8a64-2b329b58db65)" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Server (7fc059bf-9a51-45f1-8a64-2b329b58db65)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/dai/code/zookeeper" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="hundsun (859100b4-bd52-4264-a340-a23d8f4b5867)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.iMJwP7VI0L" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
