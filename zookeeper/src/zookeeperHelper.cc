@@ -20,6 +20,7 @@ static inline constexpr ACL_vector getZookeeperMode(ZK_ACL mode)
 	{
 		return ZOO_CREATOR_ALL_ACL;
 	}
+    return ZOO_OPEN_ACL_UNSAFE;
 }
 
 static inline std::string getErrorInfo(int errcode)
@@ -54,7 +55,10 @@ ZookeeperClient::ZookeeperClient(std::string_view host) noexcept
 _zkClient(nullptr),
 _handle(nullptr,[this](zhandle_t* handle){
   this->close();
-})
+}),
+ _isConnected(false),
+ _sessionCallback([](ZK_SessionEvent event,std::string_view node){
+ })
 {}
 
 void ZookeeperClient::connect(time_t timeout,const std::function<void (ZK_SessionEvent,std::string_view)>& callback)
@@ -231,8 +235,28 @@ void ZookeeperClient::zk_watcher(zhandle_t* zh, int type, int state, const char*
 		// -> ZOO_CONNECTED_STATE/ZOO_EXPIRED_SESSION_STATE
 		// -> ZOO_AUTH_FAILED_STATE
 
-		std::invoke(self->_sessionCallback,detail::ZKStatToSessionEvent(type),path);
+        if(ZOO_CONNECTED_STATE == state)
+        {
+            {
+                std::lock_guard lock(self->_mutex);
+                self->_isConnected = true;
+            }
+            self->_cond.notify_all();
+        }
+
+		std::invoke(self->_sessionCallback,detail::ZKStatToSessionEvent(state),path);
 	}
+}
+
+void ZookeeperClient::waitConnected() noexcept
+{
+    std::unique_lock lock(_mutex);
+    if(!_isConnected)
+    {
+        _cond.wait(lock,[this]{
+            return _isConnected;
+        });
+    }
 }
 
 

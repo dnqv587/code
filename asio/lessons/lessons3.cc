@@ -1,38 +1,33 @@
 #include <iostream>
-#include "asio/ip/tcp.hpp"
-#include "asio/io_service.hpp"
-#include <memory>
+#include "asio/io_context.hpp"
 #include <thread>
-#include <future>
-#include <system_error>
+#include <chrono>
 
 using namespace asio;
 
-void service()
-{
-	io_context context;
+io_context context;
 
+void sleepfunc()
+{
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(3s);
+    std::cout<<"3"<<std::endl;
 }
 
-void client()
+void func()
 {
-
+    std::cout<<"begin"<<std::endl;
+    context.post(sleepfunc);
+    std::cout<<"end"<<std::endl;
 }
-
-int main(int argc, char const *argv[])
+int main()
 {
 
 
-	if(argc > 1 && ::strcmp(argv[1], "c") == 0)
-	{
-		std::cout<<"client"<<std::endl;
-		auto c = std::async(client);
-		c.wait();
-	}
-	else
-	{
-		std::cout<<"server"<<std::endl;
-		auto s = std::async(service);
-		s.wait();
-	}
+    context.wrap(func)();
+
+    context.run();
+
+
+    return 0;
 }

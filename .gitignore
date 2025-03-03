@@ -1,2 +1,4 @@
+/algorithms/cmake-build-debug
+/mock/cmake-build-debug
 /asio/cmake-build-debug
 /zookeeper/cmake-build-debug

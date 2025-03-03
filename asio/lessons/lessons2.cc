@@ -6,6 +6,7 @@
 #include <future>
 #include <system_error>
 #include <functional>
+#include <array>
 //***********************************************
 // name      : 异步echo示例
 // brief     : 
@@ -44,18 +45,18 @@ void client()
 	io_service service;
 	ip::tcp::endpoint ep(ip::address::from_string("127.0.0.1"),2001);
 	ip::tcp::socket  sock(service);
-	char buf [1024];
+    std::array<char,1024> buf{};
 	sock.async_connect(ep,[&buf,&sock](std::error_code code){
 		if(code)
 			return;
 	  while(true)
 	  {
-		  ::memset(buf, 0x00, sizeof(buf));
-		  ::read(STDIN_FILENO, buf, sizeof(buf));
+		  ::memset(buf.data(), 0x00, sizeof(buf));
+		  ::read(STDIN_FILENO, buf.data(), sizeof(buf));
 		  sock.write_some(buffer(buf));
-		  ::memset(buf, 0x00, sizeof(buf));
+		  ::memset(buf.data(), 0x00, sizeof(buf));
 		  sock.read_some(buffer(buf));
-		  std::cout << "read=" << buf << std::endl;
+		  std::cout << "read=" << buf.data() << std::endl;
 	  }
 	});
 

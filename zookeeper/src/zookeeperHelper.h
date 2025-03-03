@@ -4,45 +4,47 @@
 #include <functional>
 #include <exception>
 #include <string>
+#include <mutex>
+#include <condition_variable>
 
-/// @brief ½ÚµãÈ¨ÏŞ
+/// @brief èŠ‚ç‚¹æƒé™
 enum class ZK_ACL
 {
-	Open, 		//È«¿ª·Å£¬²»×öÈ¨ÏŞ¿ØÖÆ
-	OnlyRead, 	//Ö»¶Á
-	CreatorOpen	//´´½¨ÕßÓµÓĞËùÓĞÈ¨ÏŞ
+	Open, 		//å…¨å¼€æ”¾ï¼Œä¸åšæƒé™æ§åˆ¶
+	OnlyRead, 	//åªè¯»
+	CreatorOpen	//åˆ›å»ºè€…æ‹¥æœ‰æ‰€æœ‰æƒé™
 };
 
-/// @brief ½ÚµãÀàĞÍ
+/// @brief èŠ‚ç‚¹ç±»å‹
 enum class ZK_NodeMode
 {
-	Persistent = 0,		//³Ö¾Ã½Úµã
-	Ephemeral = 1,  //ÁÙÊ±½Úµã
-	Persistent_Sequential = 2,  //³Ö¾ÃË³Ğò½Úµã
-	Ephemeral_Sequential= 3,	//ÁÙÊ±Ë³Ğò½Úµã
-	Container = 4,				//ÈİÆ÷½Úµã
+	Persistent = 0,		//æŒä¹…èŠ‚ç‚¹
+	Ephemeral = 1,  //ä¸´æ—¶èŠ‚ç‚¹
+	Persistent_Sequential = 2,  //æŒä¹…é¡ºåºèŠ‚ç‚¹
+	Ephemeral_Sequential= 3,	//ä¸´æ—¶é¡ºåºèŠ‚ç‚¹
+	Container = 4,				//å®¹å™¨èŠ‚ç‚¹
 	PersistentWithTTL = 5,
 	Persistent_Sequential_WithTTL = 6
 };
 
-/// @brief SessionÊÂ¼şÀàĞÍ
+/// @brief Sessionäº‹ä»¶ç±»å‹
 enum class ZK_SessionEvent
 {
-	Connecting,	//ÕıÔÚ½¨Á¢Á¬½Ó
-	Connected,	//Á¬½Ó³É¹¦
-	Expired,	//»á»°¹ıÆÚ
-				//	 ¹ıÆÚºó¿ÉÒÔµ÷ÓÃrecreate_session()ÖØ½¨Á¢ÓëzookeeperµÄ»á»°
-				//	 ×¢ÒâÖØÁ¬½ÓºóµÃÖØĞÂµ÷ÓÃrace_master()¾ºÕùmaster£¬
-				//	 ¼òµ¥µãµÄ×ö·¨ÊÇsession¹ıÆÚºóÍË³öµ±Ç°½ø³Ì£¬Í¨¹ıÖØĞÂÆô¶¯µÄ·½Ê½À´¾ºÕùmaster
+	Connecting,	//æ­£åœ¨å»ºç«‹è¿æ¥
+	Connected,	//è¿æ¥æˆåŠŸ
+	Expired,	//ä¼šè¯è¿‡æœŸ
+				//	 è¿‡æœŸåå¯ä»¥è°ƒç”¨recreate_session()é‡å»ºç«‹ä¸zookeeperçš„ä¼šè¯
+				//	 æ³¨æ„é‡è¿æ¥åå¾—é‡æ–°è°ƒç”¨race_master()ç«äº‰masterï¼Œ
+				//	 ç®€å•ç‚¹çš„åšæ³•æ˜¯sessionè¿‡æœŸåé€€å‡ºå½“å‰è¿›ç¨‹ï¼Œé€šè¿‡é‡æ–°å¯åŠ¨çš„æ–¹å¼æ¥ç«äº‰master
 				//
-				//	 ÌØ±ğ×¢Òâ£¨session¹ıÆÚµÄÇ°ÌáÊÇÁ¬½ÓÒÑ¾­½¨Á¢£©£º
-				//	 Èç¹ûÁ¬½Ó±»¹ÒÆğ£¬²»»á´¥·¢on_zookeeper_session_expired()ÊÂ¼ş£¬
-				//	 µ±ÓÃÓÚÑ¡masterÊ±£¬µ÷ÓÃÕßĞèÒª×Ô¼ºÎ¬»¤ÕâÖÖÇé¿öÏÂµÄ³¬Ê±£¬
-				//	 ÒÔ±ÜÃâÁÙÊ±½Úµã±»É¾³ıºóÈÔÈ»±£³ÖÎªmaster×´Ì¬¡£
+				//	 ç‰¹åˆ«æ³¨æ„ï¼ˆsessionè¿‡æœŸçš„å‰ææ˜¯è¿æ¥å·²ç»å»ºç«‹ï¼‰ï¼š
+				//	 å¦‚æœè¿æ¥è¢«æŒ‚èµ·ï¼Œä¸ä¼šè§¦å‘on_zookeeper_session_expired()äº‹ä»¶ï¼Œ
+				//	 å½“ç”¨äºé€‰masteræ—¶ï¼Œè°ƒç”¨è€…éœ€è¦è‡ªå·±ç»´æŠ¤è¿™ç§æƒ…å†µä¸‹çš„è¶…æ—¶ï¼Œ
+				//	 ä»¥é¿å…ä¸´æ—¶èŠ‚ç‚¹è¢«åˆ é™¤åä»ç„¶ä¿æŒä¸ºmasterçŠ¶æ€ã€‚
 	Unknown
 };
 
-typedef struct clientid_t clientid_t;
+struct clientid_t;
 typedef struct _zhandle zhandle_t;
 
 class ZookeeperClient
@@ -55,44 +57,46 @@ class ZookeeperClient
 
 	void close();
 
-	/// @brief »ñÈ¡Á¬½Ó³É¹¦µÄip:port
-	/// @return ·µ»ØÁ¬½Ó³É¹¦µÄip:port£¬ÈôÎŞÁ¬½Ó·µ»Ø¿Õ×Ö·û´®
+	/// @brief è·å–è¿æ¥æˆåŠŸçš„ip:port
+	/// @return è¿”å›è¿æ¥æˆåŠŸçš„ip:portï¼Œè‹¥æ— è¿æ¥è¿”å›ç©ºå­—ç¬¦ä¸²
 	std::string getConnectedHost() const noexcept;
 
 	bool isConnected() const noexcept;
 
-	/// @brief ¾ºÕù³ÉÎªmaster
-	/// @param zk_path ÓÃÓÚ¾ºÕùµÄpath£¬²»ÄÜÎª¿Õ£¬ÇÒ¸¸path±ØĞëÒÑ¾­´æÔÚ
-	/// @param data ´æ´¢µ½zk_pathµÄÊı¾İ£¬¿ÉÓÃÓÚÊ¶±æµ±Ç°µÄmaster£¬Òò´Ë¿ÉÒÔ¿¼ÂÇÊ¹ÓÃIP»òÆäËüÓĞ±êÊ¶µÄÖµ
-	/// @return Èç¹û¾ºÕù³É¹¦·µ»Øtrue£¬·ñÔò·µ»Øfalse
+    void waitConnected() noexcept;
+
+	/// @brief ç«äº‰æˆä¸ºmaster
+	/// @param zk_path ç”¨äºç«äº‰çš„pathï¼Œä¸èƒ½ä¸ºç©ºï¼Œä¸”çˆ¶pathå¿…é¡»å·²ç»å­˜åœ¨
+	/// @param data å­˜å‚¨åˆ°zk_pathçš„æ•°æ®ï¼Œå¯ç”¨äºè¯†è¾¨å½“å‰çš„masterï¼Œå› æ­¤å¯ä»¥è€ƒè™‘ä½¿ç”¨IPæˆ–å…¶å®ƒæœ‰æ ‡è¯†çš„å€¼
+	/// @return å¦‚æœç«äº‰æˆåŠŸè¿”å›trueï¼Œå¦åˆ™è¿”å›false
 	bool raceMaster(std::string_view zk_path,std::string_view data);
 
-	/// @brief ´´½¨Ò»¸ö½Úµã£¬ÒªÇó¸¸½Úµã±ØĞëÒÑ¾­´æÔÚÇÒÓĞÈ¨ÏŞ
-	/// @param path ¸¸½ÚµãÂ·¾¶
-	/// @param nodeName ½ÚµãÃû
-	/// @param data ½ÚµãÊı¾İ
-	/// @param nodeType ½ÚµãÀàĞÍ
-	/// @param mode ½ÚµãÈ¨ÏŞ
+	/// @brief åˆ›å»ºä¸€ä¸ªèŠ‚ç‚¹ï¼Œè¦æ±‚çˆ¶èŠ‚ç‚¹å¿…é¡»å·²ç»å­˜åœ¨ä¸”æœ‰æƒé™
+	/// @param path çˆ¶èŠ‚ç‚¹è·¯å¾„
+	/// @param nodeName èŠ‚ç‚¹å
+	/// @param data èŠ‚ç‚¹æ•°æ®
+	/// @param nodeType èŠ‚ç‚¹ç±»å‹
+	/// @param mode èŠ‚ç‚¹æƒé™
 	void createNode(std::string_view path,std::string_view nodeName,std::string_view data,ZK_NodeMode mode,ZK_ACL acl);
 
-	/// @brief É¾³ı½Úµã£¬²¢Ğ£Ñé°æ±¾ºÅ£¬Èô²»Ò»ÖÂÔòÉ¾³ıÊ§°Ü
-	/// @param nodePath ½ÚµãÂ·¾¶
-	/// @param version ½Úµã°æ±¾£¬-1Ôò²»Ğ£Ñé
+	/// @brief åˆ é™¤èŠ‚ç‚¹ï¼Œå¹¶æ ¡éªŒç‰ˆæœ¬å·ï¼Œè‹¥ä¸ä¸€è‡´åˆ™åˆ é™¤å¤±è´¥
+	/// @param nodePath èŠ‚ç‚¹è·¯å¾„
+	/// @param version èŠ‚ç‚¹ç‰ˆæœ¬ï¼Œ-1åˆ™ä¸æ ¡éªŒ
 	void deleteNode(std::string_view nodePath,int version);
-	/// @brief É¾³ı½Úµã£¬²»Ğ£Ñé°æ±¾
+	/// @brief åˆ é™¤èŠ‚ç‚¹ï¼Œä¸æ ¡éªŒç‰ˆæœ¬
 	void deleteNode(std::string_view nodePath);
 
 
-	/// @brief »ñÈ¡Â·¾¶ÔÚËùÓĞ×Ó½Úµã
-	/// @param path ½ÚµãÂ·¾¶
-	/// @return ×Ó½Úµãvector
+	/// @brief è·å–è·¯å¾„åœ¨æ‰€æœ‰å­èŠ‚ç‚¹
+	/// @param path èŠ‚ç‚¹è·¯å¾„
+	/// @return å­èŠ‚ç‚¹vector
 	std::vector<std::string> getAllChildren(std::string_view path) ;
 
-	/// @brief »ñÈ¡½ÚµãÊı¾İ
-	/// @param path ½ÚµãÂ·¾¶
-	/// @param maxSize ´æ´¢½ÚµãÊı¾İµÄ×î´ó´óĞ¡
-	/// @param keep_watch ÊÇ·ñ±£³Öwatch¸Ãpath
-	/// @return ½ÚµãÊı¾İ
+	/// @brief è·å–èŠ‚ç‚¹æ•°æ®
+	/// @param path èŠ‚ç‚¹è·¯å¾„
+	/// @param maxSize å­˜å‚¨èŠ‚ç‚¹æ•°æ®çš„æœ€å¤§å¤§å°
+	/// @param keep_watch æ˜¯å¦ä¿æŒwatchè¯¥path
+	/// @return èŠ‚ç‚¹æ•°æ®
 	std::string getData(std::string_view path,int maxSize=4096, bool keep_watch = false) const;
 
 
@@ -112,17 +116,19 @@ class ZookeeperClient
 	 std::string _errorInfo;
  };
  private:
-	/// @brief ÊÂ¼ş¼àÌıÒÔ¼°·Ö·¢
-	/// @param zh zk¾ä±ú
-	/// @param type ÊÂ¼şÀàĞÍ
-	/// @param state ×´Ì¬
-	/// @param path ½ÚµãÂ·¾¶
-	/// @param context ÉÏÏÂÎÄ
+	/// @brief äº‹ä»¶ç›‘å¬ä»¥åŠåˆ†å‘
+	/// @param zh zkå¥æŸ„
+	/// @param type äº‹ä»¶ç±»å‹
+	/// @param state çŠ¶æ€
+	/// @param path èŠ‚ç‚¹è·¯å¾„
+	/// @param context ä¸Šä¸‹æ–‡
 	static void zk_watcher(zhandle_t *zh, int type, int state, const char *path, void *context);
 
 	std::string _zkHost;
 	std::unique_ptr<clientid_t,std::function<void (clientid_t*)>> _zkClient;
 	std::unique_ptr<zhandle_t,std::function<void (zhandle_t*)>> _handle;
+    bool _isConnected;
 	std::function<void (ZK_SessionEvent,std::string_view)> _sessionCallback;
-
+    std::mutex _mutex;
+    std::condition_variable _cond;
 };
