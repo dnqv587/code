@@ -57,11 +57,11 @@ _handle(nullptr,[this](zhandle_t* handle){
   this->close();
 }),
  _isConnected(false),
- _sessionCallback([](ZK_SessionEvent event,std::string_view node){
+ _sessionCallback([](ZK_SessionEvent event){
  })
 {}
 
-void ZookeeperClient::connect(time_t timeout,const std::function<void (ZK_SessionEvent,std::string_view)>& callback)
+void ZookeeperClient::connect(time_t timeout,const std::function<void (ZK_SessionEvent)>& callback)
 {
 	_handle.reset(zookeeper_init(_zkHost.c_str(),ZookeeperClient::zk_watcher,timeout * 1000l ,_zkClient.get(),this,0));
 	// 当连接不上时，会报如下错误（默认输出到stderr，可通过zoo_set_log_stream(FILE*)输出到文件）：
@@ -128,17 +128,13 @@ bool ZookeeperClient::raceMaster(std::string_view zk_path, std::string_view data
 	{
 		return true;
 	}
+	if(ZNODEEXISTS == errcode)
+	{
+		return false;
+	}
 	else
 	{
-		if(ZNODEEXISTS == errcode)
-		{
-			return false;
-		}
-		else
-		{
-			throw zkError("raceMaster error," + std::string(zerror(errcode)) + "(" + std::to_string(errcode) + ")");
-		}
-
+		throw zkError("raceMaster error," + std::string(zerror(errcode)) + "(" + std::to_string(errcode) + ")");
 	}
 }
 void ZookeeperClient::createNode(std::string_view path,
@@ -178,7 +174,7 @@ void ZookeeperClient::deleteNode(std::string_view nodePath, int version)
 		throw zkError("delete path://" + std::string(nodePath) + detail::getErrorInfo(errcode));
 	}
 }
-std::vector<std::string> ZookeeperClient::getAllChildren(std::string_view path)
+std::vector<std::string> ZookeeperClient::getAllChildren(std::string_view path) const
 {
 	struct String_vector children{};
 	std::vector<std::string> childrenVec;
@@ -244,7 +240,7 @@ void ZookeeperClient::zk_watcher(zhandle_t* zh, int type, int state, const char*
             self->_cond.notify_all();
         }
 
-		std::invoke(self->_sessionCallback,detail::ZKStatToSessionEvent(state),path);
+		std::invoke(self->_sessionCallback,detail::ZKStatToSessionEvent(state));
 	}
 }
 

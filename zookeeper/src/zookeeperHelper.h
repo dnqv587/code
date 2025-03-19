@@ -53,7 +53,7 @@ class ZookeeperClient
 	explicit ZookeeperClient(std::string_view host) noexcept;
 	~ZookeeperClient() noexcept =default;
 
-	void connect(time_t timeout,const std::function<void (ZK_SessionEvent,std::string_view)>& callback);
+	void connect(time_t timeout,const std::function<void (ZK_SessionEvent)>& callback);
 
 	void close();
 
@@ -90,7 +90,7 @@ class ZookeeperClient
 	/// @brief 获取路径在所有子节点
 	/// @param path 节点路径
 	/// @return 子节点vector
-	std::vector<std::string> getAllChildren(std::string_view path) ;
+	std::vector<std::string> getAllChildren(std::string_view path) const;
 
 	/// @brief 获取节点数据
 	/// @param path 节点路径
@@ -128,7 +128,7 @@ class ZookeeperClient
 	std::unique_ptr<clientid_t,std::function<void (clientid_t*)>> _zkClient;
 	std::unique_ptr<zhandle_t,std::function<void (zhandle_t*)>> _handle;
     bool _isConnected;
-	std::function<void (ZK_SessionEvent,std::string_view)> _sessionCallback;
+	std::function<void (ZK_SessionEvent)> _sessionCallback;
     std::mutex _mutex;
     std::condition_variable _cond;
 };
