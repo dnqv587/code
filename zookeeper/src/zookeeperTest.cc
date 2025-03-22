@@ -21,21 +21,33 @@ int main()
         }
     });
     zk.waitConnected();
+    zk.createNode("/","zkRace","test",ZK_NodeMode::Persistent,ZK_ACL::Open);
+  zk.createNode("/","tttt","test",ZK_NodeMode::Persistent,ZK_ACL::Open);
     //zk.createNode("/test","child","{data:2}",ZK_NodeMode::Persistent,ZK_ACL::Open);
     std::future<bool> a = std::async(std::launch::async,[&]()
     {
-        return zk.raceMaster("/zkRace","test1");
+        return zk.raceMaster("/zkRace/test","test1");
     });
 
     std::future<bool> b = std::async(std::launch::async,[&]()
     {
-        return zk.raceMaster("/zkRace","test2");
+        return zk.raceMaster("/zkRace/test","test2");
     });
 
     std::cout<<"test1"<<std::boolalpha<<a.get()<<",test2"<<b.get()<<std::endl;
 
+    zk.NodeWatch("/zkRace/test",[&zk](std::string_view path,ZK_NodeEvent event) {
+      if (event == ZK_NodeEvent::DeleteNode) {
+        std::cout<<path<<" DeleteNode"<<std::endl;
+         std::cout<<"test3"<<std::boolalpha<<zk.raceMaster("/zkRace/test","test3")<<std::endl;
+      }
+      if (event == ZK_NodeEvent::ChildNodeChange) {
+        std::cout<<path<<" ChildNodeChange"<<std::endl;
+      }
+    });
 
-    std::this_thread::sleep_for(std::chrono::seconds(100));
+    //std::this_thread::sleep_for(std::chrono::seconds(100));
+    std::getchar();
     zk.close();
 
 	return 0;
