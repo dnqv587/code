@@ -2,3 +2,4 @@
 /mock/cmake-build-debug
 /asio/cmake-build-debug
 /zookeeper/cmake-build-debug
+/zookeeper/.idea
