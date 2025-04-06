@@ -2,3 +2,7 @@
 /mock/cmake-build-debug
 /asio/cmake-build-debug
 /zookeeper/cmake-build-debug
+/kafka/cmake-build-debug
+/kafka/.idea
+/zookeeper/.idea
+/asio/.idea
