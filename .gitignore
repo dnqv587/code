@@ -7,3 +7,5 @@
 /kafka/.idea
 /zookeeper/.idea
 /asio/.idea
+/rdma/.idea
+/rdma/cmake-build-debug
