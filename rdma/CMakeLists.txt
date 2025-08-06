@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 
-project(VERBS C CXX )
+project(RDMA C CXX )
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
